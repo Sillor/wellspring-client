@@ -42,12 +42,12 @@ import Accordion from "../components/Accordion"
 export function PrescriptionPage() {
 
 	return (
-		<div className="flex flex-col items-center gap-1 mx-2 md:mx-0" id="pageContainer"> {/*Primary container*/}
+		<div className="flex flex-col items-center gap-1" id="pageContainer"> {/*Primary container*/}
 
 
 
 			{/*User header*/}
-			<div className="flex w-full" id="userHeader">
+			<div className="flex w-full mx-2" id="userHeader">
 
 				{/*Navigation menu for large screen */}
 				<div className="hidden md:flex w-full justify-between">
@@ -66,18 +66,16 @@ export function PrescriptionPage() {
 
 				{/*Hamburger Menu*/}
 
-				<div className="flex flex-row justify-between md:hidden w-full">
+				<div className="flex flex-row justify-between md:hidden w-full ">
 					<Accordion/>
-					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="m-2"/>
-
 				</div>
 
 				
 			</div>
 
 			{/*Patient info and backspace header*/}
-			<Card className="flex flex-row w-full md:w-2/3 items-center">
-				<Card className="flex w-fit">
+			<Card className="flex flex-row w-full sm:w-2/3 items-center">
+				<Card className="flex w-fit hover:bg-slate-100">
 					<img src="../src/assets/PrescriptionAssets/arrow.png" alt="not found" className="w-10 p-2"/>
 				</Card>
 				<div id="patientInfo" className="flex flex-row m-2">
@@ -87,7 +85,7 @@ export function PrescriptionPage() {
 			</Card>
 
 			{/*Primary Display*/}
-			<Card className="w-full md:w-2/3">
+			<Card className="w-full sm:w-2/3">
 				<CardHeader>
 					<CardTitle>Prescription Request</CardTitle>
 					<CardDescription>What medication is to be requested?</CardDescription>
