@@ -1,27 +1,8 @@
 import '../globals.css'
-import { Button } from "../components/ui/button"
+import {Card} from "../components/ui/card"
+
 import {Link } from "react-router-dom";
 
-
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
 
   import {
 	NavigationMenu,
@@ -34,15 +15,15 @@ import {
 	NavigationMenuViewport,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import { Textarea } from "@/components/ui/textarea"
 import Accordion from "../components/Accordion"
+import PatientChart from './PatientChart'
   
 
-export function PrescriptionPage() {
+
+export function PatientInformation() {
 
 	return (
 		<div className="flex flex-col items-center gap-1" id="pageContainer"> {/*Primary container*/}
-
 			{/*User header*/}
 			<div className="flex w-full mx-2" id="userHeader">
 
@@ -52,7 +33,7 @@ export function PrescriptionPage() {
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()}>View Schedule List</NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}>Search Patient</NavigationMenuLink>
+								<NavigationMenuLink className={navigationMenuTriggerStyle()}>Search for patient</NavigationMenuLink>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()}>Logout</NavigationMenuLink>
 							</NavigationMenuItem>
 						</NavigationMenuList>
@@ -65,7 +46,6 @@ export function PrescriptionPage() {
 				<div className="flex flex-row justify-between md:hidden w-full ">
 					<Accordion/>
 				</div>
-
 			</div>
 
 			{/*Patient info and backspace header*/}
@@ -78,7 +58,6 @@ export function PrescriptionPage() {
 					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="flex ml-4"/>
 				</div>
 			</Card>
-
 
             {/*Patient info selections header*/}
 			<Card className="flex flex-row  sm:w-2/3 w-full justify-evenly mt-4">
@@ -98,24 +77,11 @@ export function PrescriptionPage() {
 				</Card>
 			</Card>
 
-
 			{/*Primary Display*/}
-			<Card className="w-full sm:w-2/3">
-				<CardHeader>
-					<CardTitle>Patient Prescriptions</CardTitle>
-					<CardDescription>List of names meds</CardDescription>
-				</CardHeader>
-	
-				<CardFooter className="flex sm:justify-center">
-                <Link to={"/prescriptioninfo/request"} className=" sm:w-1/3 w-full">
-                    <Button className="w-full" >Request</Button>
-                </Link>
-
-				</CardFooter>
-			</Card>
+			<PatientChart/>
 			
 		</div>
 	)
 }
 
-export default PrescriptionPage
+export default PatientInformation

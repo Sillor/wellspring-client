@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import './globals.css';
-import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage';
+import { PatientInformation } from './PatientInformation/PatientInformation';
 
 function App() {
   return (
     <>
-      <PrescriptionPage/>
+      <PatientInformation/>
     </>
   );
 }
