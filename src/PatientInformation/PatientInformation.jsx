@@ -1,18 +1,11 @@
 import '../globals.css'
 import {Card} from "../components/ui/card"
-
 import {Link } from "react-router-dom";
-
-
-  import {
+import {
 	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import Accordion from "../components/Accordion"
@@ -42,7 +35,6 @@ export function PatientInformation() {
 				</div>
 
 				{/*Hamburger Menu*/}
-
 				<div className="flex flex-row justify-between md:hidden w-full ">
 					<Accordion/>
 				</div>

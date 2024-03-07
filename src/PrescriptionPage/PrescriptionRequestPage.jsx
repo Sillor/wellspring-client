@@ -1,6 +1,5 @@
 import '../globals.css'
 import { Button } from "../components/ui/button"
-
 import {
 	Card,
 	CardContent,
@@ -21,15 +20,11 @@ import {
 	SelectValue,
   } from "@/components/ui/select"
 
-  import {
+import {
 	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import { Textarea } from "@/components/ui/textarea"

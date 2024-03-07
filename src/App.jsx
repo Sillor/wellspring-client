@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './globals.css';
 import { PatientInformation } from './PatientInformation/PatientInformation';
 
