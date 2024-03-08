@@ -1,11 +1,9 @@
 import './globals.css';
-import { PatientInformation } from './PatientInformation/PatientInformation';
+import {PatientDashboard }from './PatientDashboard/PatientDashboard';
 
 function App() {
   return (
-    <>
-      <PatientInformation/>
-    </>
+      <PatientDashboard/>
   );
 }
 

@@ -9,24 +9,21 @@ import {
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
+import { Button } from '../components/ui/button'
 
 
-
-
-export function PatientInformation() {
-
-	return (
-		<>
-	<Card className="w-full sm:w-2/3 overflow-hidden">
+/* Shows Individual Patient Dashboard layout*/
+export function PatientLabs(){
+    return(
+        <>
+        <Card className="w-full sm:w-2/3">
         <CardHeader>
-            <CardTitle>Patient Information:</CardTitle>
+            <CardTitle>Patient's Lab Reports</CardTitle>
         </CardHeader>
-        <CardContent className=''> {/* overfloew and hieght here 500px */}
+        <CardContent>
             <div className='table w-full'>
-
-				{/*General Info*/}
                 <div className='table-row h-10'>
-                    <Label htmlFor="generalInfo" className="table-cell font-bold text-md">General Information:</Label>
+                    <Label htmlFor="generalInfo" className="table-cell font-bold text-md">Recent Labs:</Label>
                 </div>
                 <div className='table-row'>
                     <Label htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</Label>
@@ -43,7 +40,8 @@ export function PatientInformation() {
                 <div className='table-row'>
                     <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Sex at birth:</Label>
                     <p className='table-cell w-1/3'>psex</p>
-                </div>
+
+                    </div>
                 <div className='table-row'>
                     <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Address:</Label>
                     <p className='table-cell w-1/3'>Address</p>
@@ -60,43 +58,18 @@ export function PatientInformation() {
                     <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</Label>
                     <p className='table-cell w-1/3'>EC phone</p>
                 </div>
-
             </div>
 
-			<div className='table w-full mt-10'>
-				{/*Emergency Contact Info */}
-				<div className='table-row h-10 align-bottom '>
-                    <Label htmlFor="generalInfo" className="table-cell font-bold text-md">Emergency Contact Information:</Label>
+            <CardFooter className="flex sm:justify-center">
+                <div className='sm:w-1/3 w-full'>
+                    <Button className="w-full" >Request</Button>
                 </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Contact First Name:</Label>
-                    <p className='table-cell w-1/3'>FName</p>
-                </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Contact Last Name:</Label>
-                    <p className='table-cell w-1/3'>LName</p>
-                </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Contact Address:</Label>
-                    <p className='table-cell w-1/3'>Address</p>
-                </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">City:</Label>
-                    <p className='table-cell w-1/3'>city</p>
-                </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Realtion:</Label>
-                    <p className='table-cell w-1/3'>contact</p>
-                </div>
-                <div className='table-row'>
-                    <Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</Label>
-                    <p className='table-cell w-1/3'>EC phone</p>
-                </div>
-			</div>
+			</CardFooter>
         </CardContent>
     </Card>
-		</>
-	)
+    </>
+    );    
+
 }
 
-export default PatientInformation
+export default PatientLabs

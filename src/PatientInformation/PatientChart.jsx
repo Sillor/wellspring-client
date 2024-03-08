@@ -1,5 +1,4 @@
 import '../globals.css'
-import { Button } from "../components/ui/button"
 
 import {
 	Card,
@@ -14,9 +13,10 @@ import { Label } from "../components/ui/label"
 
 
 
-
+/* Shows Individual Patient Dashboard layout*/
 export function PatientChart(){
     return(
+        <>
         <Card className="w-full sm:w-2/3">
         <CardHeader>
             <CardTitle>Patient Chart</CardTitle>
@@ -24,7 +24,7 @@ export function PatientChart(){
         <CardContent>
             <div className='table w-full'>
                 <div className='table-row h-10'>
-                    <Label htmlFor="generalInfo" className="table-cell">General Information:</Label>
+                    <Label htmlFor="generalInfo" className="table-cell font-bold text-md">Medical Information:</Label>
                 </div>
                 <div className='table-row'>
                     <Label htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</Label>
@@ -62,6 +62,7 @@ export function PatientChart(){
             </div>
         </CardContent>
     </Card>
+    </>
     );    
 
 }

@@ -1,6 +1,7 @@
 import '../globals.css'
 import { Button } from "../components/ui/button"
 import {Link } from "react-router-dom";
+import { Label } from '@radix-ui/react-label';
 
 
 import {
@@ -11,110 +12,71 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
-
-  import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport,
-  } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import { Textarea } from "@/components/ui/textarea"
-import Accordion from "../components/Accordion"
-  
 
 export function PrescriptionPage() {
 
 	return (
-		<div className="flex flex-col items-center gap-1" id="pageContainer"> {/*Primary container*/}
-
-			{/*User header*/}
-			<div className="flex w-full mx-2" id="userHeader">
-
-				{/*Navigation menu for large screen */}
-				<div className="hidden md:flex w-full justify-center">
-					<NavigationMenu>
-						<NavigationMenuList>
-							<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}>View Schedule List</NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}>Search Patient</NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}>Logout</NavigationMenuLink>
-							</NavigationMenuItem>
-						</NavigationMenuList>
-					</NavigationMenu>
-					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="m-2"/>
-				</div>
-
-				{/*Hamburger Menu*/}
-
-				<div className="flex flex-row justify-between md:hidden w-full ">
-					<Accordion/>
-				</div>
-
-			</div>
-
-			{/*Patient info and backspace header*/}
-			<Card className="flex flex-row w-full sm:w-2/3 items-center">
-				<Card className="flex w-fit hover:bg-slate-100">
-					<img src="../src/assets/PrescriptionAssets/arrow.png" alt="not found" className="w-10 p-2"/>
-				</Card>
-				<div id="patientInfo" className="flex flex-row m-2">
-					<h1>Patient Name</h1>
-					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="flex ml-4"/>
-				</div>
-			</Card>
-
-
-            {/*Patient info selections header*/}
-			<Card className="flex flex-row  sm:w-2/3 w-full justify-evenly mt-4">
-				<Card className="flex w-fit hover:bg-slate-100">
-					<img src="../src/assets/PatientInformationAssets/info.png" alt="not found" className="w-10 p-2"/>
-				</Card>
-                <Card className="flex w-fit hover:bg-slate-100">
-					<img src="../src/assets/PatientInformationAssets/clipboard.png" alt="not found" className="w-10 p-2"/>
-				</Card>
-                <Card className="flex w-fit hover:bg-slate-100">
-					<Link to={'prescriptioninfo'}>
-						<img src="../src/assets/PatientInformationAssets/pill.png" alt="not found" className="w-10 p-2"/>
-					</Link>
-				</Card>
-                <Card className="flex w-fit hover:bg-slate-100">
-					<img src="../src/assets/PatientInformationAssets/lab.png" alt="not found" className="w-10 p-2"/>
-				</Card>
-			</Card>
-
-
+		<>
 			{/*Primary Display*/}
 			<Card className="w-full sm:w-2/3">
 				<CardHeader>
 					<CardTitle>Patient Prescriptions</CardTitle>
 					<CardDescription>List of names meds</CardDescription>
 				</CardHeader>
+				<CardHeader>
+					<CardTitle className="text-md">Prescription Information:</CardTitle>
+				</CardHeader>
+
+				<table>
+					<div className='table-row'>	
+						<Label htmlFor="generalInfo" className="table-cell w-auto">MedicalName:</Label>
+						<Label htmlFor="generalInfo" className="table-cell w-auto">Dose Given:</Label>
+						<Label htmlFor="generalInfo" className="table-cell w-auto">Date Ordered:</Label>
+					</div>
+					<div className='table-row'>	
+						<Label htmlFor="generalInfo" className="table-cell w-auto">First Name:</Label>
+						<p className='table-cell w-1/3'>FName</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Last Name:</Label>
+						<p className='table-cell w-1/3'>LName</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Date of Birth:</Label>
+						<p className='table-cell w-1/3'>bday</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Sex at birth:</Label>
+						<p className='table-cell w-1/3'>psex</p>
+
+						</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Address:</Label>
+						<p className='table-cell w-1/3'>Address</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">City:</Label>
+						<p className='table-cell w-1/3'>city</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact:</Label>
+						<p className='table-cell w-1/3'>contact</p>
+					</div>
+					<div className='table-row'>
+						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</Label>
+						<p className='table-cell w-1/3'>EC phone</p>
+					</div>
+
+				</table>
+
 	
 				<CardFooter className="flex sm:justify-center">
                 <Link to={"/prescriptioninfo/request"} className=" sm:w-1/3 w-full">
                     <Button className="w-full" >Request</Button>
                 </Link>
-
 				</CardFooter>
 			</Card>
-			
-		</div>
+		</>
 	)
 }
 
