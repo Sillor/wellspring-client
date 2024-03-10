@@ -14,6 +14,16 @@ import {
 } from "../components/ui/card"
 
 export function PrescriptionPage() {
+	
+	/*Color seperation for each table row*/
+	const colorSeparation = ()=>{
+		const table = document.querySelectorAll('.table-row')
+		for (let i = 0; i < table.length; i++) {
+			if(i % 2 === 0){
+				table.classList.add('bg-slate-100')
+			}
+		}
+	}
 
 	return (
 		<>
@@ -27,48 +37,29 @@ export function PrescriptionPage() {
 					<CardTitle className="text-md">Prescription Information:</CardTitle>
 				</CardHeader>
 
-				<table>
-					<div className='table-row'>	
-						<Label htmlFor="generalInfo" className="table-cell w-auto">MedicalName:</Label>
-						<Label htmlFor="generalInfo" className="table-cell w-auto">Dose Given:</Label>
-						<Label htmlFor="generalInfo" className="table-cell w-auto">Date Ordered:</Label>
+				<table className='table m-6 justify-between'>
+					<div className='table-row w-full'>	
+						<Label htmlFor="generalInfo" className="table-cell w-1/2">MedicalName:</Label>
+						<Label htmlFor="generalInfo" className="table-cell w-1/3">Dose Given:</Label>
+						<Label htmlFor="generalInfo" className="table-cell w-1/3">Date Ordered:</Label>
 					</div>
 					<div className='table-row'>	
-						<Label htmlFor="generalInfo" className="table-cell w-auto">First Name:</Label>
-						<p className='table-cell w-1/3'>FName</p>
+						<Label htmlFor="generalInfo" className="table-cell w-auto">Acetaminophen:</Label>
+						<p className='table-cell w-1/3'>300mg</p>
+						<p className='table-cell w-1/3'>12/25/13</p>
 					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Last Name:</Label>
-						<p className='table-cell w-1/3'>LName</p>
+					<div className='table-row'>	
+						<Label htmlFor="generalInfo" className="table-cell w-auto">Promethazine:</Label>
+						<p className='table-cell w-1/3'>500mg</p>
+						<p className='table-cell w-1/3'>2/6/13</p>
 					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Date of Birth:</Label>
-						<p className='table-cell w-1/3'>bday</p>
+					<div className='table-row'>	
+						<Label htmlFor="generalInfo" className="table-cell w-auto">Lexapro:</Label>
+						<p className='table-cell w-1/3'>50mg</p>
+						<p className='table-cell w-1/3'>6/10/15</p>
 					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Sex at birth:</Label>
-						<p className='table-cell w-1/3'>psex</p>
-
-						</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Address:</Label>
-						<p className='table-cell w-1/3'>Address</p>
-					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">City:</Label>
-						<p className='table-cell w-1/3'>city</p>
-					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact:</Label>
-						<p className='table-cell w-1/3'>contact</p>
-					</div>
-					<div className='table-row'>
-						<Label htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</Label>
-						<p className='table-cell w-1/3'>EC phone</p>
-					</div>
-
 				</table>
-
+				{colorSeparation}
 	
 				<CardFooter className="flex sm:justify-center">
                 <Link to={"/prescriptioninfo/request"} className=" sm:w-1/3 w-full">
