@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import './App.css';
+import './globals.css';
+import {PatientDashboard }from './PatientDashboard/PatientDashboard';
 
 function App() {
   return (
-    <>
-      <h1>Wellspring</h1>
-    </>
+      <PatientDashboard/>
   );
 }
 
