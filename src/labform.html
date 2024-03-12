@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Information Form</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="output.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="bg-teal-600">
+        <h1 class=" text-6xl block text-left text-bg text-white font-semibold"></i></i> MediCorp</h1>
+    </div>
+    <div class="bg-teal-600 flex justify-center items-center h-screen ">
+        <div class="w-full max-w-md p-4 shadow-lg bg-white rounded-md">
+            <h1 class="text-2xl font-semibold text-teal-800 mb-4 text-center mt-3"><i class="fa-solid fa-dna"></i></i>Lab Information Form</h1>
+            <form id="labForm" class="space-y-6">
+                <div class="flex space-x-5">
+                    
+                    
+                    <div>
+                        <label for="labFacility" class="block text-sm font-medium text-teal-800 mt-5">Lab Facility</label>
+                        <input type="text" id="labFacility" name="labFacility" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter Lab" required>
+                    </div>
+                    <div>
+                        <label for="labOrderDate" class="block text-sm font-medium text-teal-800 mt-5">Lab Order Date</label>
+                        <input type="date" id="labOrderDate" name="labOrderDate" class="mt-1 p-2 w-full border rounded-md" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="patientName" class="block text-sm font-medium text-teal-800 mt-5">Patient's Name</label>
+                    <input type="text" id="patientName" name="patientName" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter Patient" required>
+                </div>
+                <div>
+                    <label for="doctorName" class="block text-sm font-medium text-teal-800 mt-5">Doctor's Name</label>
+                    <input type="text" id="doctorName" name="doctorName" class="mt-1 p-2 w-full border rounded-md" placeholder="Enter Doctor" required>
+                </div>
+                <div>
+                    <label for="Notes" class="block text-sm font-medium text-teal-600 mt-3">Notes</label>
+                    <input type="text" id="Notes" name="Notes" class="mt-3 p-8 w-full border rounded-md" placeholder="Enter Notes">
+                </div>
+                <div>
+                <button type="submit" class="border-1 border-l-teal-800 bg-teal-600 text-white px-8 py-2 rounded-md w-full hover:bg-teal-800 font-semibold">Submit</button>
+                </div>
+                <div>
+                    <h1 class=" text-1x2 text-center text-bg text-teal-800 font-semibold"></i></i>MediCorp</h1>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- JavaScript to autofill data -->
+    <script>
+        document.getElementById('labForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Simulate autofill (replace with actual data)
+            const patientName = 'John Doe';
+            const labOrderDate = new Date().toISOString().split('T')[0]; // Today's date
+            const doctorName = 'Dr. Smith';
+            const labFacility = 'X-Ray Lab';
+            // Fill input fields
+            document.getElementById('patientName').value = patientName;
+            document.getElementById('labOrderDate').value = labOrderDate;
+            document.getElementById('doctorName').value = doctorName;
+            document.getElementById('labFacility').value = labFacility;
+        });
+    </script>
+</body>
+</html>
