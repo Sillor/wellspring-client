@@ -9,6 +9,7 @@ import {
 import "./index.css";
 import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
+import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
 
 
 const router = createBrowserRouter([
@@ -19,7 +20,12 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/prescriptioninfo",
+    path: "/dashboard",
+    element: <PatientDashboard/>,
+  },
+
+  {
+    path: "/dashboard/prescriptioninfo",
     element: <PrescriptionPage/>,
   },
 

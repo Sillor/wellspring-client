@@ -29,12 +29,13 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import { Textarea } from "@/components/ui/textarea"
 import Accordion from "../components/Accordion"
+import { Link } from 'react-router-dom'
   
 
 export function PrescriptionRequestPage() {
 
 	return (
-		<div className="flex flex-col items-center gap-1" id="pageContainer"> {/*Primary container*/}
+		<div className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
 
 			{/*User header*/}
 			<div className="flex w-full mx-2" id="userHeader">
@@ -64,7 +65,9 @@ export function PrescriptionRequestPage() {
 			{/*Patient info and backspace header*/}
 			<Card className="flex flex-row w-full sm:w-2/3 items-center">
 				<Card className="flex w-fit hover:bg-slate-100">
-					<img src="../src/assets/PrescriptionAssets/arrow.png" alt="not found" className="w-10 p-2"/>
+					<Link to={"/dashboard"}>
+						<img src="../src/assets/PrescriptionAssets/arrow.png" alt="not found" className="w-10 p-2"/>
+					</Link>				
 				</Card>
 				<div id="patientInfo" className="flex flex-row m-2">
 					<h1>Patient Name</h1>

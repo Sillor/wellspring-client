@@ -1,7 +1,6 @@
 import '../globals.css'
 import { Button } from "../components/ui/button"
 import {Link } from "react-router-dom";
-import { Label } from '@radix-ui/react-label';
 
 
 import {
@@ -16,14 +15,6 @@ import {
 export function PrescriptionPage() {
 	
 	/*Color seperation for each table row*/
-	const colorSeparation = ()=>{
-		const table = document.querySelectorAll('.table-row')
-		for (let i = 0; i < table.length; i++) {
-			if(i % 2 === 0){
-				table.classList.add('bg-slate-100')
-			}
-		}
-	}
 
 	return (
 		<>
@@ -31,36 +22,38 @@ export function PrescriptionPage() {
 			<Card className="w-full sm:w-2/3">
 				<CardHeader>
 					<CardTitle>Patient Prescriptions</CardTitle>
-					<CardDescription>List of names meds</CardDescription>
+					<CardDescription>Prescription History</CardDescription>
 				</CardHeader>
 				<CardHeader>
-					<CardTitle className="text-md">Prescription Information:</CardTitle>
+					<CardTitle className="text-md">Current Prescription Information:</CardTitle>
 				</CardHeader>
-
-				<table className='table m-6 justify-between'>
-					<div className='table-row w-full'>	
-						<Label htmlFor="generalInfo" className="table-cell w-1/2">MedicalName:</Label>
-						<Label htmlFor="generalInfo" className="table-cell w-1/3">Dose Given:</Label>
-						<Label htmlFor="generalInfo" className="table-cell w-1/3">Date Ordered:</Label>
-					</div>
-					<div className='table-row'>	
-						<Label htmlFor="generalInfo" className="table-cell w-auto">Acetaminophen:</Label>
-						<p className='table-cell w-1/3'>300mg</p>
-						<p className='table-cell w-1/3'>12/25/13</p>
-					</div>
-					<div className='table-row'>	
-						<Label htmlFor="generalInfo" className="table-cell w-auto">Promethazine:</Label>
-						<p className='table-cell w-1/3'>500mg</p>
-						<p className='table-cell w-1/3'>2/6/13</p>
-					</div>
-					<div className='table-row'>	
-						<Label htmlFor="generalInfo" className="table-cell w-auto">Lexapro:</Label>
-						<p className='table-cell w-1/3'>50mg</p>
-						<p className='table-cell w-1/3'>6/10/15</p>
-					</div>
+				<CardContent>
+				<table className='table justify-between w-full'>
+					<tbody>
+						<tr className='table-row w-full h-10'>	
+							<td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Medical Name:</td>
+							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Dose:</td>
+							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Ordered:</td>
+						</tr>
+						<tr className='table-row'>	
+							<td htmlFor="generalInfo" className="table-cell w-auto">Acetaminophen:</td>
+							<td className='table-cell w-1/3'>300mg</td>
+							<td className='table-cell w-1/3'>12/25/13</td>
+						</tr>
+						<tr className='table-row'>	
+							<td htmlFor="generalInfo" className="table-cell w-auto">Promethazine:</td>
+							<td className='table-cell w-1/3'>500mg</td>
+							<td className='table-cell w-1/3'>2/6/13</td>
+						</tr>
+						<tr className='table-row'>	
+							<td htmlFor="generalInfo" className="table-cell w-auto">Lexapro:</td>
+							<td className='table-cell w-1/3'>50mg</td>
+							<td className='table-cell w-1/3'>6/10/15</td>
+						</tr>
+					</tbody>
 				</table>
-				{colorSeparation}
-	
+
+				</CardContent>
 				<CardFooter className="flex sm:justify-center">
                 <Link to={"/prescriptioninfo/request"} className=" sm:w-1/3 w-full">
                     <Button className="w-full" >Request</Button>
