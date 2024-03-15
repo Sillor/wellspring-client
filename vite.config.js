@@ -4,6 +4,11 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  rollupOptions: {
+    output: {
+      assetFileNames: "./assets/**"
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
