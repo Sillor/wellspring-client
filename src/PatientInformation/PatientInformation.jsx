@@ -7,6 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../components/ui/card"
+import edit from './PatientInformationAssets/pencil.png'
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 
@@ -17,10 +18,17 @@ export function PatientInformation() {
 
 	return (
 		<>
-	<Card className="w-full sm:w-2/3 overflow-hidden">
-        <CardHeader>
-            <CardTitle>Patient Information:</CardTitle>
-        </CardHeader>
+        <Card className="w-full sm:w-2/3 overflow-hidden">
+            <CardHeader>
+                <CardTitle>Patient Information:
+                {/*Edit button*/}    
+                <Card className="flex w-fit hover:bg-slate-100 float-right">
+                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart">
+                            <img src={edit} alt="not found" className="w-10 p-2"/>
+                        </button>
+                    </Card>
+                </CardTitle>
+            </CardHeader>
         <CardContent>
 
                     <table className='table w-full'>

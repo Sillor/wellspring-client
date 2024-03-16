@@ -1,5 +1,6 @@
 import '../globals.css'
 import { Button } from "../components/ui/button"
+import arrow from './PrescriptionAssets/arrow.png'
 import {
 	Card,
 	CardContent,
@@ -66,7 +67,7 @@ export function PrescriptionRequestPage() {
 			<Card className="flex flex-row w-full sm:w-2/3 items-center">
 				<Card className="flex w-fit hover:bg-slate-100">
 					<Link to={"/dashboard"}>
-						<img src="../src/assets/PrescriptionAssets/arrow.png" alt="not found" className="w-10 p-2"/>
+						<img src={arrow} alt="not found" className="w-10 p-2"/>
 					</Link>				
 				</Card>
 				<div id="patientInfo" className="flex flex-row m-2">
