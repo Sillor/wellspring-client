@@ -1,8 +1,8 @@
-import React from 'react';
-import { useState } from 'react';
-import { Menu } from 'lucide-react';
-import { User } from 'lucide-react';
-import '../globals.css';
+import React from "react";
+import { useState } from "react";
+import { Menu } from "lucide-react";
+import { User } from "lucide-react";
+import "../globals.css";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Drawer,
   DrawerClose,
@@ -20,7 +20,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
+} from "@/components/ui/drawer";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,38 +31,52 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/alert-dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import Popup from "../components/ui/popup";
+import defaultPatientImg from "../components/images/patient_default.jpg";
+import "../components/images/defaultPatientImg.css";
 
 function Dashboard() {
+  const [ButtonPopup, setButtonPopup] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleButtonClick = (event) => {
+    setSelectedEvent(event);
+    setButtonPopup(true);
+  };
+
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([
     {
       id: 1,
-      title: 'Doctor Appointment',
-      date: '2021-08-10',
-      time: '10:00',
-      type: 'Urgent Care',
+      title: "Doctor Appointment",
+      patientName: "Patient #1",
+      date: "2021-08-10",
+      time: "10:00",
+      type: "Urgent Care",
     },
     {
       id: 2,
-      title: 'Dentist Appointment',
-      date: '2021-08-10',
-      time: '11:00',
-      type: 'Non-Urgent Care',
+      title: "Dentist Appointment",
+      patientName: "Patient #2",
+      date: "2021-08-10",
+      time: "11:00",
+      type: "Non-Urgent Care",
     },
     {
       id: 3,
-      title: 'Therapy Session',
-      date: '2021-08-10',
-      time: '12:00',
-      type: 'Urgent Care',
+      title: "Therapy Session",
+      patientName: "Patient #3",
+      date: "2021-08-10",
+      time: "12:00",
+      type: "Urgent Care",
     },
   ]);
-  const [selectedType, setSelectedType] = useState('All');
+  const [selectedType, setSelectedType] = useState("All");
   const filteredEvents =
-    selectedType === 'All'
+    selectedType === "All"
       ? events
       : events.filter((event) => event.type === selectedType);
 
@@ -113,14 +127,14 @@ function Dashboard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setSelectedType('All')}>
+              <DropdownMenuItem onClick={() => setSelectedType("All")}>
                 All
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedType('Urgent Care')}>
+              <DropdownMenuItem onClick={() => setSelectedType("Urgent Care")}>
                 Urgent Care
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setSelectedType('Non-Urgent Care')}
+                onClick={() => setSelectedType("Non-Urgent Care")}
               >
                 Non-Urgent Care
               </DropdownMenuItem>
@@ -129,11 +143,31 @@ function Dashboard() {
         </div>
         {filteredEvents.map((event) => (
           <div key={event.id} className="border p-4 rounded-md mb-4">
-            <h2 className="text-xl font-bold">{event.title}</h2>
-            <p>
-              {event.date} at {event.time}
-            </p>
-            <p>Type: {event.type}</p>
+            {/* <h2 className="text-xl font-bold">{event.title}</h2> */}
+            <Button
+              variant="outline"
+              className="schedule-btn"
+              onClick={() => handleButtonClick(event)}
+            >
+              <img
+                src={defaultPatientImg}
+                alt="Default image for patients"
+                className="patientImage"
+              />
+              <div>
+                <h1>{event.patientName}</h1>
+                <p>{event.type}</p>
+              </div>
+            </Button>
+            {selectedEvent && (
+              <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
+                <h1 className="text-xl font-bold">{selectedEvent.title}</h1>
+                <h1>{selectedEvent.type}</h1>
+                <p>
+                  {selectedEvent.date} at {selectedEvent.time}
+                </p>
+              </Popup>
+            )}
           </div>
         ))}
       </div>
