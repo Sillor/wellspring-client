@@ -1,9 +1,14 @@
 import './globals.css';
-import {PatientDashboard }from './PatientDashboard/PatientDashboard';
+import { LoginPage }from './LoginPage/LoginPage';
+import { PatientDashboard }from './PatientDashboard/PatientDashboard';
+import { useState } from 'react';
 
 function App() {
+  
+  const [authenticated, setauthenticated] = useState(localStorage.getItem("authenticated") || false);
+
   return (
-      <PatientDashboard/>
+      authenticated ? <PatientDashboard/> : <LoginPage/>
   );
 }
 

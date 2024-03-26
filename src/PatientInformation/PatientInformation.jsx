@@ -19,18 +19,17 @@ export function PatientInformation() {
 
     const [data, setData] = useState([])
 
-    useEffect(() => {
-        fetchPatient() // Fetch games when component is mounted
-    }, [])
-
     const fetchPatient = async () => {
-        await axios('http://152.44.224.138:5174/post', {
+        await axios('http://152.44.224.138:5174/patients', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
             method: 'GET',
         })
-            .then((res) => setData(res.data[0]))
+            .then((res) => {
+                setData(res.data.patients[0]);
+                console.log(data);
+            })
             .catch((err) => console.log('Error: ', err))
     }
 
@@ -50,11 +49,11 @@ export function PatientInformation() {
                             </tr>
                             <tr className='table-row'>
                                 <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                                <td className='table-cell w-1/3'>{data.First_Name}</td>
+                                <td className='table-cell w-1/3'>{data.FirstName}</td>
                             </tr>
                             <tr className='table-row'>
                                 <td htmlFor="generalInfo" className="table-cell text-center w-auto">Last Name:</td>
-                                <td className='table-cell w-1/3'>{data.Surname}</td>
+                                <td className='table-cell w-1/3'>{data.LastName}</td>
                             </tr>
                             <tr className='table-row'>
                                 <td htmlFor="generalInfo" className="table-cell text-center w-auto">Date of Birth:</td>
