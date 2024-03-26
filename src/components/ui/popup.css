@@ -31,3 +31,10 @@
   height: auto;
   width: auto;
 }
+
+.patientData-btn{
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding: 20px;
+}

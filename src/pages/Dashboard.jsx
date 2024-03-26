@@ -166,6 +166,7 @@ function Dashboard() {
                 <p>
                   {selectedEvent.date} at {selectedEvent.time}
                 </p>
+                <Button className="patientData-btn">Patient Data</Button>
               </Popup>
             )}
           </div>
