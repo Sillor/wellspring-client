@@ -3,19 +3,15 @@ import { Button } from "../components/ui/button"
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
   } from "@/components/ui/select"
@@ -23,7 +19,6 @@ import {
   import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -42,15 +37,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 //Zod schema for form validation
 const formSchema = z.object({
     userName:z.string().min(2).max(18),
-    // firstName: z.string().min(2).max(18),
-    // lastName: z.string().min(2).max(18),
-    // email: z.string().email(),
+    firstName: z.string().min(2).max(18),
+    lastName: z.string().min(2).max(18),
+    email: z.string().email(),
     password: z.string().min(4),
     confirmPassword: z.string(),
     position: z.enum(["Doctor", "Nurse", "Technician"]),
     doctorCode: z.string().optional()
     
 })
+//Error for password matching
 .refine((data) => {
     return data.password === data.confirmPassword
 }, 
@@ -58,6 +54,8 @@ const formSchema = z.object({
     message: "Passwords do not match",
     path:["confirmPassword"],
 })
+
+// Check for doctor code if needed
 .refine((data) => {
     if(data.position === "Doctor"){
         return !!data.doctorCode;
@@ -71,12 +69,27 @@ const formSchema = z.object({
     }
 )
 
+//Submition to database
+const submitNewUser = (data) => {
+    fetch('https://wellspring.pfc.io:5175/createuser',{
+        method: 'POST',
+        headers: {
+            'content-type' : 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, First_Name: data.firstName, Surname: data.lastName, Role: data.position}),
+    })
+}
 
+//Default values for zod form initialization
 export default function NewUser() {
     const form = useForm({
         resolver:zodResolver(formSchema),
         defaultValues: {
             userName:"",
+            firstName:"",
+            lastName:"",
+            email:"",
             password:"",
             confirmPassword:"",
             position:"",
@@ -84,10 +97,6 @@ export default function NewUser() {
         }
     })
     
-
-    const handleSubmit = (data) => {
-        console.log(data)
-    }
 
     return (
         <main className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
@@ -98,7 +107,7 @@ export default function NewUser() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleSubmit)}>
+                        <form onSubmit={form.handleSubmit(submitNewUser)}>
 
                             {/* User Name */}
                             <FormField control={form.control} name="userName" render={({field}) => {
@@ -133,6 +142,36 @@ export default function NewUser() {
                                 </FormItem>
                             }}/>
 
+                            <FormField control={form.control} name="firstName" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>First Name:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="first name" type="text" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
+
+                            <FormField control={form.control} name="lastName" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>Last Name:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="last name" type="text" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
+
+                            <FormField control={form.control} name="email" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>Email:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="email" type="email" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
+
                             <FormField control={form.control} name="position" render={({field}) => {
                                 return <FormItem>
                                     <FormLabel>Position:</FormLabel>
@@ -145,7 +184,7 @@ export default function NewUser() {
                                         <SelectContent>
                                             <SelectItem value="Doctor">Doctor</SelectItem>
                                             <SelectItem value="Nurse">Nurse</SelectItem>
-                                            <SelectItem value="Tech">Technician</SelectItem>
+                                            <SelectItem value="Technician">Technician</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>
@@ -161,8 +200,9 @@ export default function NewUser() {
                                     <FormMessage />
                                 </FormItem>
                             }} />
-
-                        <Button className="w-full sm:w-1/3" type="submit" >Submit</Button>                              
+                        <CardFooter className="flex sm:justify-center mt-10">
+                            <Button className="w-full sm:w-1/3 flo" type="submit" >Submit</Button>  
+                        </CardFooter>
                         </form>
                     </Form>
                 </CardContent>

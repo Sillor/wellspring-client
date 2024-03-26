@@ -66,7 +66,7 @@ export function PrescriptionRequestPage() {
 			{/*Patient info and backspace header*/}
 			<Card className="flex flex-row w-full sm:w-2/3 items-center">
 				<Card className="flex w-fit hover:bg-slate-100">
-					<Link to={"/dashboard"}>
+					<Link to={"/"}>
 						<img src={arrow} alt="not found" className="w-10 p-2"/>
 					</Link>				
 				</Card>

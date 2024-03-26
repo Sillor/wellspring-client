@@ -9,7 +9,7 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import PatientChart from '../PatientInformation/PatientChart'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PrescriptionPage from '../PrescriptionPage/PrescriptionPage';
 import PatientInformation from '../PatientInformation/PatientInformation';
 import PatientLabs from '../PatientLabs/PatientLabs';
@@ -33,10 +33,10 @@ import {
   
 
 
-export function PatientDashboard() {
-	const[display,setDisplay] = useState(<PatientInformation/>);
+export function PatientDashboard(props) {
 
-
+	const[display,setDisplay] = useState(<PatientInformation data={props.data}/>);
+    
     // Function showing what patient tab is selected by changing background color
     function currentOpenTab(e){
         const tabs = document.querySelectorAll('.menuItem');
@@ -44,6 +44,7 @@ export function PatientDashboard() {
         e.target.parentNode.classList.add('bg-slate-100')
         e.target.parentNode.classList.remove('bg-white')
     }
+
 
 	return (
 		<div className="flex flex-col items-center" id="pageContainer"> {/*Primary container*/}
@@ -79,7 +80,7 @@ export function PatientDashboard() {
                                     <Button>Search Patient</Button>
                                     <Button>View Schedule</Button>
                                     <Button>Logout</Button>
-                                <DrawerClose asChild>
+                                <DrawerClose>
                                     <Button variant="outline">Cancel</Button>
                                 </DrawerClose>
                                 </DrawerFooter>
@@ -95,7 +96,7 @@ export function PatientDashboard() {
                         <img src={arrow} alt="not found" className="w-10 p-2"/>
                     </Card>
                     <div id="patientInfo" className="flex flex-row m-2">
-                        <h1>Patient Name</h1>
+                        <h1>{props.data[0].FirstName}</h1>
                         <img src={user} alt="" className="flex ml-4"/>
                     </div>
                 </Card>
@@ -105,28 +106,28 @@ export function PatientDashboard() {
 
                     {/*Patient Information*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation/>);currentOpenTab(e)}}>
+                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={props.data}/>);currentOpenTab(e)}}>
                             <img src={info} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Patient Chart*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart/>); currentOpenTab(e)}}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={props.data}/>); currentOpenTab(e)}}>
                             <img src={clipboard} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Prescriptions*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=> {setDisplay(<PrescriptionPage/>); currentOpenTab(e)}}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=> {setDisplay(<PrescriptionPage data={props.data}/>); currentOpenTab(e)}}>
                             <img src={pill} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Labs*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=>{ setDisplay(<PatientLabs/>);currentOpenTab(e)}}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=>{ setDisplay(<PatientLabs data={props.data}/>);currentOpenTab(e)}}>
                             <img src={lab} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>

@@ -1,5 +1,5 @@
 import '../globals.css'
-
+import { useState } from 'react'
 import {
 	Card,
 	CardContent,
@@ -10,12 +10,45 @@ import {
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
-import edit from "./PatientInformationAssets/pencil.png"
-
+import editIcon from './PatientInformationAssets/pencil.png'
+import saveIcon from './PatientInformationAssets/save.png'
 
 
 /* Shows Individual Patient Dashboard layout*/
-export function PatientChart(){
+export function PatientChart(props){
+    
+    //Handles swaping from 'td' tags to 'input' tags for editing
+    function editInformation(){
+        const edit = document.getElementById('editBtn');
+        const save = document.getElementById('saveEditBtn');
+        const cellNodes = document.getElementsByClassName('info');
+        edit.classList.toggle('invisible');
+        save.classList.toggle('invisible');
+
+        Array.from(cellNodes).forEach(element => {
+            element.insertAdjacentHTML('afterend',"<input type='text' class='newInput rounded-md border border-slate-200 bg-white'>")
+            element.parentNode.lastChild.value = element.textContent;
+            element.parentNode.removeChild(element);
+        });
+    }
+
+    //Handles swaping from 'input' tags to 'td' tags after editing
+    function saveEdit(){
+        const edit = document.getElementById('editBtn');
+        const save = document.getElementById('saveEditBtn');
+        const inputNodes = document.getElementsByClassName('newInput');
+
+
+        edit.classList.toggle('invisible');
+        save.classList.toggle('invisible');
+
+        Array.from(inputNodes).forEach(element => {
+            element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
+            element.parentNode.lastChild.textContent = element.value;
+            element.parentNode.removeChild(element);
+        });
+    }
+
     return(
         <>
         <Card className="w-full sm:w-2/3">
@@ -23,9 +56,14 @@ export function PatientChart(){
                 <CardTitle>Patient Chart
 
                 {/*Edit Button */}
-                <Card className="flex w-fit hover:bg-slate-100 float-right">
-                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart">
-                            <img src={edit} alt="not found" className="w-10 p-2"/>
+                <Card className="flex w-fit hover:bg-slate-100 float-right" id="editBtn">
+                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem"  onClick={editInformation}>
+                            <img src={editIcon} alt="not found" className=" w-10 p-2" id="editIcon"/>
+                        </button>
+                    </Card>
+                    <Card className="invisible flex w-fit hover:bg-slate-100 float-right"  id="saveEditBtn">
+                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem" onClick={saveEdit}>
+                            <img src={saveIcon} alt="not found" className=" w-10 p-2" id="saveIcon"/>
                         </button>
                     </Card>
                 </CardTitle>
@@ -39,74 +77,23 @@ export function PatientChart(){
                         <td htmlFor="generalInfo" className="table-cell font-bold text-md">Medical Information:</td>
                     </tr>
                     <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                        <td className='table-cell w-1/3'>FName</td>
+                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Existing Conditions:</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].HealthHistory}</td>
                     </tr>
                     <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Last Name:</td>
-                        <td className='table-cell w-1/3'>LName</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Date of Birth:</td>
-                        <td className='table-cell w-1/3'>bday</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Sex at birth:</td>
-                        <td className='table-cell w-1/3'>psex</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Address:</td>
-                        <td className='table-cell w-1/3'>Address</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">City:</td>
-                        <td className='table-cell w-1/3'>city</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact:</td>
-                        <td className='table-cell w-1/3'>contact</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</td>
-                        <td className='table-cell w-1/3'>EC phone</td>
+                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Recent Diagnoses:</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].Diagnoses}</td>
                     </tr>
 
-
+                    {/*Family History*/}
                     <tr className='table-row h-10'>
                         <td htmlFor="generalInfo" className="table-cell font-bold text-md">Family Illness History:</td>
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                        <td className='table-cell w-1/3'>FName</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].FamilyHistory}</td>
                     </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Last Name:</td>
-                        <td className='table-cell w-1/3'>LName</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Date of Birth:</td>
-                        <td className='table-cell w-1/3'>bday</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Sex at birth:</td>
-                        <td className='table-cell w-1/3'>psex</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Address:</td>
-                        <td className='table-cell w-1/3'>Address</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">City:</td>
-                        <td className='table-cell w-1/3'>city</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact:</td>
-                        <td className='table-cell w-1/3'>contact</td>
-                    </tr>
-                    <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Emergency Contact Phone:</td>
-                        <td className='table-cell w-1/3'>EC phone</td>
-                    </tr>
+
                     </tbody>
                 </table>
                 
