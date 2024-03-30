@@ -14,7 +14,6 @@ import saveIcon from './PatientInformationAssets/save.png'
 export default function PatientInformation(props) {
 
 
-
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
         const edit = document.getElementById('editBtn');
@@ -35,11 +34,9 @@ export default function PatientInformation(props) {
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
-
-
         edit.classList.toggle('invisible');
         save.classList.toggle('invisible');
-
+        
         Array.from(inputNodes).forEach(element => {
             element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
             element.parentNode.lastChild.textContent = element.value;
@@ -47,9 +44,10 @@ export default function PatientInformation(props) {
         });
     }
 
+
+
 	return (
 		<>
-        
         <Card className="w-full sm:w-2/3 overflow-hidden">
             <CardHeader>
                 <CardTitle>Patient Information:

@@ -30,8 +30,7 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import { Textarea } from "@/components/ui/textarea"
 import Accordion from "../components/Accordion"
-import { Link } from 'react-router-dom'
-  
+import { Link, useNavigate } from 'react-router-dom'
 
 export function PrescriptionRequestPage() {
 
@@ -57,16 +56,14 @@ export function PrescriptionRequestPage() {
 
 				{/*Hamburger Menu*/}
 
-				<div className="flex flex-row justify-between md:hidden w-full ">
-					<Accordion/>
-				</div>
+
 
 			</div>
 
 			{/*Patient info and backspace header*/}
 			<Card className="flex flex-row w-full sm:w-2/3 items-center">
 				<Card className="flex w-fit hover:bg-slate-100">
-					<Link to={"/"}>
+					<Link to={"/dashboard/prescriptioninfo"}>
 						<img src={arrow} alt="not found" className="w-10 p-2"/>
 					</Link>				
 				</Card>
@@ -124,7 +121,7 @@ export function PrescriptionRequestPage() {
 					</form>
 				</CardContent>
 				<CardFooter className="flex sm:justify-center">
-					<Button className="w-full sm:w-1/3" >Request</Button>
+					<Button className="w-full sm:w-1/3">Request</Button>
 				</CardFooter>
 			</Card>
 			

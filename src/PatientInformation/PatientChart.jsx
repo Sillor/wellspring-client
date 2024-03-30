@@ -8,14 +8,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
+import { useLocation } from 'react-router-dom'
 
 
 /* Shows Individual Patient Dashboard layout*/
-export function PatientChart(props){
+export function PatientChart(){
+    const location = useLocation()
     
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
@@ -31,14 +31,12 @@ export function PatientChart(props){
             element.parentNode.removeChild(element);
         });
     }
-
+                                                                                /* TODO: Consolidate to 1 function? */
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
-
-
         edit.classList.toggle('invisible');
         save.classList.toggle('invisible');
 
@@ -47,6 +45,7 @@ export function PatientChart(props){
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
+
     }
 
     return(
@@ -78,11 +77,11 @@ export function PatientChart(props){
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Existing Conditions:</td>
-                        <td className='info table-cell w-1/3'>{props.data[0].HealthHistory}</td>
+                        <td className='info table-cell w-1/3'>{location.state[0].HealthHistory}</td>
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Recent Diagnoses:</td>
-                        <td className='info table-cell w-1/3'>{props.data[0].Diagnoses}</td>
+                        <td className='info table-cell w-1/3'>{location.state[0].Diagnoses}</td>
                     </tr>
 
                     {/*Family History*/}
@@ -91,7 +90,7 @@ export function PatientChart(props){
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                        <td className='info table-cell w-1/3'>{props.data[0].FamilyHistory}</td>
+                        <td className='info table-cell w-1/3'>{location.state[0].FamilyHistory}</td>
                     </tr>
 
                     </tbody>

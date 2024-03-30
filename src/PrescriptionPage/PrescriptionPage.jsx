@@ -13,8 +13,6 @@ import {
 
 export function PrescriptionPage(props) {
 	
-	/*Color seperation for each table row*/
-
 	return (
 		<>
 			{/*Primary Display*/}
