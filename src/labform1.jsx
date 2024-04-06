@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './output.css'; 
 
-const LabForm = () => {
+const LabForm1 = () => {
     const [formData, setFormData] = useState({
         labSelection: '',
         labOrderDate: '',
@@ -19,8 +19,8 @@ const LabForm = () => {
         e.preventDefault();
 
         //submission to database
-        const submitLabForm = (data) => {
-            fetch('https://wellspring.pfc.io:5175/createlabform',{
+        const submitLabForm1 = (data) => {
+            fetch('https://wellspring.pfc.io:5175/createlabform1',{
             method: 'POST',
             headers: {
                 'content-type' : 'application/json',
@@ -84,4 +84,4 @@ const LabForm = () => {
     );
 }
 
-export default LabForm;
+export default LabForm1;
