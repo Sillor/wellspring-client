@@ -85,7 +85,3 @@ const LabForm = () => {
 }
 
 export default LabForm;
-
-    </script>
-</body>
-</html>
