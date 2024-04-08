@@ -14,8 +14,39 @@ import { useLocation } from 'react-router-dom'
 
 
 /* Shows Individual Patient Dashboard layout*/
-export function PatientChart(){
-    const location = useLocation()
+export function PatientChart(props){
+
+
+    //Submition to database
+    function updatePatient(data){
+        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                FirstName: props.data[0].FirstName,
+                LastName: props.data[0].LastName,
+                DOB: props.data[0].DOB,
+                Sex: props.data[0].Sex,
+                Address: props.data[0].Address,
+                Phone: props.data[0].Phone,
+                id: props.data[0].id,
+                EmergencyContact: props.data[0].EmergencyContact,
+                EmergencyContactPhone: props.data[0].EmergencyContactPhone,
+                Prescriptions: props.data[0].Prescriptions,
+                PrescriptionHistory: props.data[0].PrescriptionHistory,
+                HealthHistory: data[0],
+                FamilyHistory: data[1],
+                Diagnoses: data[2]
+            }),
+        })
+        console.log(props.data);
+
+       // props.setDisplay(<PatientChart data={props.data} setDisplay={props.setDisplay} />); 
+    }
+
     
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
@@ -34,18 +65,22 @@ export function PatientChart(){
                                                                                 /* TODO: Consolidate to 1 function? */
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
+        let updatedValuesArray = [];
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
         edit.classList.toggle('invisible');
         save.classList.toggle('invisible');
-
+        
         Array.from(inputNodes).forEach(element => {
+            updatedValuesArray.push(element.value)
             element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
 
+       //Update DB 
+       updatePatient(updatedValuesArray);
     }
 
     return(
@@ -77,11 +112,11 @@ export function PatientChart(){
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Existing Conditions:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].HealthHistory}</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].HealthHistory}</td>
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Recent Diagnoses:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].Diagnoses}</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].Diagnoses}</td>
                     </tr>
 
                     {/*Family History*/}
@@ -89,8 +124,8 @@ export function PatientChart(){
                         <td htmlFor="generalInfo" className="table-cell font-bold text-md">Family Illness History:</td>
                     </tr>
                     <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].FamilyHistory}</td>
+                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Condition:</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].FamilyHistory}</td>
                     </tr>
 
                     </tbody>

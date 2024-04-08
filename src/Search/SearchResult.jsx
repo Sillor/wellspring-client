@@ -40,10 +40,11 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 
 
-function Dashboard() {
+export default function SearchResult() {
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
 
+	login();
 	const navigate = useNavigate();
 
 	const handleButtonClick = (event) => {
@@ -56,9 +57,6 @@ function Dashboard() {
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
 	useEffect(() => {
-		
-		login();
-
 		fetch('http://152.44.224.138:5174/patients', {
 			method: 'GET',
 			headers: {
@@ -210,7 +208,7 @@ function Dashboard() {
 								</p>
 
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', {state : data.filter( (patient) => {return patient.id === selectedEvent.id})}) } } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>
@@ -223,4 +221,3 @@ function Dashboard() {
 
 
 
-export default Dashboard;

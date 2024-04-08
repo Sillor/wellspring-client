@@ -12,7 +12,34 @@ import saveIcon from './PatientInformationAssets/save.png'
 
 
 export default function PatientInformation(props) {
-
+        
+    //Submition to database
+    function updatePatient(data){
+        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                FirstName: data[0],
+                LastName: data[1],
+                DOB: data[2],
+                Sex: data[3],
+                Address: data[4],
+                Phone: data[5],
+                id: data[6],
+                EmergencyContact: data[7],
+                EmergencyContactPhone: data[8],
+                Prescriptions: data[9],
+                PrescriptionHistory: data[10],
+                HealthHistory: data[11],
+                FamilyHistory: data[12],
+                Diagnoses: data[13]
+            }),
+            
+        })
+    }
 
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
@@ -31,6 +58,7 @@ export default function PatientInformation(props) {
 
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
+        let updatedValuesArray = [];
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
@@ -38,11 +66,16 @@ export default function PatientInformation(props) {
         save.classList.toggle('invisible');
         
         Array.from(inputNodes).forEach(element => {
+            updatedValuesArray.push(element.value)
             element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
+       updatePatient(updatedValuesArray);
+       console.log(updatedValuesArray);
     }
+
+
 
 
 
@@ -106,7 +139,7 @@ export default function PatientInformation(props) {
 
                     <table className='table w-full mt-5'>
                         <tbody>
-                            {/*General Info*/}
+                            {/*Emergency Info*/}
                             <tr className='table-row h-10'>
                                 <td htmlFor="generalInfo" className="table-cell font-bold text-md">Emergency Contact Information:</td>
                             </tr>

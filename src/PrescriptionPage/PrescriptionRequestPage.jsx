@@ -29,7 +29,6 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import { Textarea } from "@/components/ui/textarea"
-import Accordion from "../components/Accordion"
 import { Link, useNavigate } from 'react-router-dom'
 
 export function PrescriptionRequestPage() {
@@ -53,10 +52,6 @@ export function PrescriptionRequestPage() {
 					</NavigationMenu>
 					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="m-2"/>
 				</div>
-
-				{/*Hamburger Menu*/}
-
-
 
 			</div>
 
