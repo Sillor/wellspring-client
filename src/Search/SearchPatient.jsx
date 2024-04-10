@@ -4,11 +4,30 @@ import searchIcon from './SearchAssets/search.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import login from '../Login/Login'
+
+import PatientTab from './PatientTab'
+
 export default function SearchFunction(){
 
     //Call data before routed to dashboard
 	const [data, setData] = useState([]);
     const [search, setSearch]  = useState([]);
+
+	const [ButtonPopup, setButtonPopup] = useState(false);
+	const [selectedEvent, setSelectedEvent] = useState(null);
+
+	login();
+	const navigate = useNavigate();
+
+	const handleButtonClick = (event) => {
+		setSelectedEvent(event);
+		setButtonPopup(true);
+	};
+
+	const [events, setEvents] = useState([]);
+    const [display, setDisplay] = useState([]);
+
+
 
     login();
 
@@ -34,23 +53,27 @@ export default function SearchFunction(){
 
 
 
-    function onSearch(patientName){
-
-        data.filter( (patient) => {
-
-            const pattern = new RegExp(patientName.target.value)
-
-            if(patient.FirstName.match(pattern) && !search.includes(patient) && patientName.target.value.length != 0){
-                console.log('here');
-
-                search.push(patient)
+    function onSearch(patientName) {
+        setDisplay([])
+        setSearch([])
+        data.filter((patient) => {
+            
+            const pattern = new RegExp('^' + patientName.target.value, 'i')
+    
+            if (patient.LastName.match(pattern)) {
+                setSearch(search => [...search, patient])     
             }
-            // if(patientName.target.value.length != 0){
-            //    // 
-            // }
         })
-        console.log(search);
 
+        if (patientName.target.value === '') {  
+            setDisplay([])
+            setSearch([])
+            return;
+        }
+
+        search.map((patient) => (
+            setDisplay(display => [...display, <PatientTab key={patient.id} patient={patient} />])
+        ))
     }
 
 
@@ -62,8 +85,8 @@ export default function SearchFunction(){
                 <Input className='flex w-1/2 input' id='input' placeholder="Patient Name" type='text' onChange={(value)=> onSearch(value)}></Input>
             </div>
 
-            <div className='flex w-full' id='resultsDiv'>
-                {search}
+            <div className='flex flex-col w-2/3 justify-center' id='resultsDiv'>
+                {display}
             </div>
 
         </div>

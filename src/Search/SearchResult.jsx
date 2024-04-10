@@ -107,7 +107,7 @@ export default function SearchResult() {
 
 
 	return (
-		<div className="flex flex-col items-center ">
+		<div className="flex flex-col items-center  w-2/3 overflow-y-scroll">
 			<div className="p-4 flex flex-row justify-between md:hidden w-full">
 				<Drawer>
 					<DrawerTrigger>
@@ -143,45 +143,9 @@ export default function SearchResult() {
 				<User size={32} />
 			</div>
 
-			{/*Navigation menu for large screen */}
-			<div className="hidden md:flex w-full justify-center">
-				<NavigationMenu>
-					<NavigationMenuList>
-						<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
-						</NavigationMenuItem>
-					</NavigationMenuList>
-				</NavigationMenu>
-				<img alt="" className="m-2" />
-			</div>
-
 
 			<div className="flex flex-col md:w-2/3 w-full p-4">
-				<div className="flex flex-row justify-between items-center mb-4">
-					<h1 className="text-4xl font-bold">Today</h1>
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="outline" className="w-36">
-								{selectedType}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className='bg-white'>
-							<DropdownMenuItem onClick={() => setSelectedType("All")}>
-								All
-							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setSelectedType("Urgent Care")}>
-								Urgent Care
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								onClick={() => setSelectedType("Non-Urgent Care")}
-							>
-								Non-Urgent Care
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
+
 				{filteredEvents.map((event) => (
 					<div key={event.id} className="border p-4 rounded-md mb-4">
 						<Button
