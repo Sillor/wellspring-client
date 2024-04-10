@@ -37,7 +37,6 @@ import {
 	NavigationMenuLink,
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 
 
 export default function SearchResult() {

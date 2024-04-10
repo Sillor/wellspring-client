@@ -36,10 +36,11 @@ import {
   
 
 
-export function PatientDashboard(props) {
+export function PatientDashboard() {
 
     //Use Location to navigate
     const location = useLocation()
+
 	let[display,setDisplay] = useState(<PatientInformation data={location.state}/>);
 
     // Function showing what patient tab is selected by changing background color
@@ -55,6 +56,7 @@ export function PatientDashboard(props) {
 
             {/*Header for navigation*/}
             <div className='w-full flex flex-col items-center top-0 sticky bg-white'>
+                
                 {/*User header*/}
                 <div className="flex w-full mx-2 sticky " id="userHeader">
 

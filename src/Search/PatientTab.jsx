@@ -17,13 +17,11 @@ export default function PatientTab(props){
 
 
     const [ButtonPopup, setButtonPopup] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
     
     login();
     const navigate = useNavigate();
     
-    const handleButtonClick = (event) => {
-        setSelectedEvent(event);
+    const handleButtonClick = () => {
         setButtonPopup(true);
     };
     
@@ -41,17 +39,16 @@ export default function PatientTab(props){
                 className="patientImage"
             />
             <div>
-                <h1>{props.patient.FirstName}</h1>
+                <h1> {props.patient.LastName},{props.patient.FirstName}</h1>
                 <p></p>
             </div>
         </Button>
         {props.patient && (
             <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
-                <h1 className="text-xl font-bold">{props.patient.LastName}</h1>
-
+                <h1 className="text-xl font-bold">{props.patient.LastName}, {props.patient.FirstName}</h1>
 
                 {/* Weird stuff happens when Link instead of button*/}
-                <button onClick={ ()=>{ navigate('/dashboard', {state : data.filter( (patient) => {return patient.id === props.patient.id})}) } } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+                <button onClick={ ()=>{ navigate('/dashboard', {state : [props.patient]} ) } } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
             </Popup>
         )}
     </div>)
