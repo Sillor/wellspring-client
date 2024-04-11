@@ -16,8 +16,6 @@ export default function PatientTab(props){
 
 
     const [ButtonPopup, setButtonPopup] = useState(false);
-    
-    login();
     const navigate = useNavigate();
     
     const handleButtonClick = () => {

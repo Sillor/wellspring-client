@@ -35,13 +35,11 @@ export default function SearchFunction(){
 	const [data, setData] = useState([]);
     const [search, setSearch]  = useState([]);
 
-	login();
-
     const [display, setDisplay] = useState([]);
 
     //Fetch data on page load
 	useEffect(() => {
-		fetch('http://152.44.224.138:5174/patients', {
+		fetch('https://152.44.224.138:5174/patients', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
