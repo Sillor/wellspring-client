@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Menu, PaintBucket } from "lucide-react";
 import { User } from "lucide-react";
@@ -31,13 +32,12 @@ import login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
 
 import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-  } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 
 function Dashboard() {
   const [ButtonPopup, setButtonPopup] = useState(false);
@@ -45,12 +45,13 @@ function Dashboard() {
 
   login();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleButtonClick = (event) => {
     setSelectedEvent(event);
     setButtonPopup(true);
   };
 
+  const handleNewAppointmentClick = () => {};
 
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([
@@ -86,48 +87,45 @@ function Dashboard() {
       : events.filter((event) => event.type === selectedType);
 
   //Call data before routed to dashboard
-  const [data,setData] = useState([])
-  useEffect(()=>{
-    fetch('http://152.44.224.138:5174/patients',{
-    method: 'GET',
-    headers: {
-        'content-type' : 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    },
-},[data])
-.then((res) => res.json())
-.then((data) => {
-    if(data.message === 'success'){
-        localStorage.setItem('token', data.token)
-        setData(data.patients);
-        populateSchedule(data)
-    }
-    else{
-        alert(data.message)
-    }
-})
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    fetch(
+      "http://152.44.224.138:5174/patients",
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+      [data]
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "success") {
+          localStorage.setItem("token", data.token);
+          setData(data.patients);
+          populateSchedule(data);
+        } else {
+          alert(data.message);
+        }
+      });
+  });
 
-})
-
-
-function populateSchedule(data){
-    events.forEach(patient => {
+  function populateSchedule(data) {
+    events.forEach((patient) => {
       patient.patientName = data.patients[1].FirstName;
     });
-}
+  }
 
+  //Dont render if data isnt there
+  if (data.length < 1) {
+    return <div>Loading...</div>;
+  }
 
-//Dont render if data isnt there
-if(data.length < 1){
-  return(
-    <div>Loading...</div>
-  )
-}
-
-      
   return (
     <div className="flex flex-col items-center ">
-      <div className="p-4 flex flex-row justify-between md:hidden w-full">
+      <div className="p-4 flex flex-row justify-between w-full">
         <Drawer>
           <DrawerTrigger>
             <Menu size={32} />
@@ -143,13 +141,20 @@ if(data.length < 1){
             </DrawerHeader>
             <ul className="ps-4">
               <li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-                Set Appointments
+                {/* <Link to={"/newappointment"} className=" sm:w-1/3 w-full"> */}
+                <Button
+                  variant="outline"
+                  onClick={navigate("/newappointment", { state: data })}
+                >
+                  Set Appointment
+                </Button>
+                {/* </Link> */}
               </li>
               <li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-                View Patients
+                <Button variant="outline">View Patients</Button>
               </li>
               <li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-                Request Lab
+                <Button variant="outline">Request Lab</Button>
               </li>
             </ul>
             <DrawerFooter>
@@ -162,20 +167,25 @@ if(data.length < 1){
         <User size={32} />
       </div>
 
-        {/*Navigation menu for large screen */}
-        <div className="hidden md:flex w-full justify-center">
-            <NavigationMenu>
-                <NavigationMenuList>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}><button>View Schedule List</button></NavigationMenuLink>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}><button>Search for patient</button></NavigationMenuLink>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}><button>Logout</button></NavigationMenuLink>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-            <img  alt="" className="m-2"/>
-        </div>
-      
+      {/*Navigation menu for large screen */}
+      <div className="hidden md:flex w-full justify-center">
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <button>View Schedule List</button>
+              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <button>Search for patient</button>
+              </NavigationMenuLink>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <button>Logout</button>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <img alt="" className="m-2" />
+      </div>
 
       <div className="flex flex-col md:w-2/3 w-full p-4">
         <div className="flex flex-row justify-between items-center mb-4">
@@ -225,7 +235,9 @@ if(data.length < 1){
                 <p>
                   {selectedEvent.date} at {selectedEvent.time}
                 </p>
-                <button onClick={navigate('/dashboard', {state: data})}></button>
+                <button
+                  onClick={navigate("/dashboard", { state: data })}
+                ></button>
               </Popup>
             )}
           </div>
