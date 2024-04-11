@@ -1,5 +1,4 @@
 import '../globals.css'
-import { useState } from 'react'
 import {
 	Card,
 	CardContent,
@@ -10,7 +9,6 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
-import { useLocation } from 'react-router-dom'
 
 
 /* Shows Individual Patient Dashboard layout*/

@@ -3,7 +3,6 @@ import { Input } from '../components/ui/input'
 import searchIcon from './SearchAssets/search.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import login from '../Login/Login'
 import { Button } from "@/components/ui/button";
 import { Card } from '../components/ui/card'
 

@@ -28,7 +28,6 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
 
 import {
