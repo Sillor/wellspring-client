@@ -12,7 +12,7 @@ import "./index.css";
 import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
 import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
-
+import SearchPatient from './Search/SearchPatient.jsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +35,18 @@ const router = createBrowserRouter([
   {
     path: "/prescriptioninfo/request",
     element: <PrescriptionRequestPage/>,
+    errorElement: <p>404</p>
+  },
+
+  {
+    path: "/search",
+    element: <SearchPatient/>,
+    errorElement: <p>404</p>
+  },
+
+  {
+    path: "/schedule",
+    element: <SearchPatient/>,
     errorElement: <p>404</p>
   }
 
