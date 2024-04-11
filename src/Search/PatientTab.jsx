@@ -4,7 +4,6 @@ import searchIcon from './SearchAssets/search.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import login from '../Login/Login'
-import SearchResult from './SearchResult'
 import { Button } from '../components/ui/button'
 import { User } from "lucide-react";
 import defaultPatientImg from "../components/images/patient_default.jpg";

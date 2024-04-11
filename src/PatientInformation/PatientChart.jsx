@@ -16,7 +16,6 @@ import { useLocation } from 'react-router-dom'
 /* Shows Individual Patient Dashboard layout*/
 export function PatientChart(props){
 
-
     //Submition to database
     function updatePatient(data){
         fetch('https://wellspring.pfc.io:5175/updatepatient/', {
@@ -26,25 +25,23 @@ export function PatientChart(props){
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                FirstName: props.data[0].FirstName,
-                LastName: props.data[0].LastName,
-                DOB: props.data[0].DOB,
-                Sex: props.data[0].Sex,
-                Address: props.data[0].Address,
-                Phone: props.data[0].Phone,
-                id: props.data[0].id,
-                EmergencyContact: props.data[0].EmergencyContact,
-                EmergencyContactPhone: props.data[0].EmergencyContactPhone,
-                Prescriptions: props.data[0].Prescriptions,
-                PrescriptionHistory: props.data[0].PrescriptionHistory,
-                HealthHistory: data[0],
-                FamilyHistory: data[1],
-                Diagnoses: data[2]
+                FirstName: data[0].FirstName,
+                LastName: data[0].LastName,
+                DOB: data[0].DOB,
+                Sex: data[0].Sex,
+                Address: data[0].Address,
+                Phone: data[0].Phone,
+                id: data[0].id,
+                EmergencyContact: data[0].EmergencyContact,
+                EmergencyContactPhone: data[0].EmergencyContactPhone,
+                Prescriptions: data[0].Prescriptions,
+                PrescriptionHistory: data[0].PrescriptionHistory,
+                HealthHistory: data[0].HealthHistory,
+                FamilyHistory: data[0].FamilyHistory,
+                Diagnoses: data[0].Diagnoses
             }),
         })
-        console.log(props.data);
-
-       // props.setDisplay(<PatientChart data={props.data} setDisplay={props.setDisplay} />); 
+        props.setData(data)
     }
 
     
@@ -79,8 +76,25 @@ export function PatientChart(props){
             element.parentNode.removeChild(element);
         });
 
-       //Update DB 
-       updatePatient(updatedValuesArray);
+        const updatedPatient = [{           
+            FirstName: props.data[0].FirstName,
+            LastName: props.data[0].LastName,
+            DOB: props.data[0].DOB,
+            Sex: props.data[0].Sex,
+            Address: props.data[0].Address,
+            Phone: props.data[0].Phone,
+            id: props.data[0].id,
+            EmergencyContact: props.data[0].EmergencyContact,
+            EmergencyContactPhone: props.data[0].EmergencyContactPhone,
+            Prescriptions: props.data[0].Prescriptions,
+            PrescriptionHistory: props.data[0].PrescriptionHistory,
+            HealthHistory: updatedValuesArray[0],
+            FamilyHistory: updatedValuesArray[2],
+            Diagnoses: updatedValuesArray[1]
+        }]
+
+
+       updatePatient(updatedPatient);
     }
 
     return(

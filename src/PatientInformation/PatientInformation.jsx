@@ -12,9 +12,10 @@ import saveIcon from './PatientInformationAssets/save.png'
 
 
 export default function PatientInformation(props) {
-        
+
     //Submition to database
     function updatePatient(data){
+
         fetch('https://wellspring.pfc.io:5175/updatepatient/', {
             method: 'POST',
             headers: {
@@ -22,23 +23,24 @@ export default function PatientInformation(props) {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                FirstName: data[0],
-                LastName: data[1],
-                DOB: data[2],
-                Sex: data[3],
-                Address: data[4],
-                Phone: data[5],
-                id: data[6],
-                EmergencyContact: data[7],
-                EmergencyContactPhone: data[8],
-                Prescriptions: data[9],
-                PrescriptionHistory: data[10],
-                HealthHistory: data[11],
-                FamilyHistory: data[12],
-                Diagnoses: data[13]
+                FirstName: data[0].FirstName,
+                LastName: data[0].LastName,
+                DOB: data[0].DOB,
+                Sex: data[0].Sex,
+                Address: data[0].Address,
+                Phone: data[0].Phone,
+                id: data[0].id,
+                EmergencyContact: data[0].EmergencyContact,
+                EmergencyContactPhone: data[0].EmergencyContactPhone,
+                Prescriptions: data[0].Prescriptions,
+                PrescriptionHistory: data[0].PrescriptionHistory,
+                HealthHistory: data[0].HealthHistory,
+                FamilyHistory: data[0].FamilyHistory,
+                Diagnoses: data[0].Diagnoses
             }),
             
         })
+        props.setData(data)
     }
 
     //Handles swaping from 'td' tags to 'input' tags for editing
@@ -71,8 +73,25 @@ export default function PatientInformation(props) {
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
-       updatePatient(updatedValuesArray);
-       console.log(updatedValuesArray);
+
+        const updatedPatient = [{           
+            FirstName: updatedValuesArray[0],
+            LastName: updatedValuesArray[1],
+            DOB: updatedValuesArray[2],
+            Sex: updatedValuesArray[3],
+            Address: updatedValuesArray[4],
+            Phone: updatedValuesArray[5],
+            id: updatedValuesArray[6],
+            EmergencyContact: updatedValuesArray[7],
+            EmergencyContactPhone: updatedValuesArray[8],
+            Prescriptions: props.data[0].Prescriptions,
+            PrescriptionHistory: props.data[0].PrescriptionHistory,
+            HealthHistory: props.data[0].HealthHistory,
+            FamilyHistory: props.data[0].FamilyHistory,
+            Diagnoses: props.data[0].Diagnoses
+        }]
+
+       updatePatient(updatedPatient);
     }
 
 

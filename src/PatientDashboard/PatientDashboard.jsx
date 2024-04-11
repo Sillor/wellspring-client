@@ -40,8 +40,9 @@ export function PatientDashboard() {
 
     //Use Location to navigate
     const location = useLocation()
+    const [data,setData] = useState(location.state)
+    const [display,setDisplay] = useState(<PatientInformation data={data} setData={setData}/>);
 
-	let[display,setDisplay] = useState(<PatientInformation data={location.state}/>);
 
     // Function showing what patient tab is selected by changing background color
     function currentOpenTab(e){
@@ -105,7 +106,7 @@ export function PatientDashboard() {
                     </Card>
                     <div id="patientInfo" className="flex flex-row m-2">
                         
-                        <h1>{location.state[0].FirstName}</h1>
+                        <h1>{data[0].FirstName}</h1>
                         <img src={user} alt="" className="flex ml-4"/>
                     </div>
                 </Card>
@@ -115,28 +116,28 @@ export function PatientDashboard() {
 
                     {/*Patient Information*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={location.state}/>);currentOpenTab(e)}}>
+                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={data} setData={setData}/>);currentOpenTab(e)}}>
                             <img src={info} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Patient Chart*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={location.state} setDisplay={setDisplay}/>); currentOpenTab(e); }}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={data} setData={setData}/>); currentOpenTab(e); }}>
                             <img src={clipboard} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Prescriptions*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=> {setDisplay(<PrescriptionPage data={location.state}/>); currentOpenTab(e)}}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=> {setDisplay(<PrescriptionPage data={data} setData={setData}/>); currentOpenTab(e)}}>
                             <img src={pill} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Labs*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=>{ setDisplay(<PatientLabs data={location.state}/>);currentOpenTab(e)}}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" onClick={(e)=>{ setDisplay(<PatientLabs data={data} setData={setData}/>);currentOpenTab(e)}}>
                             <img src={lab} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>

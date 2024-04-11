@@ -50,7 +50,7 @@ export default function SearchFunction(){
 
 
 
-    //Fetch patient list on page load
+    //Fetch data on page load
 	useEffect(() => {
 		fetch('http://152.44.224.138:5174/patients', {
 			method: 'GET',
@@ -90,7 +90,6 @@ export default function SearchFunction(){
 
         //Clear all if empty
         if (patientName.target.value === '') {  
-            setDisplay([])
             setSearch([])
             return;
         }

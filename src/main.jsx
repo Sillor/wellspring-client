@@ -13,7 +13,6 @@ import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
 import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
 import SearchPatient from './Search/SearchPatient.jsx'
-import SearchResult from './Search/SearchResult.jsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,7 +46,7 @@ const router = createBrowserRouter([
 
   {
     path: "/schedule",
-    element: <SearchResult/>,
+    element: <SearchPatient/>,
     errorElement: <p>404</p>
   }
 
