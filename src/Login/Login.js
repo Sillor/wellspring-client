@@ -4,7 +4,7 @@ export default async function login(){
         headers: {
             'content-type' : 'application/json',
         },
-        body: JSON.stringify({username: "admin", password: "Admin"})
+        body: JSON.stringify({username: "Admin", password: "Admin"})
     })
     .then((res) => res.json())
     .then((data) => {
