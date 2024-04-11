@@ -76,7 +76,7 @@ function Dashboard() {
 							const item = {
 								id: patient.id,
 								title: "Doctor Appointment",
-								patientName: patient.FirstName,
+								patientName: patient.FirstName + ", " +patient.LastName,
 								date: "2021-08-10",
 								time: "10:00",
 								type: "Urgent Care",

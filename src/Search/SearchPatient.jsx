@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import login from '../Login/Login'
 import { Button } from "@/components/ui/button";
-
+import { Card } from '../components/ui/card'
 
 import menu from '../PatientDashboard/PatientDashboardAssets/menu.png'
 import user from '../PatientDashboard/PatientDashboardAssets/user.png'
@@ -35,20 +35,9 @@ export default function SearchFunction(){
 	const [data, setData] = useState([]);
     const [search, setSearch]  = useState([]);
 
-	const [ButtonPopup, setButtonPopup] = useState(false);
-	const [selectedEvent, setSelectedEvent] = useState(null);
-
 	login();
-	const navigate = useNavigate();
-
-	const handleButtonClick = (event) => {
-		setSelectedEvent(event);
-		setButtonPopup(true);
-	};
 
     const [display, setDisplay] = useState([]);
-
-
 
     //Fetch data on page load
 	useEffect(() => {
@@ -73,7 +62,7 @@ export default function SearchFunction(){
 
 
     /* Search functionality */
-    function onSearch(patientName) {
+    function onSearch(patientName) {            //TODO: Search is 1 character behind
         //Clear state data on each call
         setDisplay([])
         setSearch([])
@@ -84,12 +73,13 @@ export default function SearchFunction(){
     
             //If Last name matches add to search array state
             if (patient.LastName.match(pattern)) {
+
                 setSearch(search => [...search, patient])     
             }
         })
 
         //Clear all if empty
-        if (patientName.target.value === '') {  
+        if (patientName.target.value === '') {
             setSearch([])
             return;
         }
@@ -148,7 +138,7 @@ export default function SearchFunction(){
                     <Input className='flex w-1/2 input' id='input' placeholder="Patient Name" type='text' onChange={(value) => onSearch(value)}></Input>
                 </div>
 
-                <div className='flex flex-col w-2/3 justify-center' id='resultsDiv'>
+                <div className='flex flex-col h-1/3 w-2/3 justify-start overflow-y-scroll' id='resultsDiv'>
                     {display}
                 </div>
 
