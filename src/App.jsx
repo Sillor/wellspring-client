@@ -8,12 +8,13 @@ import Dashboard from './ScheduleDashboard/Dashboard';
 
 function App() {
 
-  //Login for development purposes
-  login()
+login();
+
+
 
 return(
   <>
-  <Dashboard/>
+    <Dashboard/>
   </>
 )
 

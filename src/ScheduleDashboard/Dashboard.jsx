@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
 	NavigationMenu,
@@ -38,38 +38,41 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 
+import login from "../Login/Login";
 
 function Dashboard() {
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
 
 	const navigate = useNavigate();
-
+	
 	const handleButtonClick = (event) => {
 		setSelectedEvent(event);
 		setButtonPopup(true);
 	};
-
 	const [events, setEvents] = useState([]);
+
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
+	
 	useEffect(() => {
-		
-
-		fetch('https://152.44.224.138:5174/patients', {
+		fetch('http://152.44.224.138:5174/patients', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
 				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 			},
-		}, [data])
+		})
 			.then((res) => res.json())
 			.then((data) => {
+
 				if (data.message === 'success') {
 					localStorage.setItem('token', data.token)
 					setData(data.patients);
 					if(events.length == 0){
+						//Clear events list before repopulating
+						setEvents([])
 						data.patients.forEach((patient) => {
 							const item = {
 								id: patient.id,
@@ -79,7 +82,7 @@ function Dashboard() {
 								time: "10:00",
 								type: "Urgent Care",
 							}
-							events.push(item)
+							setEvents(events => [...events,item])
 						})
 					}
 				}
@@ -101,6 +104,7 @@ function Dashboard() {
 	//Dont render if data isnt there
 	if (data.length < 1) {
 		return (
+			
 			<div>Loading...</div>
 		)
 	}

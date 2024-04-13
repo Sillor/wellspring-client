@@ -38,7 +38,7 @@ export default function SearchFunction(){
 
     //Fetch data on page load
 	useEffect(() => {
-		fetch('https://152.44.224.138:5174/patients', {
+		fetch('http://152.44.224.138:5174/patients', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',

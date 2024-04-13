@@ -16,7 +16,7 @@ export default function PatientInformation(props) {
     //Submition to database
     function updatePatient(data){
 
-        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
+        fetch('http://wellspring.pfc.io:5175/updatepatient/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
