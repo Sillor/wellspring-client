@@ -29,16 +29,19 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import { Textarea } from "@/components/ui/textarea";
-import Accordion from "../components/Accordion";
-import { Link, useNavigate } from "react-router-dom";
+// import Accordion from "../components/Accordion";
+// import { Link, useNavigate } from "react-router-dom";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import React from "react";
+// import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import login from "../Login/Login.js";
 
 export function NewAppointmentPage() {
+  login();
+
   const [events, setEvents] = useState([
     {
       id: 1,
@@ -135,13 +138,13 @@ export function NewAppointmentPage() {
           </CardHeader>
           <CardContent>
             <form>
-              <div className="table-row">
-                <Label htmlFor="orderBy" className="table-cell">
-                  Pick a Date and Time:
-                </Label>
-                <DateTimePicker id="orderBy" className="table-cell" />
-              </div>
-              <div className="table w-full gap-4">
+              <div className="table w-full gap-4 border-spacing-y-4">
+                <div className="table-row">
+                  <Label htmlFor="orderBy" className="table-cell">
+                    Pick a Date and Time:
+                  </Label>
+                  <DateTimePicker id="orderBy" className="table-cell" />
+                </div>
                 <div className="table-row">
                   <Label htmlFor="patientName" className="table-cell ">
                     Patient Name:

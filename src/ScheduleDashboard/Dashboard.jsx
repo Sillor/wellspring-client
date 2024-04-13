@@ -51,7 +51,7 @@ function Dashboard() {
     setButtonPopup(true);
   };
 
-  const handleNewAppointmentClick = () => {};
+  // const handleNewAppointmentClick = () => {};
 
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([
