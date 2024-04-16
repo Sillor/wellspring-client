@@ -27,8 +27,10 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 
 import PatientTab from './PatientTab'
+import login from '../Login/Login'
 
 export default function SearchFunction(){
+    login();
 
     //Call data before routed to dashboard
 	const [data, setData] = useState([]);
@@ -128,6 +130,7 @@ export default function SearchFunction(){
                     <img src={user} alt="" className='m-2' />
                 </div>
             </div>
+            
             <div className='flex flex-col w-screen h-screen justify-center items-center gap-5'>
                 <h2 className='float-end text-3xl'>Patient Search</h2>
                 <div className='flex justify-center w-full'>

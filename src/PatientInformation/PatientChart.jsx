@@ -9,14 +9,15 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
+import login from '../Login/Login'
 
 
 /* Shows Individual Patient Dashboard layout*/
 export function PatientChart(props){
-
+    login();
     //Submition to database
     function updatePatient(data){
-        fetch('http://wellspring.pfc.io:5175/updatepatient/', {
+        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',

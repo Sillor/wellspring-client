@@ -29,6 +29,13 @@ import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { DatePicker } from "../components/ui/DatePicker";
+
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+  } from "@/components/ui/popover"
 
 import {
 	NavigationMenu,
@@ -38,11 +45,11 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 
-import login from "../Login/Login";
 
 function Dashboard() {
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [selectedDate,setSelectedDate] = useState([]);
 
 	const navigate = useNavigate();
 	
@@ -51,7 +58,6 @@ function Dashboard() {
 		setButtonPopup(true);
 	};
 	const [events, setEvents] = useState([]);
-
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
@@ -92,8 +98,12 @@ function Dashboard() {
 			})
 	})
 
+	//Date formating
+	let todayDate = new Date();
+	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
+
 	// Patient filter
-	const [date, setDate] = useState(new Date());
 	const [selectedType, setSelectedType] = useState("All");
 	const filteredEvents =
 		selectedType === "All"
@@ -119,28 +129,21 @@ function Dashboard() {
 					</DrawerTrigger>
 					<DrawerContent>
 						<DrawerHeader className="flex justify-center">
-							<Calendar
+							<Calendar date={date}
 								mode="single"
 								selected={date}
 								onSelect={setDate}
 								className="rounded-md border flex justify-center"
 							/>
 						</DrawerHeader>
-						<ul className="ps-4">
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								Set Appointments
-							</li>
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								View Patients
-							</li>
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								Request Lab
-							</li>
-						</ul>
 						<DrawerFooter>
-							<DrawerClose>
-								<Button className="w-full">Cancel</Button>
+							<Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
+							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
+							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
+							<DrawerClose asChild>
+								<Button variant="outline" classList='inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium'>Cancel</Button>
 							</DrawerClose>
+
 						</DrawerFooter>
 					</DrawerContent>
 				</Drawer>
@@ -152,9 +155,9 @@ function Dashboard() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
 						</NavigationMenuItem>
 					</NavigationMenuList>
 				</NavigationMenu>
@@ -162,9 +165,13 @@ function Dashboard() {
 			</div>
 
 
-			<div className="flex flex-col md:w-2/3 w-full p-4">
+			<div className="flex flex-col md:w-/3 w-full p-4">
 				<div className="flex flex-row justify-between items-center mb-4">
 					<h1 className="text-4xl font-bold">Today</h1>
+
+					{/* Date Picker*/}
+					<DatePicker date={date} setDate={setDate} setSelectedDate={setSelectedDate}/>
+
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" className="w-36">
@@ -185,6 +192,8 @@ function Dashboard() {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
+
+
 				</div>
 				{filteredEvents.map((event) => (
 					<div key={event.id} className="border p-4 rounded-md mb-4">
@@ -221,6 +230,11 @@ function Dashboard() {
 		</div>
 	);
 }
+
+
+
+
+
 
 
 
