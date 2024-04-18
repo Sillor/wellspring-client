@@ -16,7 +16,8 @@ const NewPatient = () => {
         prescriptions: '',
         prescriptionHistory: '',
         healthHistory: '',
-        familyHistory: ''
+        familyHistory: '',
+        photo: null, // Patients Photo
     });
 
     const handleInputChange = (e) => {
@@ -27,6 +28,31 @@ const NewPatient = () => {
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
         setFormData({ ...formData, [name]: checked });
+    }
+
+    const handlePhotoCapture = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            
+            mediaRecorder.addEventListener('dataavailable', async (event) => {
+                const blob = event.data;
+                const fileReader = new FileReader();
+                fileReader.onload = function () {
+                    const base64data = fileReader.result;
+                    setFormData({ ...formData, photo: base64data });
+                };
+                fileReader.readAsDataURL(blob);
+            });
+
+            mediaRecorder.start();
+            setTimeout(() => {
+                mediaRecorder.stop();
+                stream.getTracks().forEach(track => track.stop());
+            }, 3000); // Capture for 3 seconds
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
     }
 
     const handleSubmit = (e) => {
@@ -42,12 +68,12 @@ const NewPatient = () => {
                 'content-type' : 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, dob: formData.dob, phone: formData.phone, sex: formData.sex, address: formData.address, emergencyContact: formData.emergencyContact, emergencyContactPhone: formData.emergencyContactPhone, prescriptions: formData.prescriptions, prescriptionHistory: formData.prescriptionHistory, healthHistory: formData.healthHistory, familyHistory: formData.familyHistory}),
+            body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, dob: formData.dob, phone: formData.phone, sex: formData.sex, address: formData.address, emergencyContact: formData.emergencyContact, emergencyContactPhone: formData.emergencyContactPhone, prescriptions: formData.prescriptions, prescriptionHistory: formData.prescriptionHistory, healthHistory: formData.healthHistory, familyHistory: formData.familyHistory, photo: formData.photo}),
             })
         }
-        submitLabForm
+        submitNewPatient
 
-        console.log('Form submitted:', formData);
+        console.log('NewPatient:', formData);
     }
 
     return (
@@ -107,6 +133,10 @@ const NewPatient = () => {
                             <label htmlFor="familyHistory" className="block text-sm font-medium text-gray-700">Family History</label>
                             <input type="text" id="familyHistory" name="familyHistory" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
                         </div>
+                    </div>
+                    <div>
+                        <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Take Photo</label>
+                        <Button onClick={handlePhotoCapture}>Capture</Button>
                     </div>
                     <div className="mt-6">
                         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Submit</button>
