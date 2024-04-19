@@ -14,7 +14,6 @@ import login from '../Login/Login'
 
 /* Shows Individual Patient Dashboard layout*/
 export function PatientChart(props){
-    login();
     //Submition to database
     function updatePatient(data){
         fetch('https://wellspring.pfc.io:5175/updatepatient/', {

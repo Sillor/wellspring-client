@@ -8,6 +8,7 @@ import Dashboard from './ScheduleDashboard/Dashboard';
 
 function App() {
 
+//For dev purposes
 login();
 
 

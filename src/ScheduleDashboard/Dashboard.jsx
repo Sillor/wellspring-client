@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { DatePicker } from "../components/ui/DatePicker";
 
 import {
@@ -44,64 +44,93 @@ import {
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
+import AddTestPatientList from "../AddTestPatientList";
+import { set } from "date-fns";
+
+
 
 
 function Dashboard() {
-	const [ButtonPopup, setButtonPopup] = useState(false);
-	const [selectedEvent, setSelectedEvent] = useState(null);
-	const [selectedDate,setSelectedDate] = useState([]);
-
-	const navigate = useNavigate();
-	
-	const handleButtonClick = (event) => {
-		setSelectedEvent(event);
-		setButtonPopup(true);
-	};
-	const [events, setEvents] = useState([]);
-
-	//Call data before routed to dashboard
-	const [data, setData] = useState([])
-	
-	useEffect(() => {
-		fetch('http://152.44.224.138:5174/patients', {
-			method: 'GET',
-			headers: {
-				'content-type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('token')}`,
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-
-				if (data.message === 'success') {
-					localStorage.setItem('token', data.token)
-					setData(data.patients);
-					if(events.length == 0){
-						//Clear events list before repopulating
-						setEvents([])
-						data.patients.forEach((patient) => {
-							const item = {
-								id: patient.id,
-								title: "Doctor Appointment",
-								patientName: patient.FirstName + ", " +patient.LastName,
-								date: "2021-08-10",
-								time: "10:00",
-								type: "Urgent Care",
-							}
-							setEvents(events => [...events,item])
-						})
-					}
-				}
-				else {
-					alert(data.message)
-				}
-			})
-	})
 
 	//Date formating
 	let todayDate = new Date();
 	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
+
+	const [ButtonPopup, setButtonPopup] = useState(false);
+	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [selectedDate,setSelectedDate] = useState([]);
+
+	const handleDate = (date) => {
+		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		setDate(date.toLocaleDateString("en-US",dateFormating))
+	}
+	
+	const navigate = useNavigate();
+	const handleButtonClick = (event) => {
+		setSelectedEvent(event);
+		setButtonPopup(true);
+	};
+	const [events, setEvents] = useState([]);
+	
+	//Call data before routed to dashboard
+	const [data, setData] = useState([])
+
+	useEffect(() => {
+		setEvents([])
+		fetch('http://152.44.224.138:5174/appointments', {
+			method: 'GET',
+			headers: {
+				'content-type': 'application/json',
+				'Authorization': `Bearer ${localStorage.getItem('token')}`,
+			},
+		},)
+			.then((res) => res.json())
+			.then((appointments) => {
+
+				//Map over each patient id and retrieve the corresponding patient tab
+				appointments.forEach((patient) => {
+					console.log(patient.ScheduledDate.toLocaleDateString("en-US",dateFormating));
+
+					if(patient.Status === 'Open' && patient.ScheduledDate.toLocaleDateString("en-US",dateFormating)){
+						console.log(patient.id);
+
+						fetch('http://152.44.224.138:5174/patient/', {
+							method: 'POST',
+							headers: {
+								'content-type': 'application/json',
+								'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							},
+							body: JSON.stringify({
+								id: patient.Patientid,
+							})
+				
+						})
+						.then((res) => res.json())
+						.then((data) => {
+							console.log(data);
+							setData(data => [...data,data.patient]);
+
+							//Clear events list before repopulating
+
+							data.patient.forEach((patient) => {
+								const item = {
+									id: data.patient.id,
+									title: "Doctor Appointment",
+									patientName: patient.FirstName + ", " +patient.LastName,
+									date: "2021-08-10",
+									time: "10:00",
+									type: "Urgent Care",
+								}
+								setEvents(events => [...events,item])
+							})
+						})
+					}
+				})
+
+			})
+	}, [date])
+
 
 	// Patient filter
 	const [selectedType, setSelectedType] = useState("All");
@@ -111,28 +140,32 @@ function Dashboard() {
 			: events.filter((event) => event.type === selectedType);
 
 
-	//Dont render if data isnt there
-	if (data.length < 1) {
-		return (
+	// //Dont render if data isnt there
+	// if (data.length < 1) {
+	// 	return (
 			
-			<div>Loading...</div>
-		)
-	}
+	// 		<div>Loading...</div>
+	// 	)
+	// }
 
 
 	return (
+
 		<div className="flex flex-col items-center ">
+
+			{/*Hamburger Menu*/}
 			<div className="p-4 flex flex-row justify-between md:hidden w-full">
 				<Drawer>
 					<DrawerTrigger>
 						<Menu size={32} />
 					</DrawerTrigger>
 					<DrawerContent>
+
 						<DrawerHeader className="flex justify-center">
-							<Calendar date={date}
+							<Calendar
 								mode="single"
 								selected={date}
-								onSelect={setDate}
+								onSelect={handleDate}
 								className="rounded-md border flex justify-center"
 							/>
 						</DrawerHeader>
@@ -147,6 +180,7 @@ function Dashboard() {
 						</DrawerFooter>
 					</DrawerContent>
 				</Drawer>
+				<div>{date}</div>
 				<User size={32} />
 			</div>
 
@@ -170,7 +204,7 @@ function Dashboard() {
 					<h1 className="text-4xl font-bold">Today</h1>
 
 					{/* Date Picker*/}
-					<DatePicker date={date} setDate={setDate} setSelectedDate={setSelectedDate}/>
+					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>
 
 					<DropdownMenu>
 						<DropdownMenuTrigger>
@@ -192,9 +226,9 @@ function Dashboard() {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
-
-
 				</div>
+
+				{/*Actual Patient Tabs*/}
 				{filteredEvents.map((event) => (
 					<div key={event.id} className="border p-4 rounded-md mb-4">
 						<Button

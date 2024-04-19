@@ -25,12 +25,11 @@ import {
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-
 import PatientTab from './PatientTab'
 import login from '../Login/Login'
 
+
 export default function SearchFunction(){
-    login();
 
     //Call data before routed to dashboard
 	const [data, setData] = useState([]);
@@ -50,7 +49,6 @@ export default function SearchFunction(){
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.message === 'success') {
-					localStorage.setItem('token', data.token)
 					setData(data.patients);
 				}
 				else {
