@@ -3,7 +3,7 @@
 import * as React from "react"
 import { format, getDate } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect} from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,11 @@ import {
 } from "@/components/ui/popover"
 
 export function DatePicker(props) {
-  props.setSelectedDate(props.date);
+  useEffect(() => {
+    props.setSelectedDate(props.date);
+
+  })
+  
   return (
     <Popover>
       <PopoverTrigger asChild>

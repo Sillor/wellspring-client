@@ -78,7 +78,7 @@ function Dashboard() {
 
 	useEffect(() => {
 		setEvents([])
-		fetch('http://152.44.224.138:5174/appointments', {
+		fetch('https://wellspring-server.onrender.com:5174/appointments', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
@@ -91,11 +91,12 @@ function Dashboard() {
 				//Map over each patient id and retrieve the corresponding patient tab
 				appointments.forEach((patient) => {
 					console.log(patient.ScheduledDate.toLocaleDateString("en-US",dateFormating));
+					console.log(ap);
 
 					if(patient.Status === 'Open' && patient.ScheduledDate.toLocaleDateString("en-US",dateFormating)){
 						console.log(patient.id);
 
-						fetch('http://152.44.224.138:5174/patient/', {
+						fetch('https://wellspring-server.onrender.com:5174/patient/', {
 							method: 'POST',
 							headers: {
 								'content-type': 'application/json',

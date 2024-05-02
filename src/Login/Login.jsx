@@ -1,10 +1,10 @@
 export default async function login(){
-    fetch('http://152.44.224.138:5174/login',{
+    fetch('https://wellspring-server.onrender.com/login',{
         method: 'POST',
         headers: {
             'content-type' : 'application/json',
         },
-        body: JSON.stringify({username: "dan", password: "dog1"})
+        body: JSON.stringify({username: "admin", password: "admin123"})
     })
     .then((res) => res.json())
     .then((data) => {
