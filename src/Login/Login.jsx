@@ -1,5 +1,5 @@
 export default async function login(){
-    fetch('https://wellspring-server.onrender.com/login',{
+    fetch('https://wellspring.azurewebsites.net/login',{
         method: 'POST',
         headers: {
             'content-type' : 'application/json',
