@@ -78,7 +78,7 @@ function Dashboard() {
 
 	useEffect(() => {
 		setEvents([])
-		fetch('https://wellspring-server.onrender.com:5174/appointments', {
+		fetch('http://152.44.224.138:5174/appointments', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
@@ -87,16 +87,17 @@ function Dashboard() {
 		},)
 			.then((res) => res.json())
 			.then((appointments) => {
+				console.log(appointments);
 
 				//Map over each patient id and retrieve the corresponding patient tab
 				appointments.forEach((patient) => {
-					console.log(patient.ScheduledDate.toLocaleDateString("en-US",dateFormating));
-					console.log(ap);
+				//	console.log(patient.ScheduledDate.toLocaleDateString("en-US",dateFormating));
+					//console.log(ap);
 
-					if(patient.Status === 'Open' && patient.ScheduledDate.toLocaleDateString("en-US",dateFormating)){
+					if(patient.Status === 'closed'){
 						console.log(patient.id);
 
-						fetch('https://wellspring-server.onrender.com:5174/patient/', {
+						fetch('http://152.44.224.138:5174/patients', {
 							method: 'POST',
 							headers: {
 								'content-type': 'application/json',
@@ -108,15 +109,19 @@ function Dashboard() {
 				
 						})
 						.then((res) => res.json())
-						.then((data) => {
+
+						.then((serverData) => {
+
+							setData(data => [...data,serverData.patients]);
+							console.log(serverData.patients);
+
 							console.log(data);
-							setData(data => [...data,data.patient]);
 
 							//Clear events list before repopulating
+							data[0].patients.forEach((patient) => {
 
-							data.patient.forEach((patient) => {
 								const item = {
-									id: data.patient.id,
+									id: patient.id,
 									title: "Doctor Appointment",
 									patientName: patient.FirstName + ", " +patient.LastName,
 									date: "2021-08-10",
@@ -254,9 +259,9 @@ function Dashboard() {
 								<p>
 									{selectedEvent.date} at {selectedEvent.time}
 								</p>
-
+									{console.log(data)}
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', {state: data[0].patients.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>

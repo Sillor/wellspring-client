@@ -15,7 +15,7 @@ login();
 
 return(
   <>
-    <NewUser/>
+    <Dashboard/>
   </>
 )
 

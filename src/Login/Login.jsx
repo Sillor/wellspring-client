@@ -1,10 +1,10 @@
 export default async function login(){
-    fetch('https://wellspring.azurewebsites.net/login',{
+    fetch('http://152.44.224.138:5174/login',{
         method: 'POST',
         headers: {
             'content-type' : 'application/json',
         },
-        body: JSON.stringify({username: "admin", password: "admin123"})
+        body: JSON.stringify({username: "admintest", password: "admintest2"})
     })
     .then((res) => res.json())
     .then((data) => {

@@ -73,7 +73,7 @@ const formSchema = z.object({
 //Submition to database
 const submitNewUser = (data) => {
     console.log(data);
-    fetch('https://wellspring.azurewebsites.net/createuser',{
+    fetch('http://152.44.224.138:5174/createuser',{
         method: 'POST',
         headers: {
             'content-type' : 'application/json',
