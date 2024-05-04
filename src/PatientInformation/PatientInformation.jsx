@@ -37,6 +37,7 @@ export default function PatientInformation(props) {
                 Diagnoses: data[0].Diagnoses
             }),
         })
+        console.log(data)
         props.setData(data)
     }
 

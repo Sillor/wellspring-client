@@ -50,7 +50,7 @@ import { set } from "date-fns";
 
 
 
-function Dashboard() {
+function Dashboard(props) {
 
 	//Date formating
 	let todayDate = new Date();
@@ -75,9 +75,10 @@ function Dashboard() {
 	
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
+	const [dataShow, setdataShow] = useState([])
+
 
 	useEffect(() => {
-		setEvents([])
 		fetch('http://152.44.224.138:5174/appointments', {
 			method: 'GET',
 			headers: {
@@ -87,57 +88,62 @@ function Dashboard() {
 		},)
 			.then((res) => res.json())
 			.then((appointments) => {
-				console.log(appointments);
 
 				//Map over each patient id and retrieve the corresponding patient tab
-				appointments.forEach((patient) => {
-				//	console.log(patient.ScheduledDate.toLocaleDateString("en-US",dateFormating));
-					//console.log(ap);
+				appointments.forEach((patientAppointment) => {
 
-					if(patient.Status === 'closed'){
-						console.log(patient.id);
+				//Clear Data list before repopulating to prevent repeats
+				setData([])
+				//Clear events list before repopulating
+				setEvents([])
+					
+					let options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'}
+					let dateFormat = new Date(patientAppointment.ScheduledDate.replace("T00:00:00.000Z","")).toLocaleDateString('en-us', options)
 
-						fetch('http://152.44.224.138:5174/patients', {
+					// console.log(props.currentUser + " == " + patient.Username)
+					// console.log(date + " == " + dateFormat);
+
+					if(patientAppointment.Status === 'open' && props.currentUser === patientAppointment.Username && date === dateFormat){
+						console.log(patientAppointment)
+
+						fetch('http://152.44.224.138:5174/patient/', {
 							method: 'POST',
 							headers: {
 								'content-type': 'application/json',
 								'Authorization': `Bearer ${localStorage.getItem('token')}`,
 							},
-							body: JSON.stringify({
-								id: patient.Patientid,
-							})
-				
+							body: JSON.stringify({id: patientAppointment.Patientid})
+						},)
+						.then((res) => (res.json()))
+						.then( (patient) => {
+							console.log(patient.patient)
+
+
+
+
+						setData(data => [...data, patient.patient[0]]);
+
+						const item = {
+							id: patient.patient[0].id,
+							title: "Doctor Appointment",
+							patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
+							date: "2021-08-10",
+							time: "10:00",
+							type: "Urgent Care",
+						}
+						setEvents(events => [...events,item])
+
+
+
 						})
-						.then((res) => res.json())
 
-						.then((serverData) => {
 
-							setData(data => [...data,serverData.patients]);
-							console.log(serverData.patients);
-
-							console.log(data);
-
-							//Clear events list before repopulating
-							data[0].patients.forEach((patient) => {
-
-								const item = {
-									id: patient.id,
-									title: "Doctor Appointment",
-									patientName: patient.FirstName + ", " +patient.LastName,
-									date: "2021-08-10",
-									time: "10:00",
-									type: "Urgent Care",
-								}
-								setEvents(events => [...events,item])
-							})
-						})
 					}
 				})
 
 			})
 	}, [date])
-
-
+	
 	// Patient filter
 	const [selectedType, setSelectedType] = useState("All");
 	const filteredEvents =
@@ -147,13 +153,13 @@ function Dashboard() {
 
 
 	// //Dont render if data isnt there
-	// if (data.length < 1) {
-	// 	return (
-			
-	// 		<div>Loading...</div>
-	// 	)
-	// }
+	if (data.length < 1) {
+		setData("No appointments listed for selected date")
+	}
 
+
+
+	
 
 	return (
 
@@ -259,9 +265,8 @@ function Dashboard() {
 								<p>
 									{selectedEvent.date} at {selectedEvent.time}
 								</p>
-									{console.log(data)}
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data[0].patients.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>
