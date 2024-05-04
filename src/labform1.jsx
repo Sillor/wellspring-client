@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< Updated upstream
 import './output.css'; 
+=======
+ 
+>>>>>>> Stashed changes
 
 const LabForm1 = () => {
     const [formData, setFormData] = useState({
@@ -20,7 +24,11 @@ const LabForm1 = () => {
 
         //submission to database
         const submitLabForm1 = (data) => {
+<<<<<<< Updated upstream
             fetch('https://wellspring.pfc.io:5175/createlabform1',{
+=======
+            fetch('http://152.44.224.138:5174/labform1',{
+>>>>>>> Stashed changes
             method: 'POST',
             headers: {
                 'content-type' : 'application/json',
