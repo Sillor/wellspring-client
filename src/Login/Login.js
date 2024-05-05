@@ -4,7 +4,7 @@ export default function login() {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({ username: "Admin", password: "Admin" }),
+    body: JSON.stringify({ username: "admintest", password: "admintest2" }),
   })
     .then((res) => res.json())
     .then((data) => {

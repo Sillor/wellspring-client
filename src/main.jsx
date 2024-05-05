@@ -13,6 +13,7 @@ import { PrescriptionPage } from "./PrescriptionPage/PrescriptionPage.jsx";
 import PrescriptionRequestPage from "./PrescriptionPage/PrescriptionRequestPage.jsx";
 import PatientDashboard from "./PatientDashboard/PatientDashboard.jsx";
 import NewAppointmentPage from "./AppointmentPage/NewAppointmentPage.jsx";
+import NewAppointmentPage2 from "./AppointmentPage/NewAppointmentPage2.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,9 +40,15 @@ const router = createBrowserRouter([
     errorElement: <p>404</p>,
   },
 
+  // {
+  //   path: "/newappointment",
+  //   element: <NewAppointmentPage />,
+  //   errorElement: <p>404</p>,
+  // },
+
   {
     path: "/newappointment",
-    element: <NewAppointmentPage />,
+    element: <NewAppointmentPage2 />,
     errorElement: <p>404</p>,
   },
 ]);

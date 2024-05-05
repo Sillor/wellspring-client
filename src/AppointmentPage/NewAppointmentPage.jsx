@@ -1,6 +1,5 @@
 import "../globals.css";
 import { Button } from "../components/ui/button";
-// import arrow from "../PrescriptionPage/PrescriptionAssets/arrow.png";
 import {
   Card,
   CardContent,
@@ -29,31 +28,31 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import { Textarea } from "@/components/ui/textarea";
-// import Accordion from "../components/Accordion";
-// import { Link, useNavigate } from "react-router-dom";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import login from "../Login/Login.js";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+("use client");
 
 export function NewAppointmentPage() {
-  login();
-
   const [events, setEvents] = useState([
     {
       id: 1,
       patientName: "Patient #1",
-    },
-    {
-      id: 2,
-      patientName: "Patient #2",
-    },
-    {
-      id: 3,
-      patientName: "Patient #3",
     },
   ]);
 
@@ -71,7 +70,6 @@ export function NewAppointmentPage() {
     }
   }
 
-  //Call data before routed to dashboard
   const [data, setData] = useState([]);
   useEffect(() => {
     fetch(
@@ -88,7 +86,6 @@ export function NewAppointmentPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "success") {
-          localStorage.setItem("token", data.token);
           setData(data.patients);
           populatePatients(data);
         } else {
@@ -101,6 +98,26 @@ export function NewAppointmentPage() {
   if (data.length < 1) {
     return <div>Loading...</div>;
   }
+
+  // Zod schema for form validation
+  const formSchema = z.object({
+    DateAndTime: z.string().datetime(),
+    patientName: z.enum(data.patients),
+    Physician: z.string().min(2).max(18),
+    Urgency: z.enum(["Urgent", "Non-Urgent"]),
+    Notes: z.string(),
+  });
+
+  // const form = useForm({
+  // resolver: zodResolver(formSchema),
+  // defaultValues: {
+  //   DateAndTime: "",
+  //   patientName: "",
+  //   Physician: "",
+  //   Urgency: "",
+  //   Notes: "",
+  // },
+  // });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -143,7 +160,14 @@ export function NewAppointmentPage() {
                   <Label htmlFor="orderBy" className="table-cell">
                     Pick a Date and Time:
                   </Label>
-                  <DateTimePicker id="orderBy" className="table-cell" />
+                  <DateTimePicker
+                    disablePast
+                    // value={value}
+                    // onChange={(newValue) => setValue(newValue)}
+                    id="orderBy"
+                    className="table-cell"
+                  />
+                  {/* <Label>{value}</Label> */}
                 </div>
                 <div className="table-row">
                   <Label htmlFor="patientName" className="table-cell ">

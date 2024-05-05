@@ -103,7 +103,6 @@ function Dashboard() {
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "success") {
-          localStorage.setItem("token", data.token);
           setData(data.patients);
           populateSchedule(data);
         } else {
