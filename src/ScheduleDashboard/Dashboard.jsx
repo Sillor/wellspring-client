@@ -46,17 +46,18 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import AddTestPatientList from "../AddTestPatientList";
 import { set } from "date-fns";
-
-
+import dayjs from 'dayjs'
 
 
 function Dashboard(props) {
 
+
+
 	//Date formating
 	let todayDate = new Date();
 	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
 
+	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [selectedDate,setSelectedDate] = useState([]);
@@ -75,8 +76,6 @@ function Dashboard(props) {
 	
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
-	const [dataShow, setdataShow] = useState([])
-
 
 	useEffect(() => {
 		fetch('http://152.44.224.138:5174/appointments', {
@@ -97,14 +96,13 @@ function Dashboard(props) {
 				//Clear events list before repopulating
 				setEvents([])
 					
-					let options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'}
-					let dateFormat = new Date(patientAppointment.ScheduledDate.replace("T00:00:00.000Z","")).toLocaleDateString('en-us', options)
+					// Date formating jargon to correctly populate based on date selected
+					let dateFormat = patientAppointment.ScheduledDate.replace("T00:00:00.000Z","")
+					let reg = RegExp(/(\d{2}:\d{2})/g)
+					let timeFormat = patientAppointment.Time.match(reg);
 
-					// console.log(props.currentUser + " == " + patient.Username)
-					// console.log(date + " == " + dateFormat);
-
-					if(patientAppointment.Status === 'open' && props.currentUser === patientAppointment.Username && date === dateFormat){
-						console.log(patientAppointment)
+					//Populate screen with open appointments for logged user under certain date
+					if(patientAppointment.Status === 'open' && props.currentUser === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')){
 
 						fetch('http://152.44.224.138:5174/patient/', {
 							method: 'POST',
@@ -116,28 +114,20 @@ function Dashboard(props) {
 						},)
 						.then((res) => (res.json()))
 						.then( (patient) => {
-							console.log(patient.patient)
-
-
-
 
 						setData(data => [...data, patient.patient[0]]);
-
+							console.log(patientAppointment);
 						const item = {
-							id: patient.patient[0].id,
+							id: patientAppointment.id,
+							patientId:patientAppointment.Patientid,
 							title: "Doctor Appointment",
 							patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
-							date: "2021-08-10",
-							time: "10:00",
-							type: "Urgent Care",
+							date: dayjs(dateFormat).format('dddd, MMMM DD, YYYY'),
+							time: timeFormat,
+							type: patientAppointment.Care,
 						}
 						setEvents(events => [...events,item])
-
-
-
 						})
-
-
 					}
 				})
 
@@ -152,14 +142,32 @@ function Dashboard(props) {
 			: events.filter((event) => event.type === selectedType);
 
 
-	// //Dont render if data isnt there
-	if (data.length < 1) {
-		setData("No appointments listed for selected date")
+	//Function removing patient appointment from DB
+	const resolve = (item) => {
+		let result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s appointment for ' + item.time[0] + "?")
+		if(result === true){
+			fetch('http://152.44.224.138:5174/deleteappointment/', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				},
+				body: JSON.stringify({
+					id: item.id
+				}),
+			},)
+			.then((res) => res.json())
+			.then( (res) => {
+				if(res.message === 'success'){
+					alert("Appointment resolved and removed")
+				}
+			})
+		}
+		else{
+			return false;
+		}
 	}
 
-
-
-	
 
 	return (
 
@@ -173,7 +181,7 @@ function Dashboard(props) {
 					</DrawerTrigger>
 					<DrawerContent>
 
-						<DrawerHeader className="flex justify-center">
+						<DrawerHeader className="flex justify-center">						
 							<Calendar
 								mode="single"
 								selected={date}
@@ -216,7 +224,7 @@ function Dashboard(props) {
 					<h1 className="text-4xl font-bold">Today</h1>
 
 					{/* Date Picker*/}
-					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>
+					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>		
 
 					<DropdownMenu>
 						<DropdownMenuTrigger>
@@ -228,11 +236,11 @@ function Dashboard(props) {
 							<DropdownMenuItem onClick={() => setSelectedType("All")}>
 								All
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setSelectedType("Urgent Care")}>
+							<DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
 								Urgent Care
 							</DropdownMenuItem>
 							<DropdownMenuItem
-								onClick={() => setSelectedType("Non-Urgent Care")}
+								onClick={() => setSelectedType("Non-Urgent")}
 							>
 								Non-Urgent Care
 							</DropdownMenuItem>
@@ -264,9 +272,12 @@ function Dashboard(props) {
 								<h1>{selectedEvent.type}</h1>
 								<p>
 									{selectedEvent.date} at {selectedEvent.time}
+									<br />
 								</p>
+								<button className="flex mt-3 float-start  text-white border-slate-200 bg-red-500 hover:bg-red-300 h-10 w-36 justify-center text-center items-center rounded-lg" onClick={() => resolve(selectedEvent)}>Resolve</button>
+
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.patientId}) })} } className="flex float-end mt-3 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>
@@ -275,13 +286,6 @@ function Dashboard(props) {
 		</div>
 	);
 }
-
-
-
-
-
-
-
 
 
 export default Dashboard;
