@@ -30,9 +30,10 @@ import {
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import login from './Login'
 "use client"
 
-
+login();
 
 //Zod schema for form validation
 const formSchema = z.object({
@@ -71,13 +72,14 @@ const formSchema = z.object({
 
 //Submition to database
 const submitNewUser = (data) => {
-    fetch('https://wellspring.pfc.io:5175/createuser',{
+    console.log(data);
+    fetch('http://152.44.224.138:5174/createuser',{
         method: 'POST',
         headers: {
             'content-type' : 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, First_Name: data.firstName, Surname: data.lastName, Role: data.position}),
+        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position}),
     })
 }
 

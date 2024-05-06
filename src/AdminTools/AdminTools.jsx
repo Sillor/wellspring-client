@@ -1,13 +1,3 @@
-import '../globals.css'
-import { Input } from '../components/ui/input'
-import searchIcon from './SearchAssets/search.png'
-import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Button } from "@/components/ui/button";
-import { User, Menu } from "lucide-react";
-
-import menu from '../PatientDashboard/PatientDashboardAssets/menu.png'
-import user from '../PatientDashboard/PatientDashboardAssets/user.png'
 import {
     Drawer,
     DrawerClose,
@@ -25,63 +15,36 @@ import {
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import PatientTab from './PatientTab'
+import '../globals.css'
+import { Input } from "../components/ui/input"
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Button } from "@/components/ui/button";
+import { User, Menu } from "lucide-react";
 
+function inviteDoctor(){
+    
+}
 
-export default function SearchFunction(){
-    const [searchFiltered, setSearchFiltered] = useState([]);
+function showInput(){
+    const input = document.getElementById('inputBox').classList.toggle('hidden')
+}
 
-    //Call data before routed to dashboard
-	const [data, setData] = useState([]);
-    const [search, setSearch]  = useState("");
-    const [display, setDisplay] = useState([]);
-
-
-    const handleSearch = (value) => {
-        setDisplay([])
-        setSearch(value)
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
     }
+    return result;
+}
 
-    //Fetch data on page load
-	useEffect(() => {
-		fetch('http://152.44.224.138:5174/patients', {
-			method: 'GET',
-			headers: {
-				'content-type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('token')}`,
-			},
-		},)
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.message === 'success') {
-					setData(data.patients);
-				}
-				else {
-					alert(data.message)
-				}
-			})
+console.log(makeid(8));
 
-            setSearchFiltered(
-
-                // Filter data array for contents of search state
-                data.filter((patient) => {
-                    const pattern = new RegExp('^' + search, 'i')
-
-                    //If empty show nothing
-                    if(search === ""){
-                        setDisplay([])
-                    }
-                    //If Last name matches add to search array state
-                    else if (patient.LastName.match(pattern)) {
-                        setDisplay(display => [...display, <PatientTab key={patient.id} patient={patient} />])
-                    }
-                })
-            )
-	},[search])
-
-
-
-
+function AdminTools(){
     return(
         <>
             {/*User header*/}
@@ -115,6 +78,8 @@ export default function SearchFunction(){
                             <DrawerFooter>
                                 <Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
                                 <Link to={'/main'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
+                                <Link to={'/admin'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Admin Tools</Link>
+
                                 <Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
                                 <DrawerClose asChild>
                                     <Button variant="outline" classList='inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium'>Cancel</Button>
@@ -127,14 +92,18 @@ export default function SearchFunction(){
             </div>
             
             <div className='flex flex-col w-screen h-screen justify-center items-center gap-5'>
-                <h2 className='float-end text-3xl'>Patient Search</h2>
+                <h2 className='float-end text-3xl'>Admin Tools</h2>
                 <div className='flex justify-center w-full'>
-                    <img src={searchIcon} alt="" className='flex w-6 h-6 mt-2' />
-                    <Input className='flex w-1/2 input' id='input' placeholder="Patient Name" type='text' onChange={(e) => {handleSearch(e.target.value)}}></Input>
+
                 </div>
 
-                <div className='flex flex-col h-1/3 w-2/3 justify-start overflow-y-scroll' id='resultsDiv'>
-                    {display}
+                <div className='flex flex-col h-1/3 w-2/3 justify-center items-center gap-2' id='resultsDiv'>
+                    <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={()=> document.getElementById('inputBox').classList.toggle('flex')}>Invite Doctor</button>
+                    <div id="inputBox" className="inputBox w-1/2 hidden flex-row gap-3">
+                        <Input className='flex w-2/3 input' id='input' placeholder="Email of Recipient " type='text' ></Input>
+                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Submit</button>
+                    </div>
+                    <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Delete User</button>
                 </div>
 
             </div>
@@ -142,3 +111,4 @@ export default function SearchFunction(){
         </>
     )
 }
+export default AdminTools

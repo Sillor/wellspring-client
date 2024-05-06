@@ -9,14 +9,14 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
+import { useState } from 'react'
 
 
 export default function PatientInformation(props) {
 
     //Submition to database
     function updatePatient(data){
-
-        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
+        fetch('http://152.44.224.138:5174/updatepatient', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -33,15 +33,15 @@ export default function PatientInformation(props) {
                 EmergencyContact: data[0].EmergencyContact,
                 EmergencyContactPhone: data[0].EmergencyContactPhone,
                 Prescriptions: data[0].Prescriptions,
-                PrescriptionHistory: data[0].PrescriptionHistory,
                 HealthHistory: data[0].HealthHistory,
                 FamilyHistory: data[0].FamilyHistory,
                 Diagnoses: data[0].Diagnoses
             }),
-            
         })
+        console.log(data)
         props.setData(data)
     }
+
 
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){

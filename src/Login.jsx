@@ -1,7 +1,30 @@
-import React from 'react';
 import './output.css'; 
+import { useNavigate } from "react-router-dom";
+
+function login(username,password){
+    fetch('http://152.44.224.138:5174/login',{
+        method: 'POST',
+        headers: {
+            'content-type' : 'application/json',
+        },
+        body: JSON.stringify({username: username, password: password})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        if(data.message === 'success'){
+            localStorage.setItem('token', data.token)
+        }
+        else{
+            //
+        }
+    })
+}
+
+
 
 const Login = () => {
+    const navigate = useNavigate();
+
     return (
         <div>
             <div className="bg-teal-600">
@@ -13,7 +36,7 @@ const Login = () => {
                     <hr className="mt-3" />
                     <div className="mt-6">
                         <label htmlFor="email address" className="block text-base mb-2 text-teal-800 font-semibold">Email Address</label>
-                        <input type="text" id="email address" className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600" placeholder="Enter Email Address..." />
+                        <input type="text" id="emailAddress" className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600" placeholder="Enter Email Address..." />
                     </div>
                     <hr className="mt-3" />
                     <div className="mt-3">
@@ -30,7 +53,12 @@ const Login = () => {
                         </div>
                     </div>
                     <div className="mt-7">
-                        <button type="submit" className="border-1 border-l-teal-500 bg-teal-500 text-white py-1 w-full rounded-md hover:bg-teal-800 hover:text-white font-semibold">Login</button>
+                        <button type="submit" id="loginBtn" className="border-1 border-l-teal-500 bg-teal-500 text-white py-1 w-full rounded-md hover:bg-teal-800 hover:text-white font-semibold" onClick={() => {login(document.getElementById('emailAddress').value, document.getElementById('password').value);navigate('/main', 
+                        {
+                            state: {
+                                user: document.getElementById('emailAddress').value,
+                            }
+                        })}}>Login</button>
                     </div>
                     <div className="mt-3">
                         <button type="submit" className="border-1 border-teal-600 bg-gray-300 text-teal-600 py-1 min-w-full rounded-md hover:bg-teal-200 hover:text-teal-800 font-semibold">Create Account</button>
