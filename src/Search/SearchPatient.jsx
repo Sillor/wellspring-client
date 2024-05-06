@@ -85,7 +85,7 @@ export default function SearchFunction(){
     return(
         <>
             {/*User header*/}
-            <div className="md:flex w-full mx-2 sticky " id="userHeader">
+            <div className="flex w-full mx-2 sticky " id="userHeader">
 
                 {/*Navigation menu for large screen */}
                 <div className="hidden md:flex w-full justify-center">
@@ -98,11 +98,11 @@ export default function SearchFunction(){
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
-                    <img src={user} alt="" className="m-2" />
+                    <User size={32} className='flex float-end'/>
                 </div>
 
                 {/*Hamburger Menu*/}
-                <div className="flex md:hidden flex-row justify-between w-full p-4">
+                <div className="p-4 flex visible md:invisible md:absolute flex-row justify-between w-full">
                     <Drawer>
                         <DrawerTrigger>
                             <Menu size={32}/>
