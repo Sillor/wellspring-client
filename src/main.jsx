@@ -16,6 +16,7 @@ import NewPatient from './ScheduleDashboard/NewPatient.jsx';
 import LabForm1 from './Labform1.jsx';
 import SearchPatient from './Search/SearchPatient.jsx'
 import Login from './Login.jsx';
+import AdminTools from './AdminTools/AdminTools.jsx'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,11 @@ const router = createBrowserRouter([
   {
     path: "/main",
     element: <App/>,
+    errorElement: <p>404</p>
+  },
+  {
+    path: "/admin",
+    element: <AdminTools/>,
     errorElement: <p>404</p>
   },
   {
