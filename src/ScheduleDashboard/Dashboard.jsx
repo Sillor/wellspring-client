@@ -58,7 +58,7 @@ function Dashboard() {
 	useEffect(() => {
 		
 
-		fetch('https://152.44.224.138:5174/patients', {
+		fetch('http://152.44.224.138:5174/patients', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
@@ -133,6 +133,9 @@ function Dashboard() {
 							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
 								Request Lab
 							</li>
+							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
+    							<Link to="/NewPatient">New Patient</Link>
+							</li>
 						</ul>
 						<DrawerFooter>
 							<DrawerClose>
@@ -149,7 +152,7 @@ function Dashboard() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
+								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to="/NewPatient">New Patient</Link></NavigationMenuLink>								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
 						</NavigationMenuItem>

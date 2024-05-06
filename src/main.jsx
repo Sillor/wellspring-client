@@ -12,7 +12,10 @@ import "./index.css";
 import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
 import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
-import SearchPatient from './Search/SearchPatient.jsx'
+import LoginPage from './LoginPage/LoginPage.jsx';
+import NewPatient from './ScheduleDashboard/NewPatient.jsx';
+import LabForm1 from './labform1.jsx';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,20 +38,27 @@ const router = createBrowserRouter([
   {
     path: "/prescriptioninfo/request",
     element: <PrescriptionRequestPage/>,
-    errorElement: <p>404</p>
   },
 
   {
-    path: "/search",
-    element: <SearchPatient/>,
-    errorElement: <p>404</p>
+    path: "/*",
+    element: <Navigate to="/" replace={true} />,
   },
 
   {
-    path: "/schedule",
-    element: <SearchPatient/>,
-    errorElement: <p>404</p>
-  }
+    path: "*",
+    element: <Navigate to="/" replace={true} />,
+  },
+
+  {
+    path: "/NewPatient",
+    element: <NewPatient/>,
+  },
+
+  {
+    path: "/labform1",
+    element: <LabForm1/>,
+  },
 
 ]);
 
