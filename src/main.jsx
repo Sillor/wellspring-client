@@ -12,9 +12,9 @@ import "./index.css";
 import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
 import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
-import LoginPage from './LoginPage/LoginPage.jsx';
 import NewPatient from './ScheduleDashboard/NewPatient.jsx';
 import LabForm1 from './labform1.jsx';
+import SearchPatient from './Search/SearchPatient.jsx'
 
 const router = createBrowserRouter([
   {

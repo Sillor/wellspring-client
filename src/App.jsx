@@ -7,13 +7,17 @@ import Dashboard from './ScheduleDashboard/Dashboard';
 
 
 function App() {
+  let username = "admintest";
+  let pass = "admintest2"
 
-  //Login for development purposes
-  login()
+
+  //For dev purposes
+  login(username,pass);
+
 
 return(
-  <>
-  <Dashboard/>
+  <>                  
+    <Dashboard currentUser = {username}/>
   </>
 )
 

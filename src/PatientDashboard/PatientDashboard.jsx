@@ -40,9 +40,8 @@ export function PatientDashboard() {
 
     //Use Location to navigate
     const location = useLocation()
-    const [data,setData] = useState(location.state)
+    const [data,setData] = useState(location.state.selectedPatient)
     const [display,setDisplay] = useState(<PatientInformation data={data} setData={setData}/>);
-
 
     // Function showing what patient tab is selected by changing background color
     function currentOpenTab(e){
@@ -106,7 +105,7 @@ export function PatientDashboard() {
                     </Card>
                     <div id="patientInfo" className="flex flex-row m-2">
                         
-                        <h1>{data[0].FirstName}</h1>
+                        <h1>{data[0].LastName}, {data[0].FirstName}</h1>
                         <img src={user} alt="" className="flex ml-4"/>
                     </div>
                 </Card>

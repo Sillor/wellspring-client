@@ -28,8 +28,8 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import login from "../Login/Login";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
+import { DatePicker } from "../components/ui/DatePicker";
 
 import {
 	NavigationMenu,
@@ -38,60 +38,92 @@ import {
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
+import dayjs from 'dayjs'
 
 
-function Dashboard() {
+function Dashboard(props) {
+
+	//Date formating
+	let todayDate = new Date();
+	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [selectedDate,setSelectedDate] = useState([]);
 
+	const handleDate = (date) => {
+		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		setDate(date.toLocaleDateString("en-US",dateFormating))
+	}
+	
 	const navigate = useNavigate();
-
 	const handleButtonClick = (event) => {
 		setSelectedEvent(event);
 		setButtonPopup(true);
 	};
-
 	const [events, setEvents] = useState([]);
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
-	useEffect(() => {
-		
 
-		fetch('http://152.44.224.138:5174/patients', {
+	useEffect(() => {
+		fetch('http://152.44.224.138:5174/appointments', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
 				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 			},
-		}, [data])
+		},)
 			.then((res) => res.json())
-			.then((data) => {
-				if (data.message === 'success') {
-					localStorage.setItem('token', data.token)
-					setData(data.patients);
-					if(events.length == 0){
-						data.patients.forEach((patient) => {
-							const item = {
-								id: patient.id,
-								title: "Doctor Appointment",
-								patientName: patient.FirstName + ", " +patient.LastName,
-								date: "2021-08-10",
-								time: "10:00",
-								type: "Urgent Care",
-							}
-							events.push(item)
+			.then((appointments) => {
+
+				//Map over each patient id and retrieve the corresponding patient tab
+				appointments.forEach((patientAppointment) => {
+
+				//Clear Data list before repopulating to prevent repeats
+				setData([])
+				//Clear events list before repopulating
+				setEvents([])
+					
+					// Date formating jargon to correctly populate based on date selected
+					let dateFormat = patientAppointment.ScheduledDate.replace("T00:00:00.000Z","")
+					let reg = RegExp(/(\d{2}:\d{2})/g)
+					let timeFormat = patientAppointment.Time.match(reg);
+
+					//Populate screen with open appointments for logged user under certain date
+					if(patientAppointment.Status === 'open' && props.currentUser === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')){
+
+						fetch('http://152.44.224.138:5174/patient/', {
+							method: 'POST',
+							headers: {
+								'content-type': 'application/json',
+								'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							},
+							body: JSON.stringify({id: patientAppointment.Patientid})
+						},)
+						.then((res) => (res.json()))
+						.then( (patient) => {
+
+						setData(data => [...data, patient.patient[0]]);
+
+						const item = {
+							id: patientAppointment.id,
+							patientId:patientAppointment.Patientid,
+							title: "Doctor Appointment",
+							patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
+							date: dayjs(dateFormat).format('dddd, MMMM DD, YYYY'),
+							time: timeFormat,
+							type: patientAppointment.Care,
+						}
+						setEvents(events => [...events,item])
 						})
 					}
-				}
-				else {
-					alert(data.message)
-				}
-			})
-	})
+				})
 
+			})
+	}, [date])
+	
 	// Patient filter
-	const [date, setDate] = useState(new Date());
 	const [selectedType, setSelectedType] = useState("All");
 	const filteredEvents =
 		selectedType === "All"
@@ -99,51 +131,65 @@ function Dashboard() {
 			: events.filter((event) => event.type === selectedType);
 
 
-	//Dont render if data isnt there
-	if (data.length < 1) {
-		return (
-			<div>Loading...</div>
-		)
+	//Function removing patient appointment from DB
+	const resolve = (item) => {
+		let result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s appointment for ' + item.time[0] + "?")
+		if(result === true){
+			fetch('http://152.44.224.138:5174/deleteappointment/', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				},
+				body: JSON.stringify({
+					id: item.id
+				}),
+			},)
+			.then((res) => res.json())
+			.then( (res) => {
+				if(res.message === 'success'){
+					alert("Appointment resolved and removed")
+				}
+			})
+		}
+		else{
+			return false;
+		}
 	}
 
 
 	return (
+
 		<div className="flex flex-col items-center ">
+
+			{/*Hamburger Menu*/}
 			<div className="p-4 flex flex-row justify-between md:hidden w-full">
 				<Drawer>
 					<DrawerTrigger>
 						<Menu size={32} />
 					</DrawerTrigger>
 					<DrawerContent>
-						<DrawerHeader className="flex justify-center">
+
+						<DrawerHeader className="flex justify-center">						
 							<Calendar
 								mode="single"
 								selected={date}
-								onSelect={setDate}
+								onSelect={handleDate}
 								className="rounded-md border flex justify-center"
 							/>
 						</DrawerHeader>
-						<ul className="ps-4">
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								Set Appointments
-							</li>
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								View Patients
-							</li>
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-								Request Lab
-							</li>
-							<li className="mb-2 px-2 active:bg-primary/15 rounded-lg w-fit">
-    							<Link to="/NewPatient">New Patient</Link>
-							</li>
-						</ul>
 						<DrawerFooter>
-							<DrawerClose>
-								<Button className="w-full">Cancel</Button>
+							<Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
+							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
+							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
+							<DrawerClose asChild>
+								<Button variant="outline" classList='inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium'>Cancel</Button>
 							</DrawerClose>
+
 						</DrawerFooter>
 					</DrawerContent>
 				</Drawer>
+				<div>{date}</div>
 				<User size={32} />
 			</div>
 
@@ -152,9 +198,9 @@ function Dashboard() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to="/NewPatient">New Patient</Link></NavigationMenuLink>								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>View Schedule List</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
 						</NavigationMenuItem>
 					</NavigationMenuList>
 				</NavigationMenu>
@@ -162,9 +208,13 @@ function Dashboard() {
 			</div>
 
 
-			<div className="flex flex-col md:w-2/3 w-full p-4">
+			<div className="flex flex-col md:w-/3 w-full p-4">
 				<div className="flex flex-row justify-between items-center mb-4">
 					<h1 className="text-4xl font-bold">Today</h1>
+
+					{/* Date Picker*/}
+					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>		
+
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" className="w-36">
@@ -175,17 +225,19 @@ function Dashboard() {
 							<DropdownMenuItem onClick={() => setSelectedType("All")}>
 								All
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setSelectedType("Urgent Care")}>
+							<DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
 								Urgent Care
 							</DropdownMenuItem>
 							<DropdownMenuItem
-								onClick={() => setSelectedType("Non-Urgent Care")}
+								onClick={() => setSelectedType("Non-Urgent")}
 							>
 								Non-Urgent Care
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
+
+				{/*Actual Patient Tabs*/}
 				{filteredEvents.map((event) => (
 					<div key={event.id} className="border p-4 rounded-md mb-4">
 						<Button
@@ -209,10 +261,19 @@ function Dashboard() {
 								<h1>{selectedEvent.type}</h1>
 								<p>
 									{selectedEvent.date} at {selectedEvent.time}
+									<br />
 								</p>
+								<button className="flex mt-3 float-start  text-white border-slate-200 bg-red-500 hover:bg-red-300 h-10 w-36 justify-center text-center items-center rounded-lg" onClick={() => resolve(selectedEvent)}>Resolve</button>
 
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.id}) })} } className="flex float-end border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', 
+								{ 
+									state: {
+										selectedPatient: data.filter( (patient) => {return patient.id === selectedEvent.patientId}),
+									
+									} 
+								}
+									)} } className="flex float-end mt-3 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>
@@ -221,8 +282,6 @@ function Dashboard() {
 		</div>
 	);
 }
-
-
 
 
 export default Dashboard;
