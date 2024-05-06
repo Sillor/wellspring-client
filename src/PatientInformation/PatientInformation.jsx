@@ -9,6 +9,7 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
+import { useState } from 'react'
 
 
 export default function PatientInformation(props) {
@@ -40,6 +41,7 @@ export default function PatientInformation(props) {
         console.log(data)
         props.setData(data)
     }
+
 
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){

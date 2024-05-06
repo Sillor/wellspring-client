@@ -4,7 +4,7 @@ import searchIcon from './SearchAssets/search.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button";
-import { Card } from '../components/ui/card'
+import { User, Menu } from "lucide-react";
 
 import menu from '../PatientDashboard/PatientDashboardAssets/menu.png'
 import user from '../PatientDashboard/PatientDashboardAssets/user.png'
@@ -26,16 +26,21 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import PatientTab from './PatientTab'
-import login from '../Login/Login'
 
 
 export default function SearchFunction(){
+    const [searchFiltered, setSearchFiltered] = useState([]);
 
     //Call data before routed to dashboard
 	const [data, setData] = useState([]);
-    const [search, setSearch]  = useState([]);
-
+    const [search, setSearch]  = useState("");
     const [display, setDisplay] = useState([]);
+
+
+    const handleSearch = (value) => {
+        setDisplay([])
+        setSearch(value)
+    }
 
     //Fetch data on page load
 	useEffect(() => {
@@ -45,7 +50,7 @@ export default function SearchFunction(){
 				'content-type': 'application/json',
 				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 			},
-		}, [data])
+		},)
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.message === 'success') {
@@ -55,44 +60,32 @@ export default function SearchFunction(){
 					alert(data.message)
 				}
 			})
-	})
+
+            setSearchFiltered(
+
+                // Filter data array for contents of search state
+                data.filter((patient) => {
+                    const pattern = new RegExp('^' + search, 'i')
+
+                    //If empty show nothing
+                    if(search === ""){
+                        setDisplay([])
+                    }
+                    //If Last name matches add to search array state
+                    else if (patient.LastName.match(pattern)) {
+                        setDisplay(display => [...display, <PatientTab key={patient.id} patient={patient} />])
+                    }
+                })
+            )
+	},[search])
 
 
-    /* Search functionality */
-    function onSearch(patientName) {            //TODO: Search is 1 character behind
-        //Clear state data on each call
-        setDisplay([])
-        setSearch([])
-
-        //Filter through patient list
-        data.filter((patient) => {
-            const pattern = new RegExp('^' + patientName.target.value, 'i')
-    
-            //If Last name matches add to search array state
-            if (patient.LastName.match(pattern)) {
-
-                setSearch(search => [...search, patient])     
-            }
-        })
-
-        //Clear all if empty
-        if (patientName.target.value === '') {
-            setSearch([])
-            return;
-        }
-
-        //Map over each element in search array and create individual tab component
-        search.map((patient) => (
-            setDisplay(display => [...display, <PatientTab key={patient.id} patient={patient} />])
-        ))
-    }
 
 
     return(
         <>
             {/*User header*/}
             <div className="flex w-full mx-2 sticky " id="userHeader">
-
                 {/*Navigation menu for large screen */}
                 <div className="hidden md:flex w-full justify-center">
                     <NavigationMenu>
@@ -108,9 +101,11 @@ export default function SearchFunction(){
                 </div>
 
                 {/*Hamburger Menu*/}
-                <div className="flex flex-row justify-between md:hidden w-full">
+                <div className="flex flex-row justify-between md:hidden w-full p-4">
                     <Drawer>
-                        <DrawerTrigger><img src={menu} alt="" className='m-2' /></DrawerTrigger>
+                        <DrawerTrigger>
+                            <Menu size={32}/>
+                        </DrawerTrigger>
                         <DrawerContent>
                             <DrawerHeader>
                                 <DrawerTitle>What would you like to do?</DrawerTitle>
@@ -125,7 +120,7 @@ export default function SearchFunction(){
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                    <img src={user} alt="" className='m-2' />
+                    <User size={32}/>
                 </div>
             </div>
             
@@ -133,7 +128,7 @@ export default function SearchFunction(){
                 <h2 className='float-end text-3xl'>Patient Search</h2>
                 <div className='flex justify-center w-full'>
                     <img src={searchIcon} alt="" className='flex w-6 h-6 mt-2' />
-                    <Input className='flex w-1/2 input' id='input' placeholder="Patient Name" type='text' onChange={(value) => onSearch(value)}></Input>
+                    <Input className='flex w-1/2 input' id='input' placeholder="Patient Name" type='text' onChange={(e) => {handleSearch(e.target.value)}}></Input>
                 </div>
 
                 <div className='flex flex-col h-1/3 w-2/3 justify-start overflow-y-scroll' id='resultsDiv'>
@@ -143,8 +138,5 @@ export default function SearchFunction(){
             </div>
 
         </>
-
-
-
     )
 }

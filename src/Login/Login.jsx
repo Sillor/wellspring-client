@@ -11,10 +11,9 @@ export default async function login(user,pass){
     .then((data) => {
         if(data.message === 'success'){
             localStorage.setItem('token', data.token)
-            console.log('yes')
         }
         else{
-           // alert('fart fart')
+        //
         }
     })
 }

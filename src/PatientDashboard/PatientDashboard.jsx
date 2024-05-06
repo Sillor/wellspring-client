@@ -40,9 +40,8 @@ export function PatientDashboard() {
 
     //Use Location to navigate
     const location = useLocation()
-    const [data,setData] = useState(location.state)
+    const [data,setData] = useState(location.state.selectedPatient)
     const [display,setDisplay] = useState(<PatientInformation data={data} setData={setData}/>);
-    console.log(location.state)
 
     // Function showing what patient tab is selected by changing background color
     function currentOpenTab(e){

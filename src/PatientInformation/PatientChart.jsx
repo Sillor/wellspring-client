@@ -9,8 +9,7 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
-import login from '../Login/Login'
-
+import { useState } from 'react'
 
 /* Shows Individual Patient Dashboard layout*/
 export function PatientChart(props){
@@ -42,6 +41,32 @@ export function PatientChart(props){
         props.setData(data)
     }
 
+    const [role,setRole] = useState("");
+    function getUser(username){
+
+        fetch('http://152.44.224.138:5174/user',{
+          method: 'POST',
+          headers: {
+              'content-type' : 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({Username: username})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if(role.length < 1)
+          console.log(data)
+            setRole(data[0].Role)
+        })
+    }
+    getUser('admintest')
+
+
+    //Disable Edits for non-doctors
+    function disableBtn(){
+        const edit = document.getElementById('editBtn');
+        edit.classList.add('disable')
+    }
     
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
@@ -57,7 +82,7 @@ export function PatientChart(props){
             element.parentNode.removeChild(element);
         });
     }
-                                                                                /* TODO: Consolidate to 1 function? */
+                                                                            
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
         let updatedValuesArray = [];
@@ -95,6 +120,8 @@ export function PatientChart(props){
        updatePatient(updatedPatient);
     }
 
+
+
     return(
         <>
         <Card className="w-full sm:w-2/3">
@@ -103,7 +130,7 @@ export function PatientChart(props){
 
                 {/*Edit Button */}
                 <Card className="flex w-fit hover:bg-slate-100 float-right" id="editBtn">
-                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem"  onClick={editInformation}>
+                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem"  onClick={role === "Doctor" ? disableBtn : editInformation}>
                             <img src={editIcon} alt="not found" className=" w-10 p-2" id="editIcon"/>
                         </button>
                     </Card>

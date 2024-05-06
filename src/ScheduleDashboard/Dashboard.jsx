@@ -28,14 +28,8 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import { DatePicker } from "../components/ui/DatePicker";
-
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-  } from "@/components/ui/popover"
 
 import {
 	NavigationMenu,
@@ -44,19 +38,14 @@ import {
 	NavigationMenuList,
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import AddTestPatientList from "../AddTestPatientList";
-import { set } from "date-fns";
 import dayjs from 'dayjs'
 
 
 function Dashboard(props) {
 
-
-
 	//Date formating
 	let todayDate = new Date();
 	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
 	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
@@ -73,7 +62,7 @@ function Dashboard(props) {
 		setButtonPopup(true);
 	};
 	const [events, setEvents] = useState([]);
-	
+
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
 
@@ -116,7 +105,7 @@ function Dashboard(props) {
 						.then( (patient) => {
 
 						setData(data => [...data, patient.patient[0]]);
-							console.log(patientAppointment);
+
 						const item = {
 							id: patientAppointment.id,
 							patientId:patientAppointment.Patientid,
@@ -277,7 +266,14 @@ function Dashboard(props) {
 								<button className="flex mt-3 float-start  text-white border-slate-200 bg-red-500 hover:bg-red-300 h-10 w-36 justify-center text-center items-center rounded-lg" onClick={() => resolve(selectedEvent)}>Resolve</button>
 
 								{/* Weird stuff happens when Link instead of button*/}
-								<button onClick={ ()=>{ navigate('/dashboard', {state: data.filter( (patient) => {return patient.id === selectedEvent.patientId}) })} } className="flex float-end mt-3 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
+								<button onClick={ ()=>{ navigate('/dashboard', 
+								{ 
+									state: {
+										selectedPatient: data.filter( (patient) => {return patient.id === selectedEvent.patientId}),
+									
+									} 
+								}
+									)} } className="flex float-end mt-3 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>
 							</Popup>
 						)}
 					</div>
