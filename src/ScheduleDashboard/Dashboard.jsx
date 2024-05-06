@@ -163,7 +163,7 @@ function Dashboard(props) {
 		<div className="flex flex-col items-center ">
 
 			{/*Hamburger Menu*/}
-			<div className="p-4 flex flex-row justify-between md:hidden w-full">
+			<div className="p-4 flex visible md:invisible md:absolute flex-row justify-between w-full">
 				<Drawer>
 					<DrawerTrigger>
 						<Menu size={32} />

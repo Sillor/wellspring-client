@@ -12,7 +12,6 @@ function App() {
 
 
   //For dev purposes
-  login(username,pass);
 
 
 return(

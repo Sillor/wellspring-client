@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< Updated upstream
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import '../output.css';
-=======
-import { Button, buttonVariants } from "/components/ui/button";
-import { Checkbox } from "/components/ui/checkbox";
-
->>>>>>> Stashed changes
 
 const NewPatient = () => {
     const [formData, setFormData] = useState({
@@ -69,11 +63,7 @@ const NewPatient = () => {
             //submission to database
         const submitNewPatient = (data) => {
             console.log(data)
-<<<<<<< Updated upstream
             fetch('http://wellspring.pfc.io:5175/createnewpatient',{
-=======
-            fetch('http://http://152.44.224.138:5174/NewPatient',{
->>>>>>> Stashed changes
             method: 'POST',
             headers: {
                 'content-type' : 'application/json',

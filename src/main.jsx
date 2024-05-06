@@ -15,14 +15,19 @@ import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
 import NewPatient from './ScheduleDashboard/NewPatient.jsx';
 import LabForm1 from './labform1.jsx';
 import SearchPatient from './Search/SearchPatient.jsx'
+import Login from './Login.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Login/>,
+    errorElement: <p>404</p>
+  },
+  {
+    path: "/main",
     element: <App/>,
     errorElement: <p>404</p>
   },
-
   {
     path: "/dashboard",
     element: <PatientDashboard/>,
@@ -40,15 +45,6 @@ const router = createBrowserRouter([
     element: <PrescriptionRequestPage/>,
   },
 
-  {
-    path: "/*",
-    element: <Navigate to="/" replace={true} />,
-  },
-
-  {
-    path: "*",
-    element: <Navigate to="/" replace={true} />,
-  },
 
   {
     path: "/NewPatient",
@@ -58,6 +54,11 @@ const router = createBrowserRouter([
   {
     path: "/labform1",
     element: <LabForm1/>,
+  },
+
+  {
+    path: "/search",
+    element: <SearchPatient/>,
   },
 
 ]);
