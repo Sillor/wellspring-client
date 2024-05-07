@@ -91,7 +91,7 @@ function Dashboard(props) {
 					let timeFormat = patientAppointment.Time.match(reg);
 
 					//Populate screen with open appointments for logged user under certain date
-					if(patientAppointment.Status === 'open' && props.currentUser === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')){
+					if(patientAppointment.Status === 'open' && localStorage.getItem('user') === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')){
 
 						fetch('http://152.44.224.138:5174/patient/', {
 							method: 'POST',
@@ -271,8 +271,7 @@ function Dashboard(props) {
 								<button onClick={ ()=>{ navigate('/dashboard', 
 								{ 
 									state: {
-										selectedPatient: data.filter( (patient) => {return patient.id === selectedEvent.patientId}),
-									
+										selectedPatient: data.filter( (patient) => {return patient.id === selectedEvent.patientId}),									
 									} 
 								}
 									)} } className="flex float-end mt-3 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50 h-10 w-36 justify-center text-center items-center rounded-lg">Patient Chart</button>

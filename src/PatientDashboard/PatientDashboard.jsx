@@ -36,7 +36,7 @@ import {
   
 
 
-export function PatientDashboard() {
+export function PatientDashboard(props) {
 
     //Use Location to navigate
     const location = useLocation()
@@ -50,6 +50,8 @@ export function PatientDashboard() {
         e.target.parentNode.classList.add('bg-slate-100')
         e.target.parentNode.classList.remove('bg-white')
     }
+
+
 
 	return (
 		<div className="flex flex-col items-center" id="pageContainer"> {/*Primary container*/}
@@ -72,7 +74,7 @@ export function PatientDashboard() {
                                 </NavigationMenuItem>
                             </NavigationMenuList>
                         </NavigationMenu>
-                        <User size={32} />
+                        <User className="" size={32} />
                     </div>
 
                     {/*Hamburger Menu*/}
@@ -119,14 +121,14 @@ export function PatientDashboard() {
 
                     {/*Patient Information*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={data} setData={setData}/>);currentOpenTab(e)}}>
+                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={data} setData={setData} role={props.role}/>);currentOpenTab(e)}}>
                             <img src={info} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Patient Chart*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={data} setData={setData}/>); currentOpenTab(e); }}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={data} setData={setData} role={props.role}/>); currentOpenTab(e); }}>
                             <img src={clipboard} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>

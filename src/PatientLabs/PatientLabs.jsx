@@ -64,8 +64,8 @@ export function PatientLabs(){
 
 
             </CardContent>
-            <CardFooter className="flex sm:justify-center">
-                    <div className='sm:w-1/3 w-full'>
+            <CardFooter className="flex w-full justify-center ">
+                    <div className='w-full justify-center md:w-1/3'>
                         <Button className="w-full" >Request</Button>
                     </div>
                 </CardFooter>

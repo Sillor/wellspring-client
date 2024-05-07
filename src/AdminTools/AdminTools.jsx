@@ -91,17 +91,17 @@ function AdminTools(){
                 </div>
             </div>
             
-            <div className='flex flex-col w-screen h-screen justify-center items-center gap-5'>
+            <div className='md:w-full flex flex-col w-screen h-screen justify-center items-center gap-5'>
                 <h2 className='float-end text-3xl'>Admin Tools</h2>
                 <div className='flex justify-center w-full'>
 
                 </div>
 
-                <div className='flex flex-col h-1/3 w-2/3 justify-center items-center gap-2' id='resultsDiv'>
+                <div className='flex flex-col h-1/3 w-full justify-center items-center gap-2' id='resultsDiv'>
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={()=> document.getElementById('inputBox').classList.toggle('flex')}>Invite Doctor</button>
                     <div id="inputBox" className="inputBox w-1/2 hidden flex-row gap-3">
                         <Input className='flex w-2/3 input' id='input' placeholder="Email of Recipient " type='text' ></Input>
-                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Submit</button>
+                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Invite</button>
                     </div>
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Delete User</button>
                 </div>

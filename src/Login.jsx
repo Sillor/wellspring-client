@@ -12,7 +12,9 @@ function login(username,password){
     .then((res) => res.json())
     .then((data) => {
         if(data.message === 'success'){
+            localStorage.clear();
             localStorage.setItem('token', data.token)
+            localStorage.setItem('user',username)
         }
         else{
             //
@@ -24,7 +26,7 @@ function login(username,password){
 
 const Login = () => {
     const navigate = useNavigate();
-
+    
     return (
         <div>
             <div className="bg-teal-600">
@@ -35,8 +37,8 @@ const Login = () => {
                     <h1 className="text-3xl block text-teal-800 text-center font-semibold"><i className="fa-solid fa-user-doctor"></i> Login</h1>
                     <hr className="mt-3" />
                     <div className="mt-6">
-                        <label htmlFor="email address" className="block text-base mb-2 text-teal-800 font-semibold">Email Address</label>
-                        <input type="text" id="emailAddress" className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600" placeholder="Enter Email Address..." />
+                        <label htmlFor="email address" className="block text-base mb-2 text-teal-800 font-semibold">Username</label>
+                        <input type="text" id="emailAddress" className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600" placeholder="Enter Username..." />
                     </div>
                     <hr className="mt-3" />
                     <div className="mt-3">
