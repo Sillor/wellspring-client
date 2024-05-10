@@ -55,7 +55,7 @@ export function NewAppointmentPage() {
 
   // Form Values
   const [dateAndTime, setDateAndTime] = useState(dayjs(""));
-  const [patientName, setPatientName] = useState("");
+  const [patientId, setPatientId] = useState("");
   const [physician, setPhysician] = useState("");
   const [urgency, setUrgency] = useState("");
   const [notes, setNotes] = useState("");
@@ -64,8 +64,8 @@ export function NewAppointmentPage() {
     // Check if data.patients is an array and has elements
     if (Array.isArray(data.patients) && data.patients.length > 0) {
       // Update events with patient names
-      const updatedEvents = data.patients.map((patient, index) => ({
-        id: index + 1, // Assigning an id to each event
+      const updatedEvents = data.patients.map((patient) => ({
+        id: patient.id, // Assigning the patient id to id
         patientName: `${patient.FirstName} ${patient.LastName}`,
       }));
 
@@ -106,7 +106,7 @@ export function NewAppointmentPage() {
   //Submission to database
   const handleSubmit = (e) => {
     e.preventDefault();
-    const appointment = { dateAndTime, patientName, physician, urgency, notes };
+    const appointment = { dateAndTime, patientId, physician, urgency, notes };
     console.log(appointment);
   };
 
@@ -163,7 +163,10 @@ export function NewAppointmentPage() {
                     Patient Name:
                   </Label>
                   <div className="flex flex-row">
-                    <Select onValueChange={(event) => setPatientName(event)}>
+                    <Select
+                      onValueChange={(event) => setPatientId(event)}
+                      required
+                    >
                       <SelectTrigger className="w-50">
                         <SelectValue placeholder="Patients" />
                       </SelectTrigger>
@@ -175,7 +178,7 @@ export function NewAppointmentPage() {
                               className="border p-4 rounded-md mb-4"
                             >
                               <div>
-                                <SelectItem value={event.patientName}>
+                                <SelectItem value={event.id}>
                                   {event.patientName}
                                 </SelectItem>
                               </div>
@@ -195,6 +198,7 @@ export function NewAppointmentPage() {
                     value={physician}
                     placeholder="Physician Name"
                     onChange={(e) => setPhysician(e.target.value)}
+                    required
                     className="flex"
                   />
                 </div>
@@ -203,7 +207,10 @@ export function NewAppointmentPage() {
                     Urgency:
                   </Label>
                   <div className="flex flex-row">
-                    <Select onValueChange={(event) => setUrgency(event)}>
+                    <Select
+                      onValueChange={(event) => setUrgency(event)}
+                      required
+                    >
                       <SelectTrigger className="w-39">
                         <SelectValue placeholder="Type" />
                       </SelectTrigger>
@@ -228,14 +235,14 @@ export function NewAppointmentPage() {
                   />
                 </div>
               </div>
-              <Button className="w-full sm:w-1/3">Confirm</Button>
+              <Button className="w-full sm:justify-center">Confirm</Button>
             </form>
           </CardContent>
           <CardFooter className="flex sm:justify-center"></CardFooter>
         </Card>
       </div>
       <DateTimePicker value={dateAndTime} />
-      <p>{patientName}</p>
+      <p>{patientId}</p>
       <p>{physician}</p>
       <p>{urgency}</p>
       <p>{notes}</p>

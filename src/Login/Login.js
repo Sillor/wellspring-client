@@ -1,4 +1,4 @@
-export default function login() {
+export default async function login() {
   fetch("http://152.44.224.138:5174/login", {
     method: "POST",
     headers: {
