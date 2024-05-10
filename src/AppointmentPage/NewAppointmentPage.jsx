@@ -29,6 +29,7 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useState } from "react";
@@ -42,11 +43,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-("use client");
+import { date } from "zod";
 
 export function NewAppointmentPage() {
   const [events, setEvents] = useState([
@@ -55,6 +52,13 @@ export function NewAppointmentPage() {
       patientName: "Patient #1",
     },
   ]);
+
+  // Form Values
+  const [dateAndTime, setDateAndTime] = useState(dayjs(""));
+  const [patientName, setPatientName] = useState("");
+  const [physician, setPhysician] = useState("");
+  const [urgency, setUrgency] = useState("");
+  const [notes, setNotes] = useState("");
 
   function populatePatients(data) {
     // Check if data.patients is an array and has elements
@@ -99,25 +103,12 @@ export function NewAppointmentPage() {
     return <div>Loading...</div>;
   }
 
-  // Zod schema for form validation
-  const formSchema = z.object({
-    DateAndTime: z.string().datetime(),
-    patientName: z.enum(data.patients),
-    Physician: z.string().min(2).max(18),
-    Urgency: z.enum(["Urgent", "Non-Urgent"]),
-    Notes: z.string(),
-  });
-
-  // const form = useForm({
-  // resolver: zodResolver(formSchema),
-  // defaultValues: {
-  //   DateAndTime: "",
-  //   patientName: "",
-  //   Physician: "",
-  //   Urgency: "",
-  //   Notes: "",
-  // },
-  // });
+  //Submission to database
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const appointment = { dateAndTime, patientName, physician, urgency, notes };
+    console.log(appointment);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -154,7 +145,7 @@ export function NewAppointmentPage() {
             <CardDescription>When will you meet?</CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="table w-full gap-4 border-spacing-y-4">
                 <div className="table-row">
                   <Label htmlFor="orderBy" className="table-cell">
@@ -162,25 +153,22 @@ export function NewAppointmentPage() {
                   </Label>
                   <DateTimePicker
                     disablePast
-                    // value={value}
-                    // onChange={(newValue) => setValue(newValue)}
+                    onChange={(newValue) => setDateAndTime(newValue)}
                     id="orderBy"
                     className="table-cell"
                   />
-                  {/* <Label>{value}</Label> */}
                 </div>
                 <div className="table-row">
                   <Label htmlFor="patientName" className="table-cell ">
                     Patient Name:
                   </Label>
                   <div className="flex flex-row">
-                    <Select>
+                    <Select onValueChange={(event) => setPatientName(event)}>
                       <SelectTrigger className="w-50">
                         <SelectValue placeholder="Patients" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel></SelectLabel>
                           {events.map((event) => (
                             <div
                               key={event.id}
@@ -204,8 +192,9 @@ export function NewAppointmentPage() {
                   </Label>
                   <Input
                     id="orderBy"
-                    // value="{currentUser}"
+                    value={physician}
                     placeholder="Physician Name"
+                    onChange={(e) => setPhysician(e.target.value)}
                     className="flex"
                   />
                 </div>
@@ -214,13 +203,12 @@ export function NewAppointmentPage() {
                     Urgency:
                   </Label>
                   <div className="flex flex-row">
-                    <Select>
+                    <Select onValueChange={(event) => setUrgency(event)}>
                       <SelectTrigger className="w-39">
                         <SelectValue placeholder="Type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel></SelectLabel>
                           <SelectItem value="Urgent">Urgent</SelectItem>
                           <SelectItem value="Non-Urgent">Non-Urgent</SelectItem>
                         </SelectGroup>
@@ -235,17 +223,22 @@ export function NewAppointmentPage() {
                   <Textarea
                     id="notes"
                     placeholder="Important Notes"
+                    onChange={(e) => setNotes(e.target.value)}
                     className="focus-visible:ring-0"
                   />
                 </div>
               </div>
+              <Button className="w-full sm:w-1/3">Confirm</Button>
             </form>
           </CardContent>
-          <CardFooter className="flex sm:justify-center">
-            <Button className="w-full sm:w-1/3">Confirm</Button>
-          </CardFooter>
+          <CardFooter className="flex sm:justify-center"></CardFooter>
         </Card>
       </div>
+      <DateTimePicker value={dateAndTime} />
+      <p>{patientName}</p>
+      <p>{physician}</p>
+      <p>{urgency}</p>
+      <p>{notes}</p>
     </LocalizationProvider>
   );
 }
