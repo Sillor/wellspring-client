@@ -9,9 +9,38 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
+import { useState } from 'react'
 
 
 export default function PatientInformation(props) {
+
+    //Submition to database
+    function updatePatient(data){
+        fetch('http://152.44.224.138:5174/updatepatient', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                FirstName: data[0].FirstName,
+                LastName: data[0].LastName,
+                DOB: data[0].DOB,
+                Sex: data[0].Sex,
+                Address: data[0].Address,
+                Phone: data[0].Phone,
+                id: data[0].id,
+                EmergencyContact: data[0].EmergencyContact,
+                EmergencyContactPhone: data[0].EmergencyContactPhone,
+                Prescriptions: data[0].Prescriptions,
+                HealthHistory: data[0].HealthHistory,
+                FamilyHistory: data[0].FamilyHistory,
+                Diagnoses: data[0].Diagnoses
+            }),
+        })
+        console.log(data)
+        props.setData(data)
+    }
 
 
     //Handles swaping from 'td' tags to 'input' tags for editing
@@ -31,6 +60,7 @@ export default function PatientInformation(props) {
 
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
+        let updatedValuesArray = [];
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
@@ -38,11 +68,33 @@ export default function PatientInformation(props) {
         save.classList.toggle('invisible');
         
         Array.from(inputNodes).forEach(element => {
+            updatedValuesArray.push(element.value)
             element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
+
+        const updatedPatient = [{           
+            FirstName: updatedValuesArray[0],
+            LastName: updatedValuesArray[1],
+            DOB: updatedValuesArray[2],
+            Sex: updatedValuesArray[3],
+            Address: updatedValuesArray[4],
+            Phone: updatedValuesArray[5],
+            id: updatedValuesArray[6],
+            EmergencyContact: updatedValuesArray[7],
+            EmergencyContactPhone: updatedValuesArray[8],
+            Prescriptions: props.data[0].Prescriptions,
+            PrescriptionHistory: props.data[0].PrescriptionHistory,
+            HealthHistory: props.data[0].HealthHistory,
+            FamilyHistory: props.data[0].FamilyHistory,
+            Diagnoses: props.data[0].Diagnoses
+        }]
+
+       updatePatient(updatedPatient);
     }
+
+
 
 
 
@@ -106,7 +158,7 @@ export default function PatientInformation(props) {
 
                     <table className='table w-full mt-5'>
                         <tbody>
-                            {/*General Info*/}
+                            {/*Emergency Info*/}
                             <tr className='table-row h-10'>
                                 <td htmlFor="generalInfo" className="table-cell font-bold text-md">Emergency Contact Information:</td>
                             </tr>

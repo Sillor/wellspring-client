@@ -25,10 +25,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-("use client");
+import * as z from "zod"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import login from './Login'
+"use client"
+
+login();
 
 //Zod schema for form validation
 const formSchema = z
@@ -70,22 +73,16 @@ const formSchema = z
 
 //Submission to database
 const submitNewUser = (data) => {
-  fetch("https://wellspring.pfc.io:5175/createuser", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify({
-      Username: data.userName,
-      Password: data.password,
-      Email: data.email,
-      First_Name: data.firstName,
-      Surname: data.lastName,
-      Role: data.position,
-    }),
-  });
-};
+    console.log(data);
+    fetch('http://152.44.224.138:5174/createuser',{
+        method: 'POST',
+        headers: {
+            'content-type' : 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position}),
+    })
+}
 
 //Default values for zod form initialization
 export default function NewUser() {
@@ -153,132 +150,82 @@ export default function NewUser() {
                 }}
               />
 
-              {/*Password Confirm*/}
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Password Confirm:</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="confirmPassword"
-                          type="password"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                            {/*Password Confirm*/}
+                            <FormField control={form.control} name="confirmPassword" render={({field}) => {
+                                return <FormItem>
+                                    <FormLabel>Password Confirm:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="confirmPassword" type="password"/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            }}/>
+                
+                            <FormField control={form.control} name="firstName" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>First Name:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="first name" type="text" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
 
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>First Name:</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="first name"
-                          type="text"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                            <FormField control={form.control} name="lastName" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>Last Name:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="last name" type="text" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
 
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Last Name:</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="last name" type="text" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                            <FormField control={form.control} name="email" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>Email:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="email" type="email" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Email:</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="email" type="email" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                            <FormField control={form.control} name="position" render={({field}) => {
+                                return <FormItem>
+                                    <FormLabel>Position:</FormLabel>
+                                    <Select onValueChange={field.onChange}>
+                                        <FormControl>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select Position"/>
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="Doctor">Doctor</SelectItem>
+                                            <SelectItem value="Nurse">Nurse</SelectItem>
+                                            <SelectItem value="Technician">Technician</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            }}/>
 
-              <FormField
-                control={form.control}
-                name="position"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Position:</FormLabel>
-                      <Select onValueChange={field.onChange}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Position" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Doctor">Doctor</SelectItem>
-                          <SelectItem value="Nurse">Nurse</SelectItem>
-                          <SelectItem value="Technician">Technician</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-
-              <FormField
-                control={form.control}
-                name="doctorCode"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Doctor Code:</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Doctor Code"
-                          type="password"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-              <CardFooter className="flex sm:justify-center mt-10">
-                <Button className="w-full sm:w-1/3 flo" type="submit">
-                  Submit
-                </Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </main>
-  );
+                            <FormField control={form.control} name="doctorCode" render={({ field }) => {
+                                return <FormItem>
+                                    <FormLabel>Doctor Code:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Doctor Code" type="password" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            }} />
+                        <CardFooter className="flex sm:justify-center mt-10">
+                            <Button className="w-full sm:w-1/3 flo" type="submit" >Submit</Button>  
+                        </CardFooter>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
+        </main>
+    )
 }

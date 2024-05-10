@@ -1,5 +1,4 @@
 import '../globals.css'
-import { useState } from 'react'
 import {
 	Card,
 	CardContent,
@@ -10,12 +9,64 @@ import {
 } from "../components/ui/card"
 import editIcon from './PatientInformationAssets/pencil.png'
 import saveIcon from './PatientInformationAssets/save.png'
-import { useLocation } from 'react-router-dom'
-
+import { useState } from 'react'
 
 /* Shows Individual Patient Dashboard layout*/
-export function PatientChart(){
-    const location = useLocation()
+export function PatientChart(props){
+    //Submition to database
+    function updatePatient(data){
+        fetch('https://wellspring.pfc.io:5175/updatepatient/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                FirstName: data[0].FirstName,
+                LastName: data[0].LastName,
+                DOB: data[0].DOB,
+                Sex: data[0].Sex,
+                Address: data[0].Address,
+                Phone: data[0].Phone,
+                id: data[0].id,
+                EmergencyContact: data[0].EmergencyContact,
+                EmergencyContactPhone: data[0].EmergencyContactPhone,
+                Prescriptions: data[0].Prescriptions,
+                PrescriptionHistory: data[0].PrescriptionHistory,
+                HealthHistory: data[0].HealthHistory,
+                FamilyHistory: data[0].FamilyHistory,
+                Diagnoses: data[0].Diagnoses
+            }),
+        })
+        props.setData(data)
+    }
+
+    const [role,setRole] = useState("");
+    function getUser(username){
+
+        fetch('http://152.44.224.138:5174/user',{
+          method: 'POST',
+          headers: {
+              'content-type' : 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({Username: username})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if(role.length < 1)
+          console.log(data)
+            setRole(data[0].Role)
+        })
+    }
+    getUser('admintest')
+
+
+    //Disable Edits for non-doctors
+    function disableBtn(){
+        const edit = document.getElementById('editBtn');
+        edit.classList.add('disable')
+    }
     
     //Handles swaping from 'td' tags to 'input' tags for editing
     function editInformation(){
@@ -31,22 +82,45 @@ export function PatientChart(){
             element.parentNode.removeChild(element);
         });
     }
-                                                                                /* TODO: Consolidate to 1 function? */
+                                                                            
     //Handles swaping from 'input' tags to 'td' tags after editing
     function saveEdit(){
+        let updatedValuesArray = [];
         const edit = document.getElementById('editBtn');
         const save = document.getElementById('saveEditBtn');
         const inputNodes = document.getElementsByClassName('newInput');
         edit.classList.toggle('invisible');
         save.classList.toggle('invisible');
-
+        
         Array.from(inputNodes).forEach(element => {
+            updatedValuesArray.push(element.value)
             element.insertAdjacentHTML('afterend',`<td class='info table-cell w-1/3'></td>`)
             element.parentNode.lastChild.textContent = element.value;
             element.parentNode.removeChild(element);
         });
 
+        const updatedPatient = [{           
+            FirstName: props.data[0].FirstName,
+            LastName: props.data[0].LastName,
+            DOB: props.data[0].DOB,
+            Sex: props.data[0].Sex,
+            Address: props.data[0].Address,
+            Phone: props.data[0].Phone,
+            id: props.data[0].id,
+            EmergencyContact: props.data[0].EmergencyContact,
+            EmergencyContactPhone: props.data[0].EmergencyContactPhone,
+            Prescriptions: props.data[0].Prescriptions,
+            PrescriptionHistory: props.data[0].PrescriptionHistory,
+            HealthHistory: updatedValuesArray[0],
+            FamilyHistory: updatedValuesArray[2],
+            Diagnoses: updatedValuesArray[1]
+        }]
+
+
+       updatePatient(updatedPatient);
     }
+
+
 
     return(
         <>
@@ -56,7 +130,7 @@ export function PatientChart(){
 
                 {/*Edit Button */}
                 <Card className="flex w-fit hover:bg-slate-100 float-right" id="editBtn">
-                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem"  onClick={editInformation}>
+                        <button className=" bg-white hover:bg-slate-100 rounded-md menuItem"  onClick={role === "Doctor" ? disableBtn : editInformation}>
                             <img src={editIcon} alt="not found" className=" w-10 p-2" id="editIcon"/>
                         </button>
                     </Card>
@@ -77,11 +151,11 @@ export function PatientChart(){
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Existing Conditions:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].HealthHistory}</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].HealthHistory}</td>
                     </tr>
                     <tr className='table-row'>
                         <td htmlFor="generalInfo" className="table-cell text-center w-auto">Recent Diagnoses:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].Diagnoses}</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].Diagnoses}</td>
                     </tr>
 
                     {/*Family History*/}
@@ -89,8 +163,8 @@ export function PatientChart(){
                         <td htmlFor="generalInfo" className="table-cell font-bold text-md">Family Illness History:</td>
                     </tr>
                     <tr className='table-row'>
-                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">First Name:</td>
-                        <td className='info table-cell w-1/3'>{location.state[0].FamilyHistory}</td>
+                        <td htmlFor="generalInfo" className="table-cell text-center w-auto">Condition:</td>
+                        <td className='info table-cell w-1/3'>{props.data[0].FamilyHistory}</td>
                     </tr>
 
                     </tbody>

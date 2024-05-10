@@ -6,14 +6,19 @@ import NewUser from "./Login/NewUser";
 import Dashboard from "./ScheduleDashboard/Dashboard";
 
 function App() {
-  //Login for development purposes
-  login();
+  let username = "admintest";
+  let pass = "admintest2"
 
-  return (
-    <>
-      <Dashboard />
-    </>
-  );
+
+  //For dev purposes
+
+
+return(
+  <>                  
+    <Dashboard currentUser = {username}/>
+  </>
+)
+
 }
 
 export default App;
