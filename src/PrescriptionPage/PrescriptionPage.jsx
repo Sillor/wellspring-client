@@ -13,15 +13,46 @@ import {
 } from "../components/ui/card"
 
 import { useLocation } from "react-router-dom";
+import { useEffect } from 'react';
+import PrescriptionTab from './PrescriptionTab';
+import { useState } from 'react';
 
 
 export function PrescriptionPage(props) {
 
-
 	const location = useLocation();
+
+    const [displayCurrent,setDisplayCurrent] = useState([]);
+    const [displayPrevious,setDisplayPrevious] = useState([]);
+
+
+    useEffect(() => {
+        let tempCurr = []
+        let tempPrev = []
+        fetch('http://152.44.224.138:5174/prescriptions', {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        },)
+        .then((res) => (res.json()))
+        .then( (prescriptions) => {
+            prescriptions.forEach(prescription => {
+                if(prescription.Patientid === props.data[0].id && prescription.Active === 'yes'){
+                    tempCurr = [...tempCurr, <PrescriptionTab prescription={prescription} data={props.data} key={tempCurr.length}/>];
+                }
+                else if(prescription.Patientid === props.data[0].id && prescription.Active === 'no'){
+                    tempPrev = [...tempPrev, <PrescriptionTab prescription={prescription} data={props.data} key={tempCurr.length}/>];
+                }
+            });
+            setDisplayCurrent(tempCurr)
+            setDisplayPrevious(tempPrev)
+        })
+    },[])
+
 	return (
 		<>
-
 
 			{/*Primary Display*/}
 			<Card className="w-full sm:w-2/3">
@@ -33,45 +64,16 @@ export function PrescriptionPage(props) {
 					<CardTitle className="text-md">Current Prescription Information:</CardTitle>
 				</CardHeader>
 				<CardContent>
-				<table className='table justify-between w-full'>
-					<tbody>
-						<tr className='table-row w-full h-10'>	
-							<td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Medical Name:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Dose:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Ordered:</td>
-						</tr>
-						<tr className='table-row'>	
-							<td htmlFor="generalInfo" className="table-cell w-auto">{props.data[0].Prescriptions}</td>
-							<td className='table-cell w-1/3'>300mg</td>
-							<td className='table-cell w-1/3'>12/25/13</td>
-						</tr>
-					</tbody>
-				</table>
+				
+				{displayCurrent}
 
 				</CardContent>
 				<CardHeader>
 					<CardTitle className="text-md">Previous Prescription Information:</CardTitle>
 				</CardHeader>
 				<CardContent>
-				<table className='table justify-between w-full'>
-					<tbody>
-						<tr className='table-row w-full h-10'>	
-							<td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Medical Name:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Dose:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Ordered:</td>
-						</tr>
-						<tr className='table-row'>	
-							<td htmlFor="generalInfo" className="table-cell w-auto">{props.data[0].PrescriptionHistory}</td>
-							<td className='table-cell w-1/3'>300mg</td>
-							<td className='table-cell w-1/3'>12/25/13</td>
-						</tr>
-						<tr className='table-row'>	
-							<td htmlFor="generalInfo" className="table-cell w-auto">Promethazine:</td>
-							<td className='table-cell w-1/3'>500mg</td>
-							<td className='table-cell w-1/3'>2/6/13</td>
-						</tr>
-					</tbody>
-				</table>
+
+				{displayPrevious}
 
 				</CardContent>
 				<CardFooter className="flex sm:justify-center">

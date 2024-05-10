@@ -1,12 +1,11 @@
 
 
 export default function LabTab(props){
-    console.log(props)
     let dateFormat = props.lab.OrderDate.replace("T00:00:00.000Z", "")
 
     return(
         <>
-            <table className='table justify-between w-full border-separate' id='table'>
+            <table className='table-fixed justify-between w-full border-separate' id='table'>
                 <tbody>
                     <tr className='table-row w-full h-10 border-spacing-y-3'>
                         <td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Procedure Name:</td>
@@ -19,9 +18,9 @@ export default function LabTab(props){
                         <td className='table-cell w-1/3'>Dr. self</td>
                         <td className='table-cell w-1/3'>{dateFormat}</td>
                     </tr>
-                    <tr className='table-row h-4'>
+                    <tr className='table-row'>
                         <td className='table-cell w-1/3'>Results & Notes:</td>
-                        <td className='table-cell w-1/3'>{props.lab.Results}</td>
+                        <td className='table-cell break-all' colSpan={"2"}>{props.lab.Results}</td>
                     </tr>
                 </tbody>
             </table>
