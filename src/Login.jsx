@@ -63,7 +63,7 @@ const Login = () => {
                         })}}>Login</button>
                     </div>
                     <div className="mt-3">
-                        <button type="submit" className="border-1 border-teal-600 bg-gray-300 text-teal-600 py-1 min-w-full rounded-md hover:bg-teal-200 hover:text-teal-800 font-semibold">Create Account</button>
+                        <button type="submit" className="border-1 border-teal-600 bg-gray-300 text-teal-600 py-1 min-w-full rounded-md hover:bg-teal-200 hover:text-teal-800 font-semibold" onClick={() => {navigate('/createuser')}}>Create Account</button>
                     </div>
                     <div className="mt-5">
                         <h1 className="text-1x2 text-center text-bg text-teal-800 font-semibold">WellSpring</h1>

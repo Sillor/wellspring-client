@@ -17,6 +17,7 @@ import LabForm1 from './Labform1.jsx';
 import SearchPatient from './Search/SearchPatient.jsx'
 import Login from './Login.jsx';
 import AdminTools from './AdminTools/AdminTools.jsx'
+import NewUser from './Login/NewUser.jsx';
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,13 @@ const router = createBrowserRouter([
 
 
   {
-    path: "/NewPatient",
+    path: "/newpatient",
     element: <NewPatient/>,
+  },
+
+  {
+    path: "/createuser",
+    element: <NewUser/>,
   },
 
   {

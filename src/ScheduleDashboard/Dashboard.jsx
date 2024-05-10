@@ -42,6 +42,28 @@ import dayjs from 'dayjs'
 
 
 function Dashboard(props) {
+	const [role,setRole] = useState();
+
+
+
+    function getRole(username){
+  
+        fetch('http://152.44.224.138:5174/user',{
+          method: 'POST',
+          headers: {
+              'content-type' : 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({Username: username})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          setRole(data[0].Role);
+        })
+    }
+    getRole(localStorage.getItem('user'))
+
+
 
 	//Date formating
 	let todayDate = new Date();
@@ -50,6 +72,7 @@ function Dashboard(props) {
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [selectedDate,setSelectedDate] = useState([]);
+	const [initialRender,setInitialRender] = useState();
 
 	const handleDate = (date) => {
 		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -65,63 +88,126 @@ function Dashboard(props) {
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
-
 	useEffect(() => {
-		fetch('http://152.44.224.138:5174/appointments', {
-			method: 'GET',
-			headers: {
-				'content-type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('token')}`,
-			},
-		},)
-			.then((res) => res.json())
-			.then((appointments) => {
 
-				//Map over each patient id and retrieve the corresponding patient tab
-				appointments.forEach((patientAppointment) => {
+		// Doctor Dashboard
+		if (role === 'Doctor') {
+			fetch('http://152.44.224.138:5174/appointments', {
+				method: 'GET',
+				headers: {
+					'content-type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				},
+			},)
+				.then((res) => res.json())
+				.then((appointments) => {
 
-				//Clear Data list before repopulating to prevent repeats
-				setData([])
-				//Clear events list before repopulating
-				setEvents([])
-					
-					// Date formating jargon to correctly populate based on date selected
-					let dateFormat = patientAppointment.ScheduledDate.replace("T00:00:00.000Z","")
-					let reg = RegExp(/(\d{2}:\d{2})/g)
-					let timeFormat = patientAppointment.Time.match(reg);
+					//Map over each patient id and retrieve the corresponding patient tab
+					appointments.forEach((patientAppointment) => {
 
-					//Populate screen with open appointments for logged user under certain date
-					if(patientAppointment.Status === 'open' && localStorage.getItem('user') === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')){
+						//Clear Data list before repopulating to prevent repeats
+						setData([])
+						//Clear events list before repopulating
+						setEvents([])
 
-						fetch('http://152.44.224.138:5174/patient/', {
-							method: 'POST',
-							headers: {
-								'content-type': 'application/json',
-								'Authorization': `Bearer ${localStorage.getItem('token')}`,
-							},
-							body: JSON.stringify({id: patientAppointment.Patientid})
-						},)
-						.then((res) => (res.json()))
-						.then( (patient) => {
+						// Date formating jargon to correctly populate based on date selected
+						let dateFormat = patientAppointment.ScheduledDate.replace("T00:00:00.000Z", "")
+						let reg = RegExp(/(\d{2}:\d{2})/g)
+						let timeFormat = patientAppointment.Time.match(reg);
 
-						setData(data => [...data, patient.patient[0]]);
+						//Populate screen with open appointments for logged user under certain date
+						if (patientAppointment.Status === 'open' && localStorage.getItem('user') === patientAppointment.Username && date === dayjs(dateFormat).format('dddd, MMMM DD, YYYY')) {
 
-						const item = {
-							id: patientAppointment.id,
-							patientId:patientAppointment.Patientid,
-							title: "Doctor Appointment",
-							patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
-							date: dayjs(dateFormat).format('dddd, MMMM DD, YYYY'),
-							time: timeFormat,
-							type: patientAppointment.Care,
+							fetch('http://152.44.224.138:5174/patient/', {
+								method: 'POST',
+								headers: {
+									'content-type': 'application/json',
+									'Authorization': `Bearer ${localStorage.getItem('token')}`,
+								},
+								body: JSON.stringify({ id: patientAppointment.Patientid })
+							},)
+								.then((res) => (res.json()))
+								.then((patient) => {
+
+									setData(data => [...data, patient.patient[0]]);
+
+									const item = {
+										id: patientAppointment.id,
+										patientId: patientAppointment.Patientid,
+										title: "Doctor Appointment",
+										patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
+										date: dayjs(dateFormat).format('dddd, MMMM DD, YYYY'),
+										time: 'at' + timeFormat,
+										type: patientAppointment.Care,
+									}
+									setEvents(events => [...events, item])
+								})
 						}
-						setEvents(events => [...events,item])
-						})
-					}
-				})
+					})
 
-			})
-	}, [date])
+				})
+		}
+		
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+		// Technician Dashboard
+		else if(role === "Technician"){
+
+			fetch('http://152.44.224.138:5174/labs', {
+				method: 'GET',
+				headers: {
+					'content-type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				},
+			},)
+				.then((res) => res.json())
+				.then((labs) => {
+
+					//Map over each patient id and retrieve the corresponding patient tab
+					labs.forEach((patientLab) => {
+
+					//Clear Data list before repopulating to prevent repeats
+					setData([])
+
+					//Clear events list before repopulating
+					setEvents([])
+					
+					let dateFormat = patientLab.OrderDate.replace("T00:00:00.000Z", "")
+
+						//Populate screen with open labs for logged user under certain date
+						if(patientLab.Status === 'open' && date === dayjs(dateFormat).format('dddd, MMMM D, YYYY')){
+
+							fetch('http://152.44.224.138:5174/patient/', {
+								method: 'POST',
+								headers: {
+									'content-type': 'application/json',
+									'Authorization': `Bearer ${localStorage.getItem('token')}`,
+								},
+								body: JSON.stringify({id: patientLab.Patientid})
+							},)
+							.then((res) => (res.json()))
+							.then( (patient) => {
+
+							setData(data => [...data, patient.patient[0]]);
+
+							const item = {
+								id: patientLab.id,
+								patientId:patientLab.Patientid,
+								title: patientLab.Lab,
+								patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
+								time: patientLab.OrderedDate
+							}
+								setEvents(events => [...events,item])
+							})
+						}
+					})
+				})
+		}	
+	}, [date,role])
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// Patient filter
 	const [selectedType, setSelectedType] = useState("All");
@@ -159,7 +245,6 @@ function Dashboard(props) {
 
 
 	return (
-
 		<div className="flex flex-col items-center ">
 
 			{/*Hamburger Menu*/}
@@ -181,6 +266,7 @@ function Dashboard(props) {
 						<DrawerFooter>
 							<Link to={'/main'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
 							<Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
+							<Link to={'/newpatient'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Patient</Link>
 							<Link to={'/admin'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Admin Tools</Link>
 							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
 							<DrawerClose asChild>
@@ -201,6 +287,7 @@ function Dashboard(props) {
 						<NavigationMenuItem>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/main'}>View Schedule List</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newpatient'}>New Patient</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/admin'}>Admin Tools</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
 						</NavigationMenuItem>
@@ -262,7 +349,7 @@ function Dashboard(props) {
 								<h1 className="text-xl font-bold">{selectedEvent.title}</h1>
 								<h1>{selectedEvent.type}</h1>
 								<p>
-									{selectedEvent.date} at {selectedEvent.time}
+									{selectedEvent.date} {selectedEvent.time}
 									<br />
 								</p>
 								<button className="flex mt-3 float-start  text-white border-slate-200 bg-red-500 hover:bg-red-300 h-10 w-36 justify-center text-center items-center rounded-lg" onClick={() => resolve(selectedEvent)}>Resolve</button>

@@ -25,15 +25,15 @@ import {
     FormMessage,
   } from "@/components/ui/form"
   
+import { useNavigate, useLocation} from "react-router-dom";
 
 
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import login from './Login'
+import Login from '../Login'
 "use client"
-
-login();
 
 //Zod schema for form validation
 const formSchema = z.object({
@@ -70,21 +70,31 @@ const formSchema = z.object({
     }
 )
 
-//Submition to database
-const submitNewUser = (data) => {
-    console.log(data);
-    fetch('http://152.44.224.138:5174/createuser',{
-        method: 'POST',
-        headers: {
-            'content-type' : 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position}),
-    })
-}
+
 
 //Default values for zod form initialization
 export default function NewUser() {
+
+    const navigate = useNavigate();
+
+    //Submition to database
+    const submitNewUser = (data) => {
+
+        navigate('/')
+
+        fetch('http://152.44.224.138:5174/createuser', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position }),
+        })
+
+    }
+
+
+
     const form = useForm({
         resolver:zodResolver(formSchema),
         defaultValues: {
@@ -101,7 +111,7 @@ export default function NewUser() {
     
 
     return (
-        <main className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
+        <main className=" w-full justify-center flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
             {/*Primary Display*/}
             <Card className="w-full sm:w-2/3">
                 <CardHeader>
@@ -187,6 +197,7 @@ export default function NewUser() {
                                             <SelectItem value="Doctor">Doctor</SelectItem>
                                             <SelectItem value="Nurse">Nurse</SelectItem>
                                             <SelectItem value="Technician">Technician</SelectItem>
+                                            <SelectItem value="Technician">Pharmacist</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>
@@ -202,8 +213,8 @@ export default function NewUser() {
                                     <FormMessage />
                                 </FormItem>
                             }} />
-                        <CardFooter className="flex sm:justify-center mt-10">
-                            <Button className="w-full sm:w-1/3 flo" type="submit" >Submit</Button>  
+                        <CardFooter className="flex sm:justify-center mt-10 justify-center">
+                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md w-1/2">Submit</button>
                         </CardFooter>
                         </form>
                     </Form>

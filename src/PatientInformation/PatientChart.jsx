@@ -118,7 +118,6 @@ export function PatientChart(props){
           setRole(data[0].Role);
         })
     }
-
     getRole(localStorage.getItem('user'))
 
     return(

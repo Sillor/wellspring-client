@@ -1,7 +1,8 @@
 import '../globals.css'
 import { Button } from "../components/ui/button"
 import {Link } from "react-router-dom";
-
+import { Menu, PaintBucket } from "lucide-react";
+import { User } from "lucide-react";
 import {
 	Card,
 	CardContent,
@@ -11,10 +12,17 @@ import {
 	CardTitle,
 } from "../components/ui/card"
 
+import { useLocation } from "react-router-dom";
+
+
 export function PrescriptionPage(props) {
-	
+
+
+	const location = useLocation();
 	return (
 		<>
+
+
 			{/*Primary Display*/}
 			<Card className="w-full sm:w-2/3">
 				<CardHeader>
@@ -67,7 +75,7 @@ export function PrescriptionPage(props) {
 
 				</CardContent>
 				<CardFooter className="flex sm:justify-center">
-                <Link to={"/prescriptioninfo/request"} className=" sm:w-1/3 w-full">
+                <Link to={"/prescriptioninfo/request"} state={{selectedPatient:location.state.selectedPatient}} className=" sm:w-1/3 w-full">
                     <Button className="w-full" >Request</Button>
                 </Link>
 				</CardFooter>
