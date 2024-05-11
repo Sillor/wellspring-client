@@ -217,6 +217,7 @@ function Dashboard(props) {
 			: events.filter((event) => event.type === selectedType);
 
 
+
 	//Function removing patient appointment from DB
 	const resolve = (item) => {
 		let result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s appointment for ' + item.time[0] + "?")
