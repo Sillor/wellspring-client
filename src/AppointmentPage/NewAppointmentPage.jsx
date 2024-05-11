@@ -35,22 +35,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { date } from "zod";
-
 export function NewAppointmentPage() {
   const [events, setEvents] = useState([
     {
       id: 1,
       patientName: "Patient #1",
     },
+  ]);
+
+  const [physicianList, setPhysicianList] = useState([
+    { id: 1, physicianName: "Physician Example" },
   ]);
 
   // Form Values
@@ -99,9 +93,9 @@ export function NewAppointmentPage() {
   });
 
   //Dont render if data isnt there
-  if (data.length < 1) {
-    return <div>Loading...</div>;
-  }
+  // if (data.length < 1) {
+  //   return <div>Loading...</div>;
+  // }
 
   //Submission to database
   const handleSubmit = (e) => {

@@ -9,30 +9,31 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
-import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
-import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
-import NewPatient from './ScheduleDashboard/NewPatient.jsx';
-import LabForm1 from './Labform1.jsx';
-import SearchPatient from './Search/SearchPatient.jsx'
-import Login from './Login.jsx';
-import AdminTools from './AdminTools/AdminTools.jsx'
+import { PrescriptionPage } from "./PrescriptionPage/PrescriptionPage.jsx";
+import PrescriptionRequestPage from "./PrescriptionPage/PrescriptionRequestPage.jsx";
+import PatientDashboard from "./PatientDashboard/PatientDashboard.jsx";
+import NewPatient from "./ScheduleDashboard/NewPatient.jsx";
+import LabForm1 from "./Labform1.jsx";
+import SearchPatient from "./Search/SearchPatient.jsx";
+import Login from "./Login.jsx";
+import AdminTools from "./AdminTools/AdminTools.jsx";
+import NewAppointmentPage from "./AppointmentPage/NewAppointmentPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Login/>,
-    errorElement: <p>404</p>
+    element: <Login />,
+    errorElement: <p>404</p>,
   },
   {
     path: "/main",
-    element: <App/>,
-    errorElement: <p>404</p>
+    element: <App />,
+    errorElement: <p>404</p>,
   },
   {
     path: "/admin",
-    element: <AdminTools/>,
-    errorElement: <p>404</p>
+    element: <AdminTools />,
+    errorElement: <p>404</p>,
   },
   {
     path: "/dashboard",
@@ -48,28 +49,29 @@ const router = createBrowserRouter([
 
   {
     path: "/prescriptioninfo/request",
-    element: <PrescriptionRequestPage/>,
+    element: <PrescriptionRequestPage />,
   },
-
 
   {
     path: "/NewPatient",
-    element: <NewPatient/>,
+    element: <NewPatient />,
   },
 
   {
     path: "/labform1",
-    element: <LabForm1/>,
+    element: <LabForm1 />,
   },
 
   {
     path: "/search",
-    element: <SearchPatient/>,
+    element: <SearchPatient />,
   },
 
+  {
+    path: "/newappointment",
+    element: <NewAppointmentPage />,
+  },
 ]);
-
-
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
