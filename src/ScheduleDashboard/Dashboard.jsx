@@ -44,10 +44,7 @@ import dayjs from 'dayjs'
 function Dashboard(props) {
 	const [role,setRole] = useState();
 
-
-
     function getRole(username){
-  
         fetch('http://152.44.224.138:5174/user',{
           method: 'POST',
           headers: {
@@ -69,10 +66,10 @@ function Dashboard(props) {
 	let todayDate = new Date();
 	const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 	const [date, setDate] = useState(todayDate.toLocaleDateString("en-US",dateFormating));
+
 	const [ButtonPopup, setButtonPopup] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [selectedDate,setSelectedDate] = useState([]);
-	const [initialRender,setInitialRender] = useState();
 
 	const handleDate = (date) => {
 		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -90,7 +87,11 @@ function Dashboard(props) {
 	const [data, setData] = useState([])
 	useEffect(() => {
 
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		// Doctor Dashboard
+
 		if (role === 'Doctor') {
 			fetch('http://152.44.224.138:5174/appointments', {
 				method: 'GET',
@@ -149,10 +150,11 @@ function Dashboard(props) {
 		}
 		
 
-////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 		// Technician Dashboard
+
 		else if(role === "Technician"){
 
 			fetch('http://152.44.224.138:5174/labs', {
@@ -204,10 +206,82 @@ function Dashboard(props) {
 						}
 					})
 				})
-		}	
-	}, [date,role])
+		}
+		
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		// Nurse goes straight to Patient search since no 'assigned patients'
+		else if(role === 'Nurse'){
+			navigate('/search')
+		}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		// Role must be Pharmacist
+
+		else if(role === 'Pharmacist'){
+
+			fetch('http://152.44.224.138:5174/prescriptions', {
+				method: 'GET',
+				headers: {
+					'content-type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				},
+			},)
+				.then((res) => res.json())
+				.then((activePrescriptions) => {
+					//Map over each patient id and retrieve the corresponding patient tab
+					activePrescriptions.forEach((prescription) => {
+
+					//Clear Data list before repopulating to prevent repeats
+					setData([])
+
+					//Clear events list before repopulating
+					setEvents([])
+					
+					let dateFormat = prescription.OrderDate.replace("T00:00:00.000Z", "")
+
+						//Populate screen with open labs for logged user under certain date
+						if(prescription.Active === 'yes' && date === dayjs(dateFormat).format('dddd, MMMM D, YYYY')){
+
+							fetch('http://152.44.224.138:5174/patient/', {
+								method: 'POST',
+								headers: {
+									'content-type': 'application/json',
+									'Authorization': `Bearer ${localStorage.getItem('token')}`,
+								},
+								body: JSON.stringify({id: prescription.Patientid})
+							},)
+							.then((res) => (res.json()))
+							.then( (patient) => {
+
+							setData(data => [...data, patient.patient[0]]);
+
+							const item = {
+								id: prescription.id,
+								patientId:prescription.Patientid,
+								title: 'Prescription Name: ' + prescription.PrescriptionName,
+
+								// time = dosage
+								time: prescription.Dosage,
+								patientName: patient.patient[0].FirstName + ", " + patient.patient[0].LastName,
+							}
+								setEvents(events => [...events,item])
+							})
+						}
+					})
+				})
+
+
+		}
+
+	}, [date,role])
+
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	
 	// Patient filter
 	const [selectedType, setSelectedType] = useState("All");
@@ -217,30 +291,79 @@ function Dashboard(props) {
 			: events.filter((event) => event.type === selectedType);
 
 
-
 	//Function removing patient appointment from DB
 	const resolve = (item) => {
-		let result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s appointment for ' + item.time[0] + "?")
-		if(result === true){
-			fetch('http://152.44.224.138:5174/deleteappointment/', {
-				method: 'POST',
-				headers: {
-					'content-type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('token')}`,
-				},
-				body: JSON.stringify({
-					id: item.id
-				}),
-			},)
-			.then((res) => res.json())
-			.then( (res) => {
-				if(res.message === 'success'){
-					alert("Appointment resolved and removed")
-				}
-			})
+		let result;
+
+		// Dashboard delete appointment
+		if(role === "Doctor"){
+			result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s appointment for ' + item.time[0] + "?")
+
+			if(result === true){
+				fetch('http://152.44.224.138:5174/deleteappointment/', {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`,
+					},
+					body: JSON.stringify({
+						id: item.id
+					}),
+				},)
+				.then((res) => res.json())
+				.then( (res) => {
+					if(res.message === 'success'){
+						alert("Appointment resolved and removed")
+					}
+				})
+			}
+			else{
+				return false;
+			}
 		}
-		else{
-			return false;
+
+
+		// Dashboard delete lab 
+		else if(role === "Technician"){
+			result = confirm("Resolving this will close out the current appointment. \n \n Are you sure you want to delete " + item.patientName + ' \'s lab')
+			console.log(item)
+			if(result === true){
+				fetch('http://152.44.224.138:5174/deletelab/', {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`,
+					},
+					body: JSON.stringify({
+						id: item.id
+					}),
+				},)
+				.then((res) => res.json())
+				.then( (res) => {
+					if(res.message === 'success'){
+						alert("Lab resolved and removed")
+					}
+				})
+			}
+			else{
+				return false;
+			}
+		}
+
+		else if(role === "Pharmacist"){
+			result = confirm("Resolving this will close out the current prescription, and add it to patient records. \n \n Are you sure you want to fulfill" + item.patientName + ' \'s prescription?')
+			console.log(item)
+
+				fetch('http://152.44.224.138:5174/updateprescription/', {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`,
+					},
+					body: JSON.stringify({
+						id: item.id,
+					}),
+				},)
 		}
 	}
 

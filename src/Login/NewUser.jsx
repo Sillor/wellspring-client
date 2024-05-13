@@ -31,8 +31,6 @@ import { useNavigate, useLocation} from "react-router-dom";
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import login from './Login'
-import Login from '../Login'
 "use client"
 
 //Zod schema for form validation
@@ -43,7 +41,7 @@ const formSchema = z.object({
     email: z.string().email(),
     password: z.string().min(4),
     confirmPassword: z.string(),
-    position: z.enum(["Doctor", "Nurse", "Technician"]),
+    position: z.enum(["Doctor", "Nurse", "Technician", "Pharmacist"]),
     doctorCode: z.string().optional()
     
 })
@@ -197,7 +195,7 @@ export default function NewUser() {
                                             <SelectItem value="Doctor">Doctor</SelectItem>
                                             <SelectItem value="Nurse">Nurse</SelectItem>
                                             <SelectItem value="Technician">Technician</SelectItem>
-                                            <SelectItem value="Technician">Pharmacist</SelectItem>
+                                            <SelectItem value="Pharmacist">Pharmacist</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>

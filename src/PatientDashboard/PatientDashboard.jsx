@@ -40,6 +40,7 @@ export function PatientDashboard(props) {
 
     //Use Location to navigate
     const location = useLocation()
+    console.log(location)
     const [data,setData] = useState(location.state.selectedPatient)
     const [display,setDisplay] = useState(<PatientInformation data={data} setData={setData}/>);
 
