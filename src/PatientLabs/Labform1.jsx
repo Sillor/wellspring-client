@@ -1,26 +1,5 @@
-import '../globals.css'
-import { Button } from "../components/ui/button"
-import arrow from './PrescriptionAssets/arrow.png'
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
-
+import React, { useState } from 'react';
+import { Button } from '../components/ui/button';
 import {
 	NavigationMenu,
 	NavigationMenuItem,
@@ -30,8 +9,8 @@ import {
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import { Textarea } from "@/components/ui/textarea"
 import { Link } from 'react-router-dom'
-import menu from './PrescriptionAssets/menu.png'
-import user from './PrescriptionAssets/user.png'
+import arrow from '../PrescriptionPage/PrescriptionAssets/arrow.png'
+
 import {
     Drawer,
     DrawerClose,
@@ -45,30 +24,51 @@ import {
 import {useLocation} from "react-router-dom"
 import { Menu, PaintBucket } from "lucide-react";
 import { User } from "lucide-react";
-
-function request(patient){
-	fetch('https://wellspring.pfc.io:5175/createprescription', {
-		method: 'POST',
-		headers: {
-			'content-type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('token')}`
-		},
-		body: JSON.stringify({
-			id: patient.id,
-			Patientid: patient.id,
-			PrescriptionName: document.getElementById('prescription').value,
-			OrderDate: new Date(),
-			Dosage: document.getElementById('prescription').value,
-		}),
-	})
-}
+import { Card } from '../components/ui/card';
 
 
-export function PrescriptionRequestPage() {
-	const location = useLocation();
-	console.log(location)
-	return (
-		<div className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
+const LabForm1 = (props) => {
+
+    const location = useLocation(props);
+
+    console.log(props)
+    console.log(location.state)
+
+
+    const [formData, setFormData] = useState({
+        labSelection: '',
+        labOrderDate: '',
+        patientName: '',
+        doctorName: '',
+        notes: ''
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        //submission to database
+        const submitLabForm1 = (data) => {
+            fetch('https://wellspring.pfc.io:5175/createlabform1',{
+            method: 'POST',
+            headers: {
+                'content-type' : 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ labSelection: data.labSelection, labOrderDate: data.labOrderDate, patientName: data.patientName, doctorName: data.doctorName, Notes: data.Notes}),
+        })
+    }
+
+    }
+
+    return (
+        
+            <div className="flex flex-col items-center gap-2">
+
 
 			{/*User header*/}
 			<div className="flex w-full mx-2 sticky " id="userHeader">
@@ -117,9 +117,6 @@ export function PrescriptionRequestPage() {
 
 
 
-
-
-
 			{/*Patient info and backspace header*/}
 			<Card className="flex flex-row w-full sm:w-2/3 items-center">
 				<Card className="flex w-fit hover:bg-slate-100">
@@ -133,60 +130,54 @@ export function PrescriptionRequestPage() {
 				</div>
 			</Card>
 
-			{/*Primary Display*/}
-			<Card className="w-full sm:w-2/3">
-				<CardHeader>
-					<CardTitle>Prescription Request</CardTitle>
-					<CardDescription>What medication is to be requested?</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form>
-						<div className="table w-full gap-4">
-							<div className="table-row">
-								<Label htmlFor="patientName" className="table-cell " >Patient Name:</Label>
-								<Input id="patientName" placeholder="Name patient" className="table-cell col"/>
-							</div>
-							<div className="table-row">
-								<Label htmlFor="orderBy" className="table-cell">Ordered By:</Label>
-								<Input id="orderBy" placeholder="Physician name" className="flex"/>
-							</div>
-							<div className="table-row">
-								<Label htmlFor="prescription" className="table-cell" >Prescription Name:</Label>
-								<Input id="prescription" placeholder="Presciption to be filled" className="flex"/>
-							</div>
-							<div className="table-row">
-								<Label htmlFor="dosage" className="table-cell">Dosage:</Label>
-								<div className='flex flex-row'>
-								<Input id="dosage" placeholder="Dosage"/>
-								<Select>
-								<SelectTrigger className="w-20">
-									<SelectValue placeholder="Units" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-									<SelectLabel></SelectLabel>
-									<SelectItem value="milligrams">mg</SelectItem>
-									<SelectItem value="milliliters">ml</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-								</Select>
-								</div>
 
-							</div>
-							<div className="table-row">
-								<Label htmlFor="notes" className="table-cell">Notes:</Label>
-								<Textarea id="notes" placeholder="Important Notes" className="focus-visible:ring-0"/>
-							</div>
-						</div>
-					</form>
-				</CardContent>
-				<CardFooter className="flex sm:justify-center">
-					<Button className="w-full sm:w-1/3" onClick={()=> request(location.state.selectedPatient[0])}>Request</Button>
-				</CardFooter>
-			</Card>
-			
-		</div>
-	)
+			<Card className="w-full sm:w-2/3">
+
+
+                <div className="w-full p-4 shadow-lg bg-white rounded-md">
+                    <h1 className="text-2xl font-semibold text-teal-800 mb-4 text-center mt-3"><i className="fas fa-dna"></i> Lab Information Form</h1>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="flex space-x-5">
+                            <div>
+                                <label htmlFor="labFacility" className="block text-sm font-medium text-teal-800 mt-5">Lab Work</label>
+                                <div className="relative inline-block">
+                                    <button type="button" className="btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="true">
+                                        Lab Selection
+                                    </button>
+                                    <ul className="absolute hidden mt-2 bg-teal-300 border border-gray-300 rounded-md shadow-lg">
+                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="X-Ray">X-Ray</li>
+                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Bloodwork">Bloodwork</li>
+                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Physical">Physical</li>
+                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Maternal">Maternal</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="labOrderDate" className="block text-sm font-medium text-teal-800 mt-5">Lab Order Date</label>
+                                <input type="date" id="labOrderDate" name="labOrderDate" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} required />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="patientName" className="block text-sm font-medium text-teal-800 mt-5">Patient's Name</label>
+                            <input type="text" id="patientName" name="patientName" className="mt-1 p-2 w-full border rounded-md" placeholder="Enter Patient" onChange={handleInputChange} required />
+                        </div>
+                        <div>
+                            <label htmlFor="doctorName" className="block text-sm font-medium text-teal-800 mt-5">Doctor's Name</label>
+                            <input type="text" id="doctorName" name="doctorName" className="mt-1 p-2 w-full border rounded-md" placeholder="Enter Doctor" onChange={handleInputChange} required />
+                        </div>
+                        <div>
+                            <label htmlFor="Notes" className="block text-sm font-medium text-teal-600 mt-3">Notes</label>
+                            <input type="text" id="Notes" name="notes" className="mt-3 p-8 w-full border rounded-md" placeholder="Enter Notes" onChange={handleInputChange} />
+                        </div>
+                            <Link to={"/prescriptioninfo/request"} state={props.data} className=" sm:w-1/3 w-full">
+                                <Button className="w-full" >Request</Button>
+                            </Link>
+                    </form>
+                </div>
+                </Card>
+
+            </div>
+    );
 }
 
-export default PrescriptionRequestPage
+export default LabForm1;

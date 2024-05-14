@@ -44,7 +44,7 @@ const formSchema = z
     email: z.string().email(),
     password: z.string().min(4),
     confirmPassword: z.string(),
-    position: z.enum(['Doctor', 'Nurse', 'Technician']),
+    position: z.enum(['Doctor', 'Nurse', 'Technician', 'Pharmacist']),
     doctorCode: z.string().optional(),
   })
   //Error for password matching

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import '../output.css';
-
+import { Label } from '../components/ui/label';
 const NewPatient = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -58,21 +58,29 @@ const NewPatient = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    const name= document.getElementById("firstName")
-    console.log(name.value)
-            //submission to database
+
+       const patient = { 
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+
+        }
+
+
+        //submission to database
         const submitNewPatient = (data) => {
             console.log(data)
-            fetch('http://wellspring.pfc.io:5175/createnewpatient',{
+            fetch('http://152.44.224.138:5174/createpatient',{
             method: 'POST',
             headers: {
                 'content-type' : 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, dob: formData.dob, phone: formData.phone, sex: formData.sex, address: formData.address, emergencyContact: formData.emergencyContact, emergencyContactPhone: formData.emergencyContactPhone, prescriptions: formData.prescriptions, prescriptionHistory: formData.prescriptionHistory, healthHistory: formData.healthHistory, familyHistory: formData.familyHistory, photo: formData.photo}),
+            body: JSON.stringify({ FirstName: formData.firstName, LastName: formData.lastName, DOB: formData.dob, Phone: formData.phone, Sex: formData.sex, Address: formData.address, EmergencyContact: formData.emergencyContact, EmergencyContactPhone: formData.emergencyContactPhone, Prescriptions: formData.prescriptions, PrescriptionHistory: formData.prescriptionHistory, HealthHistory: formData.healthHistory, FamilyHistory: formData.familyHistory}),
             })
+            .then((res) => res.json())
+            .then ((res) => console.log(res))
         }
-        submitNewPatient
+        submitNewPatient(patient)
 
         console.log('NewPatient:', formData);
     }
@@ -103,7 +111,8 @@ const NewPatient = () => {
                             <label className="block text-sm font-medium text-gray-700">Sex</label>
                             <div className="flex items-center space-x-2">
                                 <Checkbox id="male" name="sex" value="male" label="Male" onChange={handleCheckboxChange} />
-                                <Checkbox id="female" name="sex" value="female" label="Female" onChange={handleCheckboxChange} />
+                                <Label htmlFor="Male">Male</Label>
+                                <Checkbox id="female" name="sex" value="female" label="Female" onChange={handleCheckboxChange} /> Female
                             </div>
                         </div>
                         <div>

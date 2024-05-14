@@ -21,6 +21,7 @@ import { useState } from 'react';
 export function PrescriptionPage(props) {
 
 	const location = useLocation();
+    console.log(location)
 
     const [displayCurrent,setDisplayCurrent] = useState([]);
     const [displayPrevious,setDisplayPrevious] = useState([]);

@@ -12,14 +12,17 @@ import { Label } from "../components/ui/label"
 import { Button } from '../components/ui/button'
 import LabTab from './LabTab'
 import { useEffect, useState } from 'react'
+import { useNavigate} from "react-router-dom";
+import { Link } from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 
 
 /* Shows Individual Patient Dashboard layout*/
 export function PatientLabs(props){
     const [displayCurrent,setDisplayCurrent] = useState([]);
     const [displayPrevious,setDisplayPrevious] = useState([]);
-
-
+    const location = useLocation()
+    console.log(location)
     useEffect(() => {
         let tempCurr = []
         let tempPrev = []
@@ -65,9 +68,9 @@ export function PatientLabs(props){
 
             </CardContent>
             <CardFooter className="flex w-full justify-center ">
-                    <div className='w-full justify-center md:w-1/3'>
-                        <Button className="w-full" >Request</Button>
-                    </div>
+            <Link to={"/labform1"} state={{selectedPatient:location.state.selectedPatient}} className=" sm:w-1/3 w-full">
+                    <Button className="w-full" >Request</Button>
+                </Link>
                 </CardFooter>
         </Card>
         </>

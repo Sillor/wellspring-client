@@ -23,7 +23,17 @@ import { Button } from "@/components/ui/button";
 import { User, Menu } from "lucide-react";
 
 function inviteDoctor(){
-    
+    console.log('here')
+    fetch('http://152.44.224.138:5174/createdoctorcode', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({code: 'test'})
+    },)
+
+    .then((data) => console.log(data))
 }
 
 function makeid(length) {
@@ -38,7 +48,7 @@ function makeid(length) {
     return result;
 }
 
-console.log(makeid(8));
+//console.log(makeid(8));
 
 function AdminTools(){
     return(
@@ -98,7 +108,7 @@ function AdminTools(){
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={()=> document.getElementById('inputBox').classList.toggle('flex')}>Invite Doctor</button>
                     <div id="inputBox" className="inputBox w-1/2 hidden flex-row gap-3">
                         <Input className='flex w-2/3 input' id='input' placeholder="Email of Recipient " type='text' ></Input>
-                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Invite</button>
+                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={inviteDoctor}>Invite</button>
                     </div>
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Delete User</button>
                 </div>
