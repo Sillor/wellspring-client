@@ -18,22 +18,21 @@ import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import '../globals.css'
 import { Input } from "../components/ui/input"
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button";
 import { User, Menu } from "lucide-react";
 
 function inviteDoctor(){
-    console.log('here')
     fetch('http://152.44.224.138:5174/createdoctorcode', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({code: 'test'})
+        body: JSON.stringify({code: makeid(8), invitedby: 'boobs' })
     },)
 
-    .then((data) => console.log(data))
+    .then((res) => res.json())
+    .then((res) => console.log(res))
 }
 
 function makeid(length) {

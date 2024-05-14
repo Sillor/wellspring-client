@@ -1,31 +1,41 @@
 import './output.css'; 
 import { useNavigate } from "react-router-dom";
 
-function login(username,password){
-    fetch('http://152.44.224.138:5174/login',{
-        method: 'POST',
-        headers: {
-            'content-type' : 'application/json',
-        },
-        body: JSON.stringify({username: username, password: password})
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        if(data.message === 'success'){
-            localStorage.clear();
-            localStorage.setItem('token', data.token)
-            localStorage.setItem('user',username)
-        }
-        else{
-            //
-        }
-    })
-}
+
 
 
 
 const Login = () => {
     const navigate = useNavigate();
+
+    function login(username,password){
+        fetch('http://152.44.224.138:5174/login',{
+            method: 'POST',
+            headers: {
+                'content-type' : 'application/json',
+            },
+            body: JSON.stringify({username: username, password: password})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if(data.message === 'success'){
+                localStorage.clear();
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('user',username)
+
+
+                navigate('/main', 
+                        {
+                            state: {
+                                user: document.getElementById('emailAddress').value,
+                            }
+                        })
+            }
+            else{
+                alert("Invalid username or password")
+            }
+        })
+    }
     
     return (
         <div>
@@ -55,12 +65,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div className="mt-7">
-                        <button type="submit" id="loginBtn" className="border-1 border-l-teal-500 bg-teal-500 text-white py-1 w-full rounded-md hover:bg-teal-800 hover:text-white font-semibold" onClick={() => {login(document.getElementById('emailAddress').value, document.getElementById('password').value);navigate('/main', 
-                        {
-                            state: {
-                                user: document.getElementById('emailAddress').value,
-                            }
-                        })}}>Login</button>
+                        <button type="submit" id="loginBtn" className="border-1 border-l-teal-500 bg-teal-500 text-white py-1 w-full rounded-md hover:bg-teal-800 hover:text-white font-semibold" onClick={() => { login(document.getElementById('emailAddress').value, document.getElementById('password').value)}}>Login</button>
                     </div>
                     <div className="mt-3">
                         <button type="submit" className="border-1 border-teal-600 bg-gray-300 text-teal-600 py-1 min-w-full rounded-md hover:bg-teal-200 hover:text-teal-800 font-semibold" onClick={() => {navigate('/createuser')}}>Create Account</button>
