@@ -1,4 +1,5 @@
 import '../globals.css';
+import './button.css';
 import { Button } from '../components/ui/button';
 import {
   Card,
@@ -302,9 +303,12 @@ export default function NewUser() {
                 }}
               />
               <CardFooter className="flex sm:justify-center mt-10 justify-center">
-                <Button className="bg-slate-500 hover:bg-slate-700 text-white px-4 py-2 rounded-md w-1/2">
+                <button
+                  type="submit"
+                  className="submit-button px-4 py-2 rounded-md w-1/2"
+                >
                   Submit
-                </Button>
+                </button>
               </CardFooter>
             </form>
           </Form>
