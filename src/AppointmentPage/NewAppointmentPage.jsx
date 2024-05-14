@@ -44,7 +44,14 @@ export function NewAppointmentPage() {
   ]);
 
   const [physicianList, setPhysicianList] = useState([
-    { id: 1, physicianName: "Physician Example" },
+    {
+      id: 1,
+      physicianName: "Physician Example",
+    },
+    {
+      id: 2,
+      physicianName: "Physician Example2",
+    },
   ]);
 
   // Form Values
@@ -67,6 +74,20 @@ export function NewAppointmentPage() {
       setEvents(updatedEvents);
     }
   }
+
+  // function populatePhysician(data) {
+  //   // Check if data.users is an array and has elements
+  //   if (Array.isArray(data.users) && data.users.length > 0) {
+  //     // Update events with users names
+  //     const updatedEvents = data.users.map((user) => ({
+  //       username: user.Username, // Assigning the patient id to id
+  //       physicianName: `${user.FirstName} ${user.LastName}`,
+  //     }));
+
+  //     // Update events array
+  //     setPhysicianList(updatedEvents);
+  //   }
+  // }
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -92,6 +113,30 @@ export function NewAppointmentPage() {
       });
   });
 
+  // const [physicianData, setPhysicianData] = useState([]);
+  // useEffect(() => {
+  //   fetch(
+  //     "http://152.44.224.138:5174/users",
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         "content-type": "application/json",
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     },
+  //     [physicianData]
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.message === "success") {
+  //         setPhysicianData(data.users);
+  //         populatePhysician(physicianData);
+  //       } else {
+  //         alert(data.message);
+  //       }
+  //     });
+  // });
+
   //Dont render if data isnt there
   // if (data.length < 1) {
   //   return <div>Loading...</div>;
@@ -100,8 +145,53 @@ export function NewAppointmentPage() {
   //Submission to database
   const handleSubmit = (e) => {
     e.preventDefault();
-    const appointment = { dateAndTime, patientId, physician, urgency, notes };
+    const formattedDateAndTime = new Date(dateAndTime).toLocaleString(); // Example format
+
+    // Extract date and time parts
+    const date = new Date(formattedDateAndTime).toLocaleDateString(); // Format the date
+    const time = new Date(formattedDateAndTime).toLocaleTimeString(); // Format the time
+
+    // console.log("Formatted Date and Time:", formattedDateAndTime);
+    // const appointment = {
+    //   date,
+    //   time,
+    //   patientId,
+    //   physician,
+    //   urgency,
+    //   notes,
+    // };
     console.log(appointment);
+    //submission to database
+    const submitNewAppointment = () => {
+      fetch("http://152.44.224.138:5174/createappointment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          Patientid: patientId,
+          ScheduledDate: date,
+          Status: "open",
+          Username: physician,
+          Notes: notes,
+          Time: time,
+          Care: urgency,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          // Optionally handle successful response here
+          console.log("Appointment submitted successfully");
+        })
+        .catch((error) => {
+          // Handle fetch errors here
+          console.error("There was a problem with the fetch operation:", error);
+        });
+    };
+    submitNewAppointment();
   };
 
   return (
@@ -195,6 +285,30 @@ export function NewAppointmentPage() {
                     required
                     className="flex"
                   />
+                  {/* <Select
+                    onValueChange={(event) => setPhysician(event)}
+                    required
+                  >
+                    <SelectTrigger className="w-50">
+                      <SelectValue placeholder="Physician" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {physicianList.map((event) => (
+                          <div
+                            key={event.id}
+                            className="border p-4 rounded-md mb-4"
+                          >
+                            <div>
+                              <SelectItem value={event.id}>
+                                {event.physicianName}
+                              </SelectItem>
+                            </div>
+                          </div>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select> */}
                 </div>
                 <div className="table-row">
                   <Label htmlFor="dosage" className="table-cell">
