@@ -64,7 +64,7 @@ export function PrescriptionPage(props) {
 				<CardHeader>
 					<CardTitle className="text-md">Current Prescription Information:</CardTitle>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="">
 				
 				{displayCurrent}
 

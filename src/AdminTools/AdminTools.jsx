@@ -20,19 +20,41 @@ import { Input } from "../components/ui/input"
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button";
 import { User, Menu } from "lucide-react";
+import emailjs from '@emailjs/browser'
 
+function sendMail(code) {
+    var params = {code: code}
+
+    emailjs
+      .send('service_wellspring', 'template_wellspring', params,'lYZsvBVCuWFju6Aic')
+      .then(
+        () => {
+          console.log('SUCCESS!');
+        },
+        () => {
+            //
+        },
+      );
+      //e.target.reset();
+}
 function inviteDoctor(){
-    fetch('http://152.44.224.138:5174/createdoctorcode', {
+    let code = makeid(8)
+    fetch('http://152.44.224.138:5174/updatedoctorcode', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({code: makeid(8), invitedby: 'boobs' })
+        body: JSON.stringify({id:"49710D95-05A9-477B-B8B8-5F5FD0DFE2C3", activecode: code, invitedby: localStorage.getItem('user') })
     },)
 
     .then((res) => res.json())
-    .then((res) => console.log(res))
+    .then((res) => {
+        if(res.message === 'success'){
+            sendMail(code)
+            document.getElementById('inputBox').classList.toggle('flex')
+        }
+    })
 }
 
 function makeid(length) {
@@ -105,10 +127,10 @@ function AdminTools(){
 
                 <div className='flex flex-col h-1/3 w-full justify-center items-center gap-2' id='resultsDiv'>
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={()=> document.getElementById('inputBox').classList.toggle('flex')}>Invite Doctor</button>
-                    <div id="inputBox" className="inputBox w-1/2 hidden flex-row gap-3">
-                        <Input className='flex w-2/3 input' id='input' placeholder="Email of Recipient " type='text' ></Input>
-                        <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={inviteDoctor}>Invite</button>
-                    </div>
+                        <div id="inputBox" className="inputBox w-1/2 hidden flex-row gap-3">
+                            <Input className='flex w-2/3 input' id='input' placeholder="Email of Recipient" name="email" type='text' ></Input>
+                            <button className="inline-flex w-1/3 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90" onClick={inviteDoctor}>Invite</button>
+                        </div>
                     <button className="inline-flex w-1/2 items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Delete User</button>
                 </div>
 

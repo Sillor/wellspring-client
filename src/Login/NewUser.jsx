@@ -55,12 +55,13 @@ const formSchema = z.object({
 })
 
 // Check for doctor code if needed
-.refine((data) => {
-    if(data.position === "Doctor"){
+.refine(
+    (data) => {
+      if (data.position === 'Doctor') {
         return !!data.doctorCode;
-    }
-    return true;
-    }, 
+      }
+      return true;
+    },
     
     {
         message: "Doctor authorization code required",
@@ -68,6 +69,17 @@ const formSchema = z.object({
     }
 )
 
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
 
 //Default values for zod form initialization
@@ -78,17 +90,64 @@ export default function NewUser() {
     //Submition to database
     const submitNewUser = (data) => {
 
-        navigate('/')
+        if(data.position === 'Doctor'){
 
-        fetch('http://152.44.224.138:5174/createuser', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position }),
-        })
+            //Validate Doctor Code
+            fetch('http://152.44.224.138:5174/doctorcodes', {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+            })
+            .then((res) => res.json())
+            .then ((code) => {
 
+                if(code[0].activecode === data.doctorCode){
+                    navigate('/')
+                    fetch('http://152.44.224.138:5174/createuser', {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position }),
+                    })
+                    .then((res) => {
+
+                        //Then change the code on DB
+                        let tempCode = makeid(25);
+                        fetch('http://152.44.224.138:5174/updatedoctorcode', {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({id:"49710D95-05A9-477B-B8B8-5F5FD0DFE2C3", activecode: tempCode, invitedby: localStorage.getItem('user') })
+                        })
+                    })
+
+                }
+                else{
+                    alert("Invalid Doctor Code")
+                }
+            })
+        }
+
+        // If not doctor
+        else{
+
+            navigate('/')
+            fetch('http://152.44.224.138:5174/createuser', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ Username: data.userName, Password: data.password, Email: data.email, FirstName: data.firstName, LastName: data.lastName, Role: data.position }),
+            })
+        }
+        
     }
 
 
