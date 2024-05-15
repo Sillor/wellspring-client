@@ -19,13 +19,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import Popup from "../components/ui/popup";
+import { Link } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -34,23 +45,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Menu, User } from "lucide-react";
 
 export function NewAppointmentPage() {
+  const [ButtonPopup, setButtonPopup] = useState(false);
+
   const [events, setEvents] = useState([
     {
       id: 1,
       patientName: "Patient #1",
-    },
-  ]);
-
-  const [physicianList, setPhysicianList] = useState([
-    {
-      id: 1,
-      physicianName: "Physician Example",
-    },
-    {
-      id: 2,
-      physicianName: "Physician Example2",
     },
   ]);
 
@@ -74,20 +77,6 @@ export function NewAppointmentPage() {
       setEvents(updatedEvents);
     }
   }
-
-  // function populatePhysician(data) {
-  //   // Check if data.users is an array and has elements
-  //   if (Array.isArray(data.users) && data.users.length > 0) {
-  //     // Update events with users names
-  //     const updatedEvents = data.users.map((user) => ({
-  //       username: user.Username, // Assigning the patient id to id
-  //       physicianName: `${user.FirstName} ${user.LastName}`,
-  //     }));
-
-  //     // Update events array
-  //     setPhysicianList(updatedEvents);
-  //   }
-  // }
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -113,30 +102,6 @@ export function NewAppointmentPage() {
       });
   });
 
-  // const [physicianData, setPhysicianData] = useState([]);
-  // useEffect(() => {
-  //   fetch(
-  //     "http://152.44.224.138:5174/users",
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         "content-type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     },
-  //     [physicianData]
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (data.message === "success") {
-  //         setPhysicianData(data.users);
-  //         populatePhysician(physicianData);
-  //       } else {
-  //         alert(data.message);
-  //       }
-  //     });
-  // });
-
   //Dont render if data isnt there
   // if (data.length < 1) {
   //   return <div>Loading...</div>;
@@ -151,16 +116,6 @@ export function NewAppointmentPage() {
     const date = new Date(formattedDateAndTime).toLocaleDateString(); // Format the date
     const time = new Date(formattedDateAndTime).toLocaleTimeString(); // Format the time
 
-    // console.log("Formatted Date and Time:", formattedDateAndTime);
-    // const appointment = {
-    //   date,
-    //   time,
-    //   patientId,
-    //   physician,
-    //   urgency,
-    //   notes,
-    // };
-    console.log(appointment);
     //submission to database
     const submitNewAppointment = () => {
       fetch("http://152.44.224.138:5174/createappointment", {
@@ -185,6 +140,7 @@ export function NewAppointmentPage() {
           }
           // Optionally handle successful response here
           console.log("Appointment submitted successfully");
+          setButtonPopup(true);
         })
         .catch((error) => {
           // Handle fetch errors here
@@ -202,25 +158,88 @@ export function NewAppointmentPage() {
         {/*User header*/}
         <div className="flex w-full mx-2" id="userHeader">
           {/*Navigation menu for large screen */}
-          <div className="flex w-full justify-center">
+          <div className="hidden md:flex w-full justify-center">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    View Schedule List
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    asChild
+                  >
+                    <Link to={"/main"}>View Schedule List</Link>
                   </NavigationMenuLink>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Search Patient
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    asChild
+                  >
+                    <Link to={"/search"}>Search Patient</Link>
                   </NavigationMenuLink>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Logout
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    asChild
+                  >
+                    <Link to={"/admin"}>Admin Tools</Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    asChild
+                  >
+                    <Link to={"/"}>Logout</Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
+            <User size={32} />
           </div>
 
           {/*Hamburger Menu*/}
+          <div className="p-4 flex visible md:invisible md:absolute flex-row justify-between w-full">
+            <Drawer>
+              <DrawerTrigger>
+                <Menu size={32} />
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>What would you like to do?</DrawerTitle>
+                </DrawerHeader>
+                <DrawerFooter>
+                  <Link
+                    to={"/main"}
+                    className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                  >
+                    View Schedule
+                  </Link>
+                  <Link
+                    to={"/search"}
+                    className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                  >
+                    Search Patient
+                  </Link>
+                  <Link
+                    to={"/admin"}
+                    className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                  >
+                    Admin Tools
+                  </Link>
+                  <Link
+                    to={"/"}
+                    className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                  >
+                    Logout
+                  </Link>
+                  <DrawerClose asChild>
+                    <Button
+                      variant="outline"
+                      classList="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium"
+                    >
+                      Cancel
+                    </Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+            <User size={32} />
+          </div>
         </div>
         {/*Primary Display*/}
         <Card className="w-full sm:w-2/3">
@@ -285,30 +304,6 @@ export function NewAppointmentPage() {
                     required
                     className="flex"
                   />
-                  {/* <Select
-                    onValueChange={(event) => setPhysician(event)}
-                    required
-                  >
-                    <SelectTrigger className="w-50">
-                      <SelectValue placeholder="Physician" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {physicianList.map((event) => (
-                          <div
-                            key={event.id}
-                            className="border p-4 rounded-md mb-4"
-                          >
-                            <div>
-                              <SelectItem value={event.id}>
-                                {event.physicianName}
-                              </SelectItem>
-                            </div>
-                          </div>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select> */}
                 </div>
                 <div className="table-row">
                   <Label htmlFor="dosage" className="table-cell">
@@ -348,12 +343,10 @@ export function NewAppointmentPage() {
           </CardContent>
           <CardFooter className="flex sm:justify-center"></CardFooter>
         </Card>
+        <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
+          Successfully Submitted
+        </Popup>
       </div>
-      <DateTimePicker value={dateAndTime} />
-      <p>{patientId}</p>
-      <p>{physician}</p>
-      <p>{urgency}</p>
-      <p>{notes}</p>
     </LocalizationProvider>
   );
 }

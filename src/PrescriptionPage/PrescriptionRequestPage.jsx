@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import Popup from "../components/ui/popup";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -44,8 +44,11 @@ import {
 } from "@/components/ui/drawer";
 import { useState, useEffect } from "react";
 import { getDate } from "date-fns";
+import { Menu, User } from "lucide-react";
 
 export function PrescriptionRequestPage() {
+  const [ButtonPopup, setButtonPopup] = useState(false);
+
   const [events, setEvents] = useState([
     {
       id: 1,
@@ -77,12 +80,11 @@ export function PrescriptionRequestPage() {
 
   // Form Values
 
-  const [patientId, setPatientId] = useState("");
+  const [patientId, setPatientId] = useState();
   const [physician, setPhysician] = useState("");
   const [prescription, setPrescription] = useState("");
   const [dosage, setDosage] = useState("");
   const [units, setUnits] = useState("");
-  const [notes, setNotes] = useState("");
   const [currentDate, setCurrentDate] = useState(getDate());
 
   const [data, setData] = useState([]);
@@ -112,18 +114,10 @@ export function PrescriptionRequestPage() {
   //Submission to database
   const handleSubmit = (e) => {
     e.preventDefault();
-    const request = {
-      patientId,
-      physician,
-      prescription,
-      dosage,
-      units,
-      notes,
-    };
-    console.log(request);
 
     //submission to database
     const submitPrescriptionForm = () => {
+      console.log(patientId);
       fetch("http://152.44.224.138:5174/createprescription", {
         method: "POST",
         headers: {
@@ -136,6 +130,7 @@ export function PrescriptionRequestPage() {
           OrderDate: currentDate,
           Dosage: dosage + units,
           Active: "yes",
+          OrderedBy: physician,
         }),
       })
         .then((response) => {
@@ -144,6 +139,7 @@ export function PrescriptionRequestPage() {
           }
           // Optionally handle successful response here
           console.log("Prescription submitted successfully");
+          setButtonPopup(true);
         })
         .catch((error) => {
           // Handle fetch errors here
@@ -168,7 +164,7 @@ export function PrescriptionRequestPage() {
                   className={navigationMenuTriggerStyle()}
                   asChild
                 >
-                  <Link to={"/"}>View Schedule List</Link>
+                  <Link to={"/main"}>View Schedule List</Link>
                 </NavigationMenuLink>
                 <NavigationMenuLink
                   className={navigationMenuTriggerStyle()}
@@ -180,19 +176,25 @@ export function PrescriptionRequestPage() {
                   className={navigationMenuTriggerStyle()}
                   asChild
                 >
+                  <Link to={"/admin"}>Admin Tools</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
                   <Link to={"/"}>Logout</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <img src={user} alt="" className="m-2" />
+          <User size={32} />
         </div>
 
         {/*Hamburger Menu*/}
-        <div className="flex flex-row justify-between md:hidden w-full">
+        <div className="p-4 flex visible md:invisible md:absolute flex-row justify-between w-full">
           <Drawer>
             <DrawerTrigger>
-              <img src={menu} alt="" className="m-2" />
+              <Menu size={32} />
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -200,16 +202,22 @@ export function PrescriptionRequestPage() {
               </DrawerHeader>
               <DrawerFooter>
                 <Link
+                  to={"/main"}
+                  className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                >
+                  View Schedule
+                </Link>
+                <Link
                   to={"/search"}
                   className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
                 >
                   Search Patient
                 </Link>
                 <Link
-                  to={"/"}
+                  to={"/admin"}
                   className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
                 >
-                  View Schedule
+                  Admin Tools
                 </Link>
                 <Link
                   to={"/"}
@@ -228,7 +236,7 @@ export function PrescriptionRequestPage() {
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
-          <img src={user} alt="" className="m-2" />
+          <User size={32} />
         </div>
       </div>
       {/*Patient info and backspace header*/}
@@ -336,31 +344,15 @@ export function PrescriptionRequestPage() {
                   </Select>
                 </div>
               </div>
-              <div className="table-row">
-                <Label htmlFor="notes" className="table-cell">
-                  Notes:
-                </Label>
-                <Textarea
-                  id="notes"
-                  placeholder="Important Notes"
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="focus-visible:ring-0"
-                />
-              </div>
             </div>
             <Button className="w-full sm:justify-center">Request</Button>
           </form>
         </CardContent>
         <CardFooter className="flex sm:justify-center"></CardFooter>
       </Card>
-      <p>{patientId}</p>
-      <p>{physician}</p>
-      <p>{prescription}</p>
-      <p>
-        {dosage} {units}
-      </p>
-      <p>{notes}</p>
-      <p>{currentDate}</p>
+      <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
+        Successfully Submitted
+      </Popup>
     </div>
   );
 }
