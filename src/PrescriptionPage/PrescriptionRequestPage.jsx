@@ -1,37 +1,37 @@
-import '../globals.css'
-import { Button } from "../components/ui/button"
-import arrow from './PrescriptionAssets/arrow.png'
+import "../globals.css";
+import { Button } from "../components/ui/button";
+import arrow from "./PrescriptionAssets/arrow.png";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
-
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Popup from "../components/ui/popup";
 import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-  } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import { Textarea } from "@/components/ui/textarea"
-import { Link } from 'react-router-dom'
-import menu from './PrescriptionAssets/menu.png'
-import user from './PrescriptionAssets/user.png'
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
+import { Textarea } from "@/components/ui/textarea";
+import { Link } from "react-router-dom";
+import menu from "./PrescriptionAssets/menu.png";
+import user from "./PrescriptionAssets/user.png";
 import {
     Drawer,
     DrawerClose,
@@ -65,8 +65,108 @@ function request(patient){
 
 
 export function PrescriptionRequestPage() {
-	const location = useLocation();
-	console.log(location)
+  const [ButtonPopup, setButtonPopup] = useState(false);
+
+  const [events, setEvents] = useState([
+    {
+      id: 1,
+      patientName: "Patient #1",
+    },
+  ]);
+
+  function populatePatients(data) {
+    // Check if data.patients is an array and has elements
+    if (Array.isArray(data.patients) && data.patients.length > 0) {
+      // Update events with patient names
+      const updatedEvents = data.patients.map((patient) => ({
+        id: patient.id, // Assigning the patient id to id
+        patientName: `${patient.FirstName} ${patient.LastName}`,
+      }));
+
+      // Update events array
+      setEvents(updatedEvents);
+    }
+  }
+
+  function getDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    return `${year}-${month}-${date}`;
+  }
+
+  // Form Values
+
+  const [patientId, setPatientId] = useState();
+  const [physician, setPhysician] = useState("");
+  const [prescription, setPrescription] = useState("");
+  const [dosage, setDosage] = useState("");
+  const [units, setUnits] = useState("");
+  const [currentDate, setCurrentDate] = useState(getDate());
+
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    fetch(
+      "http://152.44.224.138:5174/patients",
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+      [data]
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "success") {
+          setData(data.patients);
+          populatePatients(data);
+        } else {
+          alert(data.message);
+        }
+      });
+  });
+
+  //Submission to database
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    //submission to database
+    const submitPrescriptionForm = () => {
+      console.log(patientId);
+      fetch("http://152.44.224.138:5174/createprescription", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          Patientid: patientId,
+          PrescriptionName: prescription,
+          OrderDate: currentDate,
+          Dosage: dosage + units,
+          Active: "yes",
+          OrderedBy: physician,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          // Optionally handle successful response here
+          console.log("Prescription submitted successfully");
+          setButtonPopup(true);
+        })
+        .catch((error) => {
+          // Handle fetch errors here
+          console.error("There was a problem with the fetch operation:", error);
+        });
+    };
+    submitPrescriptionForm();
+  };
+
 	return (
 		<div className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
 
@@ -189,4 +289,4 @@ export function PrescriptionRequestPage() {
 	)
 }
 
-export default PrescriptionRequestPage
+export default PrescriptionRequestPage;

@@ -21,7 +21,6 @@ import { useState } from 'react';
 export function PrescriptionPage(props) {
 
 	const location = useLocation();
-    console.log(location)
 
     const [displayCurrent,setDisplayCurrent] = useState([]);
     const [displayPrevious,setDisplayPrevious] = useState([]);
@@ -64,7 +63,7 @@ export function PrescriptionPage(props) {
 				<CardHeader>
 					<CardTitle className="text-md">Current Prescription Information:</CardTitle>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="">
 				
 				{displayCurrent}
 

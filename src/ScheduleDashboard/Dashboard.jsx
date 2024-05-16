@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+// import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Menu, PaintBucket } from "lucide-react";
 import { User } from "lucide-react";
@@ -28,18 +29,17 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DatePicker } from "../components/ui/DatePicker";
 
 import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-  } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import dayjs from 'dayjs'
-
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
+import dayjs from "dayjs";
 
 function Dashboard(props) {
 	const [role,setRole] = useState();
@@ -71,17 +71,22 @@ function Dashboard(props) {
 	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [selectedDate,setSelectedDate] = useState([]);
 
-	const handleDate = (date) => {
-		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-		setDate(date.toLocaleDateString("en-US",dateFormating))
-	}
-	
-	const navigate = useNavigate();
-	const handleButtonClick = (event) => {
-		setSelectedEvent(event);
-		setButtonPopup(true);
-	};
-	const [events, setEvents] = useState([]);
+  const handleDate = (date) => {
+    const dateFormating = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    setDate(date.toLocaleDateString("en-US", dateFormating));
+  };
+
+  const navigate = useNavigate();
+  const handleButtonClick = (event) => {
+    setSelectedEvent(event);
+    setButtonPopup(true);
+  };
+  const [events, setEvents] = useState([]);
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
@@ -391,6 +396,7 @@ function Dashboard(props) {
 							<Link to={'/main'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
 							<Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
 							<Link to={'/newpatient'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Patient</Link>
+							<Link to={'/newappointment'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Appointment</Link>
 							<Link to={'/admin'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Admin Tools</Link>
 							<Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
 							<DrawerClose asChild>
@@ -412,6 +418,7 @@ function Dashboard(props) {
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/main'}>View Schedule List</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newpatient'}>New Patient</Link></NavigationMenuLink>
+							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newappointment'}>New Appointment</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/admin'}>Admin Tools</Link></NavigationMenuLink>
 							<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
 						</NavigationMenuItem>
@@ -421,34 +428,36 @@ function Dashboard(props) {
 			</div>
 
 
-			<div className="flex flex-col md:w-/3 w-full p-4">
-				<div className="flex flex-row justify-between items-center mb-4">
-					<h1 className="text-4xl font-bold">Today</h1>
+      <div className="flex flex-col md:w-/3 w-full p-4">
+        <div className="flex flex-row justify-between items-center mb-4">
+          <h1 className="text-4xl font-bold">Today</h1>
 
-					{/* Date Picker*/}
-					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>		
+          {/* Date Picker*/}
+          <DatePicker
+            date={date}
+            setDate={handleDate}
+            setSelectedDate={setSelectedDate}
+          />
 
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="outline" className="w-36">
-								{selectedType}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className='bg-white'>
-							<DropdownMenuItem onClick={() => setSelectedType("All")}>
-								All
-							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
-								Urgent Care
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								onClick={() => setSelectedType("Non-Urgent")}
-							>
-								Non-Urgent Care
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="outline" className="w-36">
+                {selectedType}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-white">
+              <DropdownMenuItem onClick={() => setSelectedType("All")}>
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
+                Urgent Care
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Non-Urgent")}>
+                Non-Urgent Care
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
 				{/*Actual Patient Tabs*/}
 				{filteredEvents.map((event) => (
@@ -494,6 +503,5 @@ function Dashboard(props) {
 		</div>
 	);
 }
-
 
 export default Dashboard;
