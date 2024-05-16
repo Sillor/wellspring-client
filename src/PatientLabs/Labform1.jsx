@@ -247,6 +247,7 @@ const LabForm1 = (props) => {
         </div>
       </Card>
 
+<<<<<<< HEAD
       <Card className="w-full sm:w-2/3">
         <div className="w-full p-4 shadow-lg bg-white rounded-md">
           <h1 className="text-2xl font-semibold text-teal-800 mb-4 text-center mt-3">
@@ -296,6 +297,62 @@ const LabForm1 = (props) => {
                       Maternal
                     </li>
                   </ul>
+=======
+
+
+			{/*Patient info and backspace header*/}
+			<Card className="flex flex-row w-full sm:w-2/3 items-center">
+				<Card className="flex w-fit hover:bg-slate-100">
+					<Link to={"/dashboard"} state={{selectedPatient:location.state.selectedPatient}}>
+						<img src={arrow} alt="not found" className="w-10 p-2"/>
+					</Link>				
+				</Card>
+				<div id="patientInfo" className="flex flex-row m-2">
+					<h1>{location.state.selectedPatient[0].LastName}, {location.state.selectedPatient[0].FirstName}</h1>
+					<img src="../src/assets/PrescriptionAssets/user.png" alt="" className="flex ml-4"/>
+				</div>
+			</Card>
+
+
+			<Card className="w-full sm:w-2/3">
+
+
+                <div className="w-full p-4 shadow-lg bg-white rounded-md">
+                    <h1 className="text-2xl font-semibold text-teal-800 mb-4 text-center mt-3"><i className="fas fa-dna"></i> Lab Information Form</h1>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="flex space-x-5">
+                            <div>
+				<label htmlFor="labFacility" className="block text-sm font-medium text-teal-800 mt-5">Lab Work</label>
+				<select name="labSelection" id="labSelection" onChange={handleInputChange} className="mt-1 p-2 w-full border rounded-md">
+					<option value="">Select Lab</option>
+					<option value="X-Ray">X-Ray</option>
+					<option value="Bloodwork">Bloodwork</option>
+					<option value="Physical">Physical</option>
+					<option value="Maternal">Maternal</option>
+				</select>
+			    </div>
+                            <div>
+                                <label htmlFor="labOrderDate" className="block text-sm font-medium text-teal-800 mt-5">Lab Order Date</label>
+                                <input type="date" id="labOrderDate" name="labOrderDate" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} required />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="patientName" className="block text-sm font-medium text-teal-800 mt-5">Patient's Name</label>
+                            <input type="text" id="patientName" name="patientName" className="mt-1 p-2 w-full border rounded-md" placeholder="Enter Patient" onChange={handleInputChange} required />
+                        </div>
+                        <div>
+                            <label htmlFor="doctorName" className="block text-sm font-medium text-teal-800 mt-5">Doctor's Name</label>
+                            <input type="text" id="doctorName" name="doctorName" className="mt-1 p-2 w-full border rounded-md" placeholder="Enter Doctor" onChange={handleInputChange} required />
+                        </div>
+                        <div>
+                            <label htmlFor="Notes" className="block text-sm font-medium text-teal-600 mt-3">Notes</label>
+                            <input type="text" id="Notes" name="notes" className="mt-3 p-8 w-full border rounded-md" placeholder="Enter Notes" onChange={handleInputChange} />
+                        </div>
+                            <Link to={"/prescriptioninfo/request"} state={props.data} className=" sm:w-1/3 w-full">
+                                <Button className="w-full" >Request</Button>
+                            </Link>
+                    </form>
+>>>>>>> main
                 </div>
               </div>
               <div>
