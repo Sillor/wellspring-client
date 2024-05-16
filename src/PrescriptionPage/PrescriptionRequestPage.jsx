@@ -87,6 +87,7 @@ export function PrescriptionRequestPage() {
   const [units, setUnits] = useState("");
   const [currentDate, setCurrentDate] = useState(getDate());
 
+  // gets patients from DB
   const [data, setData] = useState([]);
   useEffect(() => {
     fetch(
