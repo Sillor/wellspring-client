@@ -149,7 +149,6 @@ export function PrescriptionRequestPage(props) {
     };
     submitPrescriptionForm();
   };
-  console.log(location.state)
   return (
     <div className="flex flex-col items-center gap-2" id="pageContainer">
       {" "}
