@@ -18,6 +18,7 @@ import SearchPatient from './Search/SearchPatient.jsx'
 import Login from './Login.jsx';
 import AdminTools from './AdminTools/AdminTools.jsx'
 import NewUser from './Login/NewUser.jsx';
+import NewAppointmentPage from './AppointmentPage/NewAppointmentPage.jsx'
 
 const router = createBrowserRouter([
   {

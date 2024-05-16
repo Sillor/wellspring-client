@@ -67,10 +67,6 @@ const formSchema = z
       return true;
     },
 
-      }
-      return true;
-    },
-
     {
       message: 'Doctor authorization code required',
       path: ['doctorCode'],

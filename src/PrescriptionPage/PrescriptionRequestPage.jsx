@@ -167,48 +167,6 @@ export function PrescriptionRequestPage() {
     submitPrescriptionForm();
   };
 
-  return (
-    <div className="flex flex-col items-center gap-2" id="pageContainer">
-      {" "}
-      {/*Primary container*/}
-      {/*User header*/}
-      <div className="flex w-full mx-2 sticky " id="userHeader">
-        {/*Navigation menu for large screen */}
-        <div className="hidden md:flex w-full justify-center">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link to={"/main"}>View Schedule List</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link to={"/search"}>Search Patient</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link to={"/admin"}>Admin Tools</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link to={"/"}>Logout</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-          <User size={32} />
-        </div>
-	const location = useLocation();
-	console.log(location)
 	return (
 		<div className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
 
