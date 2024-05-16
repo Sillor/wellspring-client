@@ -149,6 +149,7 @@ export function PrescriptionRequestPage(props) {
     };
     submitPrescriptionForm();
   };
+  console.log(location.state)
   return (
     <div className="flex flex-col items-center gap-2" id="pageContainer">
       {" "}
@@ -249,7 +250,7 @@ export function PrescriptionRequestPage(props) {
           </Link>
         </Card>
         <div id="patientInfo" className="flex flex-row m-2">
-          <h1>Patient Name</h1>
+          <h1>{location.state.selectedPatient[0].LastName},{location.state.selectedPatient[0].FirstName}</h1>
           <img
             src="../src/assets/PrescriptionAssets/user.png"
             alt=""
