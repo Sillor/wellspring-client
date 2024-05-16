@@ -50,7 +50,6 @@ export function PrescriptionPage(props) {
             setDisplayPrevious(tempPrev)
         })
     },[])
-
 	return (
 		<>
 

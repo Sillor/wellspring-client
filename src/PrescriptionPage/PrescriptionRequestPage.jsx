@@ -45,10 +45,11 @@ import {
 import { useState, useEffect } from "react";
 import { getDate } from "date-fns";
 import { Menu, User } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
-export function PrescriptionRequestPage() {
+export function PrescriptionRequestPage(props) {
   const [ButtonPopup, setButtonPopup] = useState(false);
-
+  const location = useLocation()
   const [events, setEvents] = useState([
     {
       id: 1,
@@ -148,7 +149,6 @@ export function PrescriptionRequestPage() {
     };
     submitPrescriptionForm();
   };
-
   return (
     <div className="flex flex-col items-center gap-2" id="pageContainer">
       {" "}
@@ -242,12 +242,14 @@ export function PrescriptionRequestPage() {
       {/*Patient info and backspace header*/}
       <Card className="flex flex-row w-full sm:w-2/3 items-center">
         <Card className="flex w-fit hover:bg-slate-100">
-          <Link to={"/dashboard/prescriptioninfo"}>
+        <Link
+            to={"/dashboard"}
+            state={{ selectedPatient: location.state.selectedPatient }}>
             <img src={arrow} alt="not found" className="w-10 p-2" />
           </Link>
         </Card>
         <div id="patientInfo" className="flex flex-row m-2">
-          <h1>Patient Name</h1>
+          <h1>{location.state.selectedPatient[0].LastName},{location.state.selectedPatient[0].FirstName}</h1>
           <img
             src="../src/assets/PrescriptionAssets/user.png"
             alt=""
