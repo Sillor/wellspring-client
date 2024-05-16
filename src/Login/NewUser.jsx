@@ -31,8 +31,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import login from './Login';
-import Login from '../Login';
+import "./button.css"
 ('use client');
 
 //Zod schema for form validation
