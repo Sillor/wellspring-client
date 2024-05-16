@@ -2,6 +2,13 @@
 
 **Wellspring** is a comprehensive healthcare management application designed to streamline the workflow of healthcare professionals, including doctors, nurses, and pharmacists. It provides a unified platform to manage patients, appointments, lab results, prescriptions, and medications.
 
+> [!NOTE]  
+> Please note that this is client side of the Wellspring application. You will need to set up the server side to use the application. The server side can be found [here](https://github.com/Sillor/wellspring-server).
+
+
+> [!CAUTION]  
+> Please note that the database files are not included in this project. You will need to create your own database and tables to use this server.
+
 <img src="screenshot-1.png" width="800">
 <img src="screenshot-2.png" width="800">
 <img src="screenshot-3.png" width="800">

@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Button } from '../components/ui/button'
-import saveIcon from '../PatientInformation/PatientInformationAssets/save.png'
-
+import { useEffect, useState } from "react";
+import { Button } from "../components/ui/button";
+import saveIcon from "../PatientInformation/PatientInformationAssets/save.png";
 
 export default function LabTab(props){
 
