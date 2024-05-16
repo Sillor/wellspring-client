@@ -22,7 +22,6 @@ export function PatientLabs(props){
     const [displayCurrent,setDisplayCurrent] = useState([]);
     const [displayPrevious,setDisplayPrevious] = useState([]);
     const location = useLocation()
-    console.log(location)
     useEffect(() => {
         let tempCurr = []
         let tempPrev = []
@@ -37,10 +36,10 @@ export function PatientLabs(props){
         .then( (labs) => {
             labs.forEach(lab => {
                 if(lab.Patientid === props.data[0].id && lab.Status === 'open'){
-                    tempCurr = [...tempCurr, <LabTab lab={lab} data={props.data} key={tempCurr.length}/>];
+                    tempCurr = [...tempCurr, <LabTab status={'current'} lab={lab} data={props.data} index={tempCurr.length} key={tempCurr.length}/>];
                 }
                 else if(lab.Patientid === props.data[0].id && lab.Status === 'closed'){
-                    tempPrev = [...tempPrev, <LabTab lab={lab} data={props.data} key={tempCurr.length}/>];
+                    tempPrev = [...tempPrev, <LabTab status={'previous'} lab={lab} data={props.data} index={tempCurr.length} key={tempCurr.length}/>];
 
                 }
             });
@@ -57,9 +56,8 @@ export function PatientLabs(props){
                 <CardDescription>Lab History & Information</CardDescription>
 
             </CardHeader>
-            <CardContent className="flex flex-col justify-between gap-10">
+            <CardContent className="flex flex-col justify-between gap-10" id="container">
              <h1 className='font-bold text-lg'>Current Procedures:</h1>   
-            
             {displayCurrent}
 
             <h1 className='font-bold text-lg'>Previous Procedures:</h1>   

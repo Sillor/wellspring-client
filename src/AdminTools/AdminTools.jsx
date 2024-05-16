@@ -35,7 +35,6 @@ function sendMail(code) {
             //
         },
       );
-      //e.target.reset();
 }
 function inviteDoctor(){
     let code = makeid(8)

@@ -1,6 +1,5 @@
 
 export default function PrescriptionTab(props){
-    console.log(props)
     return (
         <div className="border-black-900">
             <table className='table justify-between w-full border-separate'>

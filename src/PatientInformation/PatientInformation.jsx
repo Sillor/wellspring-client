@@ -49,7 +49,7 @@ export default function PatientInformation(props) {
         const cellNodes = document.getElementsByClassName('info');
         edit.classList.toggle('invisible');
         save.classList.toggle('invisible');
-
+        
         Array.from(cellNodes).forEach(element => {
             element.insertAdjacentHTML('afterend',"<input type='text' class='newInput rounded-md border border-slate-200 bg-white'>")
             element.parentNode.lastChild.value = element.textContent;
