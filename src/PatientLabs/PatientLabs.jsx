@@ -19,6 +19,7 @@ import {useLocation} from 'react-router-dom'
 
 /* Shows Individual Patient Dashboard layout*/
 export function PatientLabs(props){
+
     const [displayCurrent,setDisplayCurrent] = useState([]);
     const [displayPrevious,setDisplayPrevious] = useState([]);
     const location = useLocation()

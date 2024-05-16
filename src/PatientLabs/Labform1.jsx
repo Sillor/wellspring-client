@@ -31,8 +31,6 @@ const LabForm1 = (props) => {
 
   const [ButtonPopup, setButtonPopup] = useState(false);
 
-  //   console.log(props);
-  //   console.log(location.state);
 
   const [events, setEvents] = useState([
     {
