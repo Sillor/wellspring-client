@@ -2,9 +2,9 @@
 
 **Wellspring** is a comprehensive healthcare management application designed to streamline the workflow of healthcare professionals, including doctors, nurses, and pharmacists. It provides a unified platform to manage patients, appointments, lab results, prescriptions, and medications.
 
-<img src="image.png" width="800">
-<img src="image-1.png" width="800">
-<img src="image-2.png" width="800">
+<img src="screenshot-1.png" width="800">
+<img src="screenshot-2.png" width="800">
+<img src="screenshot-3.png" width="800">
 
 ## Features
 
