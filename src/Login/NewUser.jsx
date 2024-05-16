@@ -1,31 +1,29 @@
-import '../globals.css'
-import { Button } from "../components/ui/button"
+import "../globals.css";
+import { Button } from "../components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../components/ui/card"
-import { Input } from "../components/ui/input"
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-  import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-  } from "@/components/ui/form"
-  
-
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
@@ -36,41 +34,44 @@ import login from './Login'
 login();
 
 //Zod schema for form validation
-const formSchema = z.object({
-    userName:z.string().min(2).max(18),
+const formSchema = z
+  .object({
+    userName: z.string().min(2).max(18),
     firstName: z.string().min(2).max(18),
     lastName: z.string().min(2).max(18),
     email: z.string().email(),
     password: z.string().min(4),
     confirmPassword: z.string(),
     position: z.enum(["Doctor", "Nurse", "Technician"]),
-    doctorCode: z.string().optional()
-    
-})
-//Error for password matching
-.refine((data) => {
-    return data.password === data.confirmPassword
-}, 
-{
-    message: "Passwords do not match",
-    path:["confirmPassword"],
-})
-
-// Check for doctor code if needed
-.refine((data) => {
-    if(data.position === "Doctor"){
-        return !!data.doctorCode;
-    }
-    return true;
-    }, 
-    
+    doctorCode: z.string().optional(),
+  })
+  //Error for password matching
+  .refine(
+    (data) => {
+      return data.password === data.confirmPassword;
+    },
     {
-        message: "Doctor authorization code required",
-        path: ["doctorCode"]
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
     }
-)
+  )
 
-//Submition to database
+  // Check for doctor code if needed
+  .refine(
+    (data) => {
+      if (data.position === "Doctor") {
+        return !!data.doctorCode;
+      }
+      return true;
+    },
+
+    {
+      message: "Doctor authorization code required",
+      path: ["doctorCode"],
+    }
+  );
+
+//Submission to database
 const submitNewUser = (data) => {
     console.log(data);
     fetch('http://152.44.224.138:5174/createuser',{
@@ -85,53 +86,69 @@ const submitNewUser = (data) => {
 
 //Default values for zod form initialization
 export default function NewUser() {
-    const form = useForm({
-        resolver:zodResolver(formSchema),
-        defaultValues: {
-            userName:"",
-            firstName:"",
-            lastName:"",
-            email:"",
-            password:"",
-            confirmPassword:"",
-            position:"",
-            doctorCode:"",
-        }
-    })
-    
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      userName: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      position: "",
+      doctorCode: "",
+    },
+  });
 
-    return (
-        <main className="flex flex-col items-center gap-2" id="pageContainer"> {/*Primary container*/}
-            {/*Primary Display*/}
-            <Card className="w-full sm:w-2/3">
-                <CardHeader>
-                    <CardTitle>New User Registration</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(submitNewUser)}>
+  return (
+    <main className="flex flex-col items-center gap-2" id="pageContainer">
+      {" "}
+      {/*Primary container*/}
+      {/*Primary Display*/}
+      <Card className="w-full sm:w-2/3">
+        <CardHeader>
+          <CardTitle>New User Registration</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(submitNewUser)}>
+              {/* User Name */}
+              <FormField
+                control={form.control}
+                name="userName"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>User Name:</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Username" type="text" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
 
-                            {/* User Name */}
-                            <FormField control={form.control} name="userName" render={({field}) => {
-                                return <FormItem>
-                                    <FormLabel>User Name:</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} placeholder="Username" type="text"/>
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            }}/>
-
-                            {/*Password*/}
-                            <FormField control={form.control} name="password" render={({field}) => {
-                                return <FormItem>
-                                    <FormLabel>Password:</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} placeholder="password" type="password"/>
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            }}/>
+              {/*Password*/}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Password:</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="password"
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
 
                             {/*Password Confirm*/}
                             <FormField control={form.control} name="confirmPassword" render={({field}) => {
