@@ -1,6 +1,5 @@
-import '../globals.css';
-import './button.css';
-import { Button } from '../components/ui/button';
+import "../globals.css";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
@@ -68,11 +67,15 @@ const formSchema = z
       return true;
     },
 
+      }
+      return true;
+    },
+
     {
       message: 'Doctor authorization code required',
       path: ['doctorCode'],
     }
-)
+  );
 
 function makeid(length) {
     let result = '';

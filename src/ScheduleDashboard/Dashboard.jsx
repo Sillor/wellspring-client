@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+// import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Menu, PaintBucket } from "lucide-react";
 import { User } from "lucide-react";
@@ -28,18 +29,17 @@ import { Button } from "@/components/ui/button";
 import Popup from "../components/ui/popup";
 import defaultPatientImg from "../components/images/patient_default.jpg";
 import "../components/images/defaultPatientImg.css";
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DatePicker } from "../components/ui/DatePicker";
 
 import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-  } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
-import dayjs from 'dayjs'
-
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu";
+import dayjs from "dayjs";
 
 function Dashboard(props) {
 	const [role,setRole] = useState();
@@ -71,17 +71,22 @@ function Dashboard(props) {
 	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [selectedDate,setSelectedDate] = useState([]);
 
-	const handleDate = (date) => {
-		const dateFormating = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-		setDate(date.toLocaleDateString("en-US",dateFormating))
-	}
-	
-	const navigate = useNavigate();
-	const handleButtonClick = (event) => {
-		setSelectedEvent(event);
-		setButtonPopup(true);
-	};
-	const [events, setEvents] = useState([]);
+  const handleDate = (date) => {
+    const dateFormating = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    setDate(date.toLocaleDateString("en-US", dateFormating));
+  };
+
+  const navigate = useNavigate();
+  const handleButtonClick = (event) => {
+    setSelectedEvent(event);
+    setButtonPopup(true);
+  };
+  const [events, setEvents] = useState([]);
 
 	//Call data before routed to dashboard
 	const [data, setData] = useState([])
@@ -421,34 +426,36 @@ function Dashboard(props) {
 			</div>
 
 
-			<div className="flex flex-col md:w-/3 w-full p-4">
-				<div className="flex flex-row justify-between items-center mb-4">
-					<h1 className="text-4xl font-bold">Today</h1>
+      <div className="flex flex-col md:w-/3 w-full p-4">
+        <div className="flex flex-row justify-between items-center mb-4">
+          <h1 className="text-4xl font-bold">Today</h1>
 
-					{/* Date Picker*/}
-					<DatePicker date={date} setDate={handleDate} setSelectedDate={setSelectedDate}/>		
+          {/* Date Picker*/}
+          <DatePicker
+            date={date}
+            setDate={handleDate}
+            setSelectedDate={setSelectedDate}
+          />
 
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="outline" className="w-36">
-								{selectedType}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className='bg-white'>
-							<DropdownMenuItem onClick={() => setSelectedType("All")}>
-								All
-							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
-								Urgent Care
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								onClick={() => setSelectedType("Non-Urgent")}
-							>
-								Non-Urgent Care
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="outline" className="w-36">
+                {selectedType}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-white">
+              <DropdownMenuItem onClick={() => setSelectedType("All")}>
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Urgent")}>
+                Urgent Care
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Non-Urgent")}>
+                Non-Urgent Care
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
 				{/*Actual Patient Tabs*/}
 				{filteredEvents.map((event) => (
@@ -494,6 +501,5 @@ function Dashboard(props) {
 		</div>
 	);
 }
-
 
 export default Dashboard;
