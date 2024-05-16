@@ -139,19 +139,15 @@ const LabForm1 = (props) => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="flex space-x-5">
                             <div>
-                                <label htmlFor="labFacility" className="block text-sm font-medium text-teal-800 mt-5">Lab Work</label>
-                                <div className="relative inline-block">
-                                    <button type="button" className="btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="true">
-                                        Lab Selection
-                                    </button>
-                                    <ul className="absolute hidden mt-2 bg-teal-300 border border-gray-300 rounded-md shadow-lg">
-                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="X-Ray">X-Ray</li>
-                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Bloodwork">Bloodwork</li>
-                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Physical">Physical</li>
-                                        <li className="py-2 px-4 hover:bg-blue-100" data-value="Maternal">Maternal</li>
-                                    </ul>
-                                </div>
-                            </div>
+				<label htmlFor="labFacility" className="block text-sm font-medium text-teal-800 mt-5">Lab Work</label>
+				<select name="labSelection" id="labSelection" onChange={handleInputChange} className="mt-1 p-2 w-full border rounded-md">
+					<option value="">Select Lab</option>
+					<option value="X-Ray">X-Ray</option>
+					<option value="Bloodwork">Bloodwork</option>
+					<option value="Physical">Physical</option>
+					<option value="Maternal">Maternal</option>
+				</select>
+			    </div>
                             <div>
                                 <label htmlFor="labOrderDate" className="block text-sm font-medium text-teal-800 mt-5">Lab Order Date</label>
                                 <input type="date" id="labOrderDate" name="labOrderDate" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} required />
