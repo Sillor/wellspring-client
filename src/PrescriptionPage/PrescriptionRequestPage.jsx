@@ -45,6 +45,7 @@ import {
 import {useLocation} from "react-router-dom"
 import { Menu, PaintBucket } from "lucide-react";
 import { User } from "lucide-react";
+import { useState, useEffect } from "react";
 
 function request(patient){
 	fetch('https://wellspring.pfc.io:5175/createprescription', {

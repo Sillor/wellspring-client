@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import '../output.css';
-import { Label } from '../components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 const NewPatient = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
+        id: '',
         dob: '',
         phone: '',
-        sex: '', // Change to boolean for checkbox
+        sex: '',
         address: '',
         emergencyContact: '',
         emergencyContactPhone: '',
@@ -18,7 +25,11 @@ const NewPatient = () => {
         prescriptionHistory: '',
         healthHistory: '',
         familyHistory: '',
-        photo: null, // Patients Photo
+        diagnosis: '',
+        bloodType: '',
+        RHFactor: '',
+        allergies: '',
+        photo: null,
     });
 
     const handleInputChange = (e) => {
@@ -27,62 +38,31 @@ const NewPatient = () => {
     }
 
     const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        setFormData({ ...formData, [name]: checked });
+        const { name, value } = e.target;
+        console.log(name)
+        console.log(value)
+        setFormData({ ...formData, [name]: value });
     }
 
-    const handlePhotoCapture = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const mediaRecorder = new MediaRecorder(stream);
-            
-            mediaRecorder.addEventListener('dataavailable', async (event) => {
-                const blob = event.data;
-                const fileReader = new FileReader();
-                fileReader.onload = function () {
-                    const base64data = fileReader.result;
-                    setFormData({ ...formData, photo: base64data });
-                };
-                fileReader.readAsDataURL(blob);
-            });
-
-            mediaRecorder.start();
-            setTimeout(() => {
-                mediaRecorder.stop();
-                stream.getTracks().forEach(track => track.stop());
-            }, 3000); // Capture for 3 seconds
-        } catch (error) {
-            console.error('Error accessing camera:', error);
-        }
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-       const patient = { 
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-
-        }
-
-
-        //submission to database
-        const submitNewPatient = (data) => {
-            console.log(data)
-            fetch('http://152.44.224.138:5174/createpatient',{
+        console.log(formData);
+        fetch('http://152.44.224.138:5174/createpatient', {
             method: 'POST',
             headers: {
-                'content-type' : 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({ FirstName: formData.firstName, LastName: formData.lastName, DOB: formData.dob, Phone: formData.phone, Sex: formData.sex, Address: formData.address, EmergencyContact: formData.emergencyContact, EmergencyContactPhone: formData.emergencyContactPhone, Prescriptions: formData.prescriptions, PrescriptionHistory: formData.prescriptionHistory, HealthHistory: formData.healthHistory, FamilyHistory: formData.familyHistory}),
-            })
-            .then((res) => res.json())
-            .then ((res) => console.log(res))
-        }
-        submitNewPatient(patient)
+            
+            body: JSON.stringify({
+                FirstName: formData.firstName, LastName: formData.lastName, DOB: formData.dob, Phone: formData.phone, Sex: formData.sex, Address: formData.address, EmergencyContact: formData.emergencyContact, EmergencyContactPhone: formData.emergencyContactPhone, Prescriptions: formData.prescriptions, PrescriptionHistory: formData.prescriptionHistory, HealthHistory: formData.healthHistory, FamilyHistory: formData.familyHistory, Diagnosis: formData.diagnosis, BloodType: formData.bloodType, RHFactor: formData.RHFactor, Allergies: formData.allergies
+            }),
+        
+        })
 
-        console.log('NewPatient:', formData);
+
+        console.log('Form submitted:', formData);
     }
 
     return (
@@ -110,9 +90,14 @@ const NewPatient = () => {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Sex</label>
                             <div className="flex items-center space-x-2">
-                                <Checkbox id="male" name="sex" value="male" label="Male" onChange={handleCheckboxChange} />
-                                <Label htmlFor="Male">Male</Label>
-                                <Checkbox id="female" name="sex" value="female" label="Female" onChange={handleCheckboxChange} /> Female
+
+                                <select name="sex" id="sexSelect" onChange={handleCheckboxChange}>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Non-Binary">Non-Binary</option>
+                                </select>
+
+
                             </div>
                         </div>
                         <div>
@@ -143,10 +128,26 @@ const NewPatient = () => {
                             <label htmlFor="familyHistory" className="block text-sm font-medium text-gray-700">Family History</label>
                             <input type="text" id="familyHistory" name="familyHistory" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
                         </div>
+                        <div>
+                            <label htmlFor="diagnosis" className="block text-sm font-medium text-gray-700">Diagnosis</label>
+                            <input type="text" id="diagnosis" name="diagnosis" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="bloodType" className="block text-sm font-medium text-gray-700">Blood Type</label>
+                            <input type="text" id="bloodType" name="bloodType" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="RHFactor" className="block text-sm font-medium text-gray-700">RH Factor</label>
+                            <input type="text" id="RHFactor" name="RHFactor" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <label htmlFor="allergies" className="block text-sm font-medium text-gray-700">Allergies</label>
+                            <input type="text" id="allergies" name="allergies" className="mt-1 p-2 w-full border rounded-md" onChange={handleInputChange} />
+                        </div>
                     </div>
                     <div>
-                        <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Take Photo</label>
-                        <Button onClick={handlePhotoCapture}>Capture</Button>
+                        <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Upload Photo</label>
+                        <input type="file" id="photo" name="photo" accept="image/*" className="mt-1 p-2 w-full border rounded-md" />
                     </div>
                     <div className="mt-6">
                         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Submit</button>

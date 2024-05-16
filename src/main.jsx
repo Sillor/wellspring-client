@@ -13,6 +13,7 @@ import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
 import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
 import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
 import NewPatient from './ScheduleDashboard/NewPatient.jsx';
+
 import LabForm1 from './PatientLabs/Labform1.jsx';
 import SearchPatient from './Search/SearchPatient.jsx'
 import Login from './Login.jsx';

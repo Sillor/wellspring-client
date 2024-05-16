@@ -19,12 +19,10 @@ export default function LabTab(props){
             .then((res) => res.json())
             .then((data) => {
                 setRole(data[0].Role);
-            })
-            if(role != "Technician"){
-                document.getElementById("editBtn" + " " + props.index).classList.add('invisible')
-            }
-        }
 
+            })
+
+        }
         getRole(localStorage.getItem('user'))
     },[role])
 
@@ -34,23 +32,25 @@ export default function LabTab(props){
 
         //Handles swaping from 'td' tags to 'input' tags for editing
         function editInformation(){
+            if(role === 'Technician'){
+                const edit = document.getElementById('editBtn' + " " + props.index);
+                const save = document.getElementById('saveBtn' + " " + props.index);
+                let results = document.getElementById('results' + " " + props.index);
+    
+                edit.classList.toggle('invisible');
+                save.classList.toggle('invisible');
+    
+                //Create Text Area for Input                
+                let text = document.createElement('textarea')
+                text.classList.add("border")
+                text.classList.add("border-2")
+                text.setAttribute("id",'results ' + props.index);
+    
+                text.innerText = results.innerText
+    
+                results.replaceWith(text)
+            }
 
-            const edit = document.getElementById('editBtn' + " " + props.index);
-            const save = document.getElementById('saveBtn' + " " + props.index);
-            let results = document.getElementById('results' + " " + props.index);
-
-            edit.classList.toggle('invisible');
-            save.classList.toggle('invisible');
-
-            //Create Text Area for Input                
-            let text = document.createElement('textarea')
-            text.classList.add("border")
-            text.classList.add("border-2")
-            text.setAttribute("id",'results ' + props.index);
-
-            text.innerText = results.innerText
-
-            results.replaceWith(text)
         }
 
 
@@ -77,7 +77,7 @@ export default function LabTab(props){
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                     body: JSON.stringify({
-                        id: props.id,
+                        id: props.lab.id,
                         Results: results.value
                     })
                 },)
@@ -110,7 +110,7 @@ export default function LabTab(props){
                     <tr>
                         <td className='h-10'></td>
                     </tr>
-                    {props.status === 'current' ? <tr className='table-row'>
+                    {props.status === 'current' && role === 'Technician' ? <tr className='table-row'>
                         <td colSpan={2}>
                             <div className='flex flex-col w-1/2'>
                                 <Button onClick={editInformation} className="visible" id={"editBtn" + " " + props.index}>Edit {props.lab.Lab} Results</Button>
