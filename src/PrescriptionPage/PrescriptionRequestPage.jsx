@@ -42,27 +42,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useLocation } from "react-router-dom";
-import { Menu, PaintBucket } from "lucide-react";
-import { User } from "lucide-react";
 import { useState, useEffect } from "react";
-
-function request(patient) {
-  fetch("https://wellspring.pfc.io:5175/createprescription", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify({
-      id: patient.id,
-      Patientid: patient.id,
-      PrescriptionName: document.getElementById("prescription").value,
-      OrderDate: new Date(),
-      Dosage: document.getElementById("prescription").value,
-    }),
-  });
-}
+import { getDate } from "date-fns";
+import { Menu, User } from "lucide-react";
 
 export function PrescriptionRequestPage() {
   const [ButtonPopup, setButtonPopup] = useState(false);
@@ -194,12 +176,6 @@ export function PrescriptionRequestPage() {
                   className={navigationMenuTriggerStyle()}
                   asChild
                 >
-                  <Link to={"/newpatient"}>New Patient</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
                   <Link to={"/admin"}>Admin Tools</Link>
                 </NavigationMenuLink>
                 <NavigationMenuLink
@@ -211,7 +187,7 @@ export function PrescriptionRequestPage() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <User className="" size={32} />
+          <User size={32} />
         </div>
 
         {/*Hamburger Menu*/}
@@ -236,12 +212,6 @@ export function PrescriptionRequestPage() {
                   className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
                 >
                   Search Patient
-                </Link>
-                <Link
-                  to={"/newpatient"}
-                  className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
-                >
-                  New Patient
                 </Link>
                 <Link
                   to={"/admin"}
@@ -272,18 +242,12 @@ export function PrescriptionRequestPage() {
       {/*Patient info and backspace header*/}
       <Card className="flex flex-row w-full sm:w-2/3 items-center">
         <Card className="flex w-fit hover:bg-slate-100">
-          <Link
-            to={"/dashboard"}
-            state={{ selectedPatient: location.state.selectedPatient }}
-          >
+          <Link to={"/dashboard/prescriptioninfo"}>
             <img src={arrow} alt="not found" className="w-10 p-2" />
           </Link>
         </Card>
         <div id="patientInfo" className="flex flex-row m-2">
-          <h1>
-            {location.state.selectedPatient[0].LastName},{" "}
-            {location.state.selectedPatient[0].FirstName}
-          </h1>
+          <h1>Patient Name</h1>
           <img
             src="../src/assets/PrescriptionAssets/user.png"
             alt=""
@@ -298,17 +262,38 @@ export function PrescriptionRequestPage() {
           <CardDescription>What medication is to be requested?</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="table w-full gap-4">
               <div className="table-row">
                 <Label htmlFor="patientName" className="table-cell ">
                   Patient Name:
                 </Label>
-                <Input
-                  id="patientName"
-                  placeholder="Name patient"
-                  className="table-cell col"
-                />
+                <div className="flex flex-row">
+                  <Select
+                    onValueChange={(event) => setPatientId(event)}
+                    required
+                  >
+                    <SelectTrigger className="w-50">
+                      <SelectValue placeholder="Patients" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {events.map((event) => (
+                          <div
+                            key={event.id}
+                            className="border p-4 rounded-md mb-4"
+                          >
+                            <div>
+                              <SelectItem value={event.id}>
+                                {event.patientName}
+                              </SelectItem>
+                            </div>
+                          </div>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div className="table-row">
                 <Label htmlFor="orderBy" className="table-cell">
@@ -317,6 +302,8 @@ export function PrescriptionRequestPage() {
                 <Input
                   id="orderBy"
                   placeholder="Physician name"
+                  onChange={(e) => setPhysician(e.target.value)}
+                  required
                   className="flex"
                 />
               </div>
@@ -327,6 +314,8 @@ export function PrescriptionRequestPage() {
                 <Input
                   id="prescription"
                   placeholder="Presciption to be filled"
+                  onChange={(e) => setPrescription(e.target.value)}
+                  required
                   className="flex"
                 />
               </div>
@@ -335,43 +324,35 @@ export function PrescriptionRequestPage() {
                   Dosage:
                 </Label>
                 <div className="flex flex-row">
-                  <Input id="dosage" placeholder="Dosage" />
-                  <Select>
+                  <Input
+                    id="dosage"
+                    placeholder="Dosage"
+                    onChange={(e) => setDosage(e.target.value)}
+                    required
+                  />
+                  <Select required onValueChange={(event) => setUnits(event)}>
                     <SelectTrigger className="w-20">
                       <SelectValue placeholder="Units" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel></SelectLabel>
-                        <SelectItem value="milligrams">mg</SelectItem>
-                        <SelectItem value="milliliters">ml</SelectItem>
+                        <SelectItem value="mg">mg</SelectItem>
+                        <SelectItem value="ml">ml</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <div className="table-row">
-                <Label htmlFor="notes" className="table-cell">
-                  Notes:
-                </Label>
-                <Textarea
-                  id="notes"
-                  placeholder="Important Notes"
-                  className="focus-visible:ring-0"
-                />
-              </div>
             </div>
+            <Button className="w-full sm:justify-center">Request</Button>
           </form>
         </CardContent>
-        <CardFooter className="flex sm:justify-center">
-          <Button
-            className="w-full sm:w-1/3"
-            onClick={() => request(location.state.selectedPatient[0])}
-          >
-            Request
-          </Button>
-        </CardFooter>
+        <CardFooter className="flex sm:justify-center"></CardFooter>
       </Card>
+      <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
+        Successfully Submitted
+      </Popup>
     </div>
   );
 }
