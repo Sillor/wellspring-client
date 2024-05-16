@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button";
 import { User, Menu } from "lucide-react";
 
-import menu from '../PatientDashboard/PatientDashboardAssets/menu.png'
-import user from '../PatientDashboard/PatientDashboardAssets/user.png'
 import {
     Drawer,
     DrawerClose,
@@ -26,6 +24,7 @@ import {
   } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "../components/ui/navigation-menu"
 import PatientTab from './PatientTab'
+import { useLocation } from 'react-router-dom';
 
 
 export default function SearchFunction(){
@@ -36,7 +35,7 @@ export default function SearchFunction(){
     const [search, setSearch]  = useState("");
     const [display, setDisplay] = useState([]);
 
-
+    const location = useLocation();
     const handleSearch = (value) => {
         setDisplay([])
         setSearch(value)
@@ -62,7 +61,6 @@ export default function SearchFunction(){
 			})
 
             setSearchFiltered(
-
                 // Filter data array for contents of search state
                 data.filter((patient) => {
                     const pattern = new RegExp('^' + search, 'i')
@@ -73,7 +71,8 @@ export default function SearchFunction(){
                     }
                     //If Last name matches add to search array state
                     else if (patient.LastName.match(pattern)) {
-                        setDisplay(display => [...display, <PatientTab key={patient.id} patient={patient} />])
+                        location.state = {state:{selectedPatient:patient}}
+                        setDisplay(display => [...display, <PatientTab key={patient.id} state={patient} />])
                     }
                 })
             )
@@ -94,6 +93,8 @@ export default function SearchFunction(){
                             <NavigationMenuItem>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/main'}>View Schedule List</Link></NavigationMenuLink>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newpatient'}>New Patient</Link></NavigationMenuLink>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newappointment'}>New Appointment</Link></NavigationMenuLink>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/admin'}>Admin Tools</Link></NavigationMenuLink>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
                             </NavigationMenuItem>
@@ -113,8 +114,10 @@ export default function SearchFunction(){
                                 <DrawerTitle>What would you like to do?</DrawerTitle>
                             </DrawerHeader>
                             <DrawerFooter>
-                                <Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
                                 <Link to={'/main'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
+                                <Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>                                <Link to={'/admin'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Admin Tools</Link>
+                                <Link to={'/newpatient'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Patient</Link>
+                                <Link to={'/newappointment'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Appointment</Link>
                                 <Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
                                 <DrawerClose asChild>
                                     <Button variant="outline" classList='inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium'>Cancel</Button>

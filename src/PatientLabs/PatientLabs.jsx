@@ -10,10 +10,44 @@ import {
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { Button } from '../components/ui/button'
+import LabTab from './LabTab'
+import { useEffect, useState } from 'react'
+import { useNavigate} from "react-router-dom";
+import { Link } from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 
 
 /* Shows Individual Patient Dashboard layout*/
-export function PatientLabs(){
+export function PatientLabs(props){
+    const [displayCurrent,setDisplayCurrent] = useState([]);
+    const [displayPrevious,setDisplayPrevious] = useState([]);
+    const location = useLocation()
+    useEffect(() => {
+        let tempCurr = []
+        let tempPrev = []
+        fetch('http://152.44.224.138:5174/labs', {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        },)
+        .then((res) => (res.json()))
+        .then( (labs) => {
+            labs.forEach(lab => {
+                if(lab.Patientid === props.data[0].id && lab.Status === 'open'){
+                    tempCurr = [...tempCurr, <LabTab status={'current'} lab={lab} data={props.data} index={tempCurr.length} key={tempCurr.length}/>];
+                }
+                else if(lab.Patientid === props.data[0].id && lab.Status === 'closed'){
+                    tempPrev = [...tempPrev, <LabTab status={'previous'} lab={lab} data={props.data} index={tempCurr.length} key={tempCurr.length}/>];
+
+                }
+            });
+            setDisplayCurrent(tempCurr)
+            setDisplayPrevious(tempPrev)
+        })
+    },[])
+
     return (
         <>
         <Card className="w-full sm:w-2/3">
@@ -22,52 +56,19 @@ export function PatientLabs(){
                 <CardDescription>Lab History & Information</CardDescription>
 
             </CardHeader>
-            <CardContent className="flex flex-col justify-between gap-10">
-            <table className='table justify-between w-full border-separate'>
-					<tbody>
-						<tr className='table-row w-full h-10 border-spacing-y-3'>	
-							<td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Procedure Name:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Ordered By:</td>
-                            <td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Date:</td>
-						</tr>
+            <CardContent className="flex flex-col justify-between gap-10" id="container">
+             <h1 className='font-bold text-lg'>Current Procedures:</h1>   
+            {displayCurrent}
 
-						<tr className='table-row h-4'>	
-							<td htmlFor="generalInfo" className="table-cell w-auto">Labotomy</td>
-							<td className='table-cell w-1/3'>Dr. self</td>
-							<td className='table-cell w-1/3'>12/25/13</td>
-						</tr>
-                        <tr>
-                            <td>Notes:</td>
-                            <td>Patient something something notes of something else.</td>
-                        </tr>
+            <h1 className='font-bold text-lg'>Previous Procedures:</h1>   
 
-						<tr className='table-row w-full h-10 border-spacing-y-3'>	
-							<td htmlFor="generalInfo" className="table-cell w-1/2 font-bold">Procedure Name:</td>
-							<td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Ordered By:</td>
-                            <td htmlFor="generalInfo" className="table-cell w-1/3 font-bold">Date:</td>
-						</tr>
-
-						<tr className='table-row h-4'>	
-							<td htmlFor="generalInfo" className="table-cell w-auto">Apendectimy</td>
-							<td className='table-cell w-1/3'>Dr. ME</td>
-							<td className='table-cell w-1/3'>8/25/13</td>
-						</tr>
-                        <tr>
-                            <td>Notes:</td>
-                            <td>Removed parts</td>
-                        </tr>
-                        
-
-                        
-					</tbody>
-				</table>
-
+            {displayPrevious}
 
             </CardContent>
-            <CardFooter className="flex sm:justify-center">
-                    <div className='sm:w-1/3 w-full'>
-                        <Button className="w-full" >Request</Button>
-                    </div>
+            <CardFooter className="flex w-full justify-center ">
+            <Link to={"/labform1"} state={{selectedPatient:location.state.selectedPatient}} className=" sm:w-1/3 w-full">
+                    <Button className="w-full" >Request</Button>
+                </Link>
                 </CardFooter>
         </Card>
         </>

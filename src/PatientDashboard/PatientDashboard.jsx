@@ -36,7 +36,7 @@ import {
   
 
 
-export function PatientDashboard() {
+export function PatientDashboard(props) {
 
     //Use Location to navigate
     const location = useLocation()
@@ -50,6 +50,8 @@ export function PatientDashboard() {
         e.target.parentNode.classList.add('bg-slate-100')
         e.target.parentNode.classList.remove('bg-white')
     }
+
+
 
 	return (
 		<div className="flex flex-col items-center" id="pageContainer"> {/*Primary container*/}
@@ -66,13 +68,14 @@ export function PatientDashboard() {
                             <NavigationMenuList>
                                 <NavigationMenuItem>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/main'}>View Schedule List</Link></NavigationMenuLink>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/admin'}>Admin Tools</Link></NavigationMenuLink>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/search'}>Search Patient</Link></NavigationMenuLink>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/newpatient'}>New Patient</Link></NavigationMenuLink>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/admin'}>Admin Tools</Link></NavigationMenuLink>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild><Link to={'/'}>Logout</Link></NavigationMenuLink>
                                 </NavigationMenuItem>
                             </NavigationMenuList>
                         </NavigationMenu>
-                        <User size={32} />
+                        <User className="" size={32} />
                     </div>
 
                     {/*Hamburger Menu*/}
@@ -88,6 +91,7 @@ export function PatientDashboard() {
                                 <DrawerFooter>
                                     <Link to={'/main'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">View Schedule</Link>
                                     <Link to={'/search'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Search Patient</Link>
+                                    <Link to={'/newpatient'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">New Patient</Link>
                                     <Link to={'/admin'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Admin Tools</Link>
                                     <Link to={'/'} className="inline-flex items-center justify-center whitespace-nowrap h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90">Logout</Link>
                                     <DrawerClose asChild>
@@ -119,14 +123,14 @@ export function PatientDashboard() {
 
                     {/*Patient Information*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={data} setData={setData}/>);currentOpenTab(e)}}>
+                        <button className="bg-slate-100 hover:bg-slate-100 rounded-md menuItem" id='patientInfo' onClick={(e)=> {setDisplay(<PatientInformation data={data} setData={setData} role={props.role}/>);currentOpenTab(e)}}>
                             <img src={info} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>
 
                     {/*Patient Chart*/}
                     <Card className="flex w-fit hover:bg-slate-100">
-                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={data} setData={setData}/>); currentOpenTab(e); }}>
+                        <button className="bg-white hover:bg-slate-100 rounded-md menuItem" id="patientChart" onClick={(e)=> {setDisplay(<PatientChart data={data} setData={setData} role={props.role}/>); currentOpenTab(e); }}>
                             <img src={clipboard} alt="not found" className="w-10 p-2"/>
                         </button>
                     </Card>

@@ -172,6 +172,12 @@ export function NewAppointmentPage() {
                     className={navigationMenuTriggerStyle()}
                     asChild
                   >
+                    <Link to={"/newappointment"}>View Schedule List</Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    asChild
+                  >
                     <Link to={"/search"}>Search Patient</Link>
                   </NavigationMenuLink>
                   <NavigationMenuLink

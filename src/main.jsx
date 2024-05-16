@@ -9,15 +9,16 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import { PrescriptionPage } from "./PrescriptionPage/PrescriptionPage.jsx";
-import PrescriptionRequestPage from "./PrescriptionPage/PrescriptionRequestPage.jsx";
-import PatientDashboard from "./PatientDashboard/PatientDashboard.jsx";
-import NewPatient from "./ScheduleDashboard/NewPatient.jsx";
-import LabForm1 from "./Labform1.jsx";
-import SearchPatient from "./Search/SearchPatient.jsx";
-import Login from "./Login.jsx";
-import AdminTools from "./AdminTools/AdminTools.jsx";
-import NewAppointmentPage from "./AppointmentPage/NewAppointmentPage.jsx";
+import { PrescriptionPage } from './PrescriptionPage/PrescriptionPage.jsx';
+import PrescriptionRequestPage from './PrescriptionPage/PrescriptionRequestPage.jsx';
+import PatientDashboard from './PatientDashboard/PatientDashboard.jsx';
+import NewPatient from './ScheduleDashboard/NewPatient.jsx';
+import LabForm1 from './PatientLabs/Labform1.jsx';
+import SearchPatient from './Search/SearchPatient.jsx'
+import Login from './Login.jsx';
+import AdminTools from './AdminTools/AdminTools.jsx'
+import NewUser from './Login/NewUser.jsx';
+import NewAppointmentPage from './AppointmentPage/NewAppointmentPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,13 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/NewPatient",
-    element: <NewPatient />,
+    path: "/newpatient",
+    element: <NewPatient/>,
+  },
+
+  {
+    path: "/createuser",
+    element: <NewUser/>,
   },
 
   {
